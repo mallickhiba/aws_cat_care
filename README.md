@@ -1,4 +1,5 @@
 # aws_cat_care
+![Alt text](https://github.com/mallickhiba/aws_cat_care/blob/main/logo.png "Logo")
 
 A new Flutter project.
 
