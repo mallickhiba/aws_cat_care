@@ -1,5 +1,7 @@
-# aws_cat_care
-![Alt text](https://github.com/mallickhiba/aws_cat_care/blob/main/logo.png "Logo")
+<img src="https://github.com/mallickhiba/aws_cat_care/blob/main/logo.png" width="100" height="100"/>
+
+# AWS Cat Care
+
 
 A new Flutter project.
 
