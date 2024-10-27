@@ -31,7 +31,7 @@ class WelcomePage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(
-                      context, '/SignInPage'); // Replace with your route name
+                      context, '/Cats'); // Replace with your route name
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF9B60F9),

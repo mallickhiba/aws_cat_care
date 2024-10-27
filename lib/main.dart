@@ -1,6 +1,9 @@
 // ignore: unused_import
-import 'package:aws_cat_care/signin_page.dart';
-import 'package:aws_cat_care/welcome_page.dart';
+import 'package:aws_cat_care/pages/signin_page.dart';
+import 'package:aws_cat_care/pages/welcome_page.dart';
+import 'package:aws_cat_care/pages/cats.dart';
+
+
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -34,12 +37,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'AWS Cat Care',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
       ),
       initialRoute: '/',
       routes: {
         '/': (context) => const WelcomePage(),
-        '/SignInPage': (context) => const SignInPage(),
+       '/SignInPage': (context) => const SignInPage(),
+       '/Cats': (context) => CatsPage(),
       },
     );
   }
