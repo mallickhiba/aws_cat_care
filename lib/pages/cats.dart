@@ -1,11 +1,12 @@
+import 'package:aws_cat_care/pages/cat_profile.dart';
 import 'package:flutter/material.dart';
 
 class Cat {
   final String name;
   final String imageUrl;
-  final String location;
+  final String breed;
 
-  Cat({required this.name, required this.imageUrl, required this.location});
+  Cat({required this.name, required this.imageUrl, required this.breed});
 }
 
 class CatsPage extends StatelessWidget {
@@ -13,23 +14,23 @@ class CatsPage extends StatelessWidget {
     Cat(
         name: 'Cat 1',
         imageUrl: 'https://example.com/cat1.jpg',
-        location: 'Location 1'),
+        breed: 'breed 1'),
     Cat(
         name: 'Cat 2',
         imageUrl: 'https://example.com/cat2.jpg',
-        location: 'Location 2'),
+        breed: 'breed 2'),
     Cat(
         name: 'Cat 3',
         imageUrl: 'https://example.com/cat3.jpg',
-        location: 'Location 3'),
+        breed: 'breed 3'),
     Cat(
         name: 'Cat 4',
         imageUrl: 'https://example.com/cat4.jpg',
-        location: 'Location 4'),
+        breed: 'breed 4'),
     Cat(
         name: 'Cat 5',
         imageUrl: 'https://example.com/cat5.jpg',
-        location: 'Location 5'),
+        breed: 'breed 5'),
   ];
 
   CatsPage({super.key});
@@ -47,7 +48,15 @@ class CatsPage extends StatelessWidget {
             child: ListTile(
               leading: Image.network(cats[index].imageUrl),
               title: Text(cats[index].name),
-              subtitle: Text(cats[index].location),
+              subtitle: Text(cats[index].breed),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CatProfilePage(cat: cats[index]),
+                  ),
+                );
+              },
             ),
           );
         },
