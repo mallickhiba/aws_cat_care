@@ -1,7 +1,7 @@
 // ignore: unused_import
 import 'package:aws_cat_care/pages/signin_page.dart';
 import 'package:aws_cat_care/pages/welcome_page.dart';
-import 'package:aws_cat_care/pages/cats_list.dart';
+// import 'package:aws_cat_care/pages/cats_list.dart';
 import 'package:aws_cat_care/pages/add_cat.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const WelcomePage(),
         '/SignInPage': (context) => const SignInPage(),
-        '/Cats': (context) => AddCatPage(),
+        '/Cats': (context) => const AddCatPage(),
       },
     );
   }

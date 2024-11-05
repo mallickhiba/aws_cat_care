@@ -1,9 +1,9 @@
 // cat_profile_page.dart
 import 'package:flutter/material.dart';
-import 'package:aws_cat_care/models/cat_model.dart' as model;
+import 'package:aws_cat_care/models/cat_model.dart';
 
 class CatProfilePage extends StatelessWidget {
-  final model.Cat cat; // Use the prefix here
+  final CatModel cat; // Use the prefix here
 
   const CatProfilePage({super.key, required this.cat});
 
