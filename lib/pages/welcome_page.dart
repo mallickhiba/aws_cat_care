@@ -30,8 +30,7 @@ class WelcomePage extends StatelessWidget {
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(
-                      context, '/Cats'); // Replace with your route name
+                  Navigator.pushNamed(context, '/signup');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF9B60F9),
@@ -52,9 +51,8 @@ class WelcomePage extends StatelessWidget {
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
-                  // Add your "Login" button logic here
-                  Navigator.pushNamed(
-                      context, '/login'); // Replace with your route name
+                  // Navigate to SignIn page
+                  Navigator.pushNamed(context, '/signup');
                 },
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
