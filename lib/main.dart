@@ -1,9 +1,13 @@
 // ignore: unused_import
 import 'package:aws_cat_care/pages/signin_page.dart';
-import 'package:aws_cat_care/pages/welcome_page.dart';
-// import 'package:aws_cat_care/pages/cats_list.dart';
-import 'package:aws_cat_care/pages/add_cat.dart';
+// import 'package:aws_cat_care/pages/welcome_page.dart';
+import 'package:aws_cat_care/pages/volunteer_dashboard.dart';
+import 'package:aws_cat_care/pages/panel_dashboard.dart';
 
+// import 'package:aws_cat_care/pages/cats_list.dart';
+// import 'package:aws_cat_care/pages/add_cat.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -25,25 +29,79 @@ Future<void> main() async {
     await Firebase.initializeApp();
   }
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AWS Cat Care',
+      title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const WelcomePage(),
-        '/SignInPage': (context) => const SignInPage(),
-        '/Cats': (context) => const AddCatPage(),
-      },
+      home: MainScreen(),
     );
+  }
+}
+
+class MainScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false, // Disable the debug banner
+        title: 'AWS Cat Care',
+        theme: ThemeData(
+          primarySwatch: Colors.purple,
+        ),
+        home: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                  child:
+                      CircularProgressIndicator()); // Show loader while waiting
+            }
+
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+
+            if (snapshot.hasData && snapshot.data != null) {
+              UserHelper.saveUser(snapshot.data!);
+              return StreamBuilder<DocumentSnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(snapshot.data!.uid)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+
+                  if (snapshot.hasData && snapshot.data != null) {
+                    final userDoc = snapshot.data;
+                    final user = userDoc?.data() as Map<String, dynamic>?;
+                    if (user?['role'] == 'admin') {
+                      return PanelDashboard();
+                    } else {
+                      return VolunteerDashboard();
+                    }
+                  }
+
+                  return const Center(
+                      child: CircularProgressIndicator()); // If no data
+                },
+              );
+            }
+
+            return SignInPage(); // User is not signed in
+          },
+        ));
   }
 }

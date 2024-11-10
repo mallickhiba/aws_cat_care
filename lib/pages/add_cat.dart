@@ -3,7 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 class AddCatPage extends StatefulWidget {
-  const AddCatPage({Key? key}) : super(key: key);
+  const AddCatPage({super.key});
 
   @override
   State<AddCatPage> createState() => _AddCatPageState();

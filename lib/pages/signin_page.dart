@@ -1,6 +1,12 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -72,7 +78,9 @@ class _SignInPageState extends State<SignInPage> {
               // const SizedBox(height: 20),
 
               // Google Sign In Button
-              _user != null ? Text('Signed in as: ${_user?.email}') : _googleSignInButton(),
+              _user != null
+                  ? Text('Signed in as: ${_user?.email}')
+                  : _googleSignInButton(),
             ],
           ),
         ),
@@ -94,17 +102,108 @@ class _SignInPageState extends State<SignInPage> {
 
   void _handleGoogleSignIn() async {
     try {
-      final GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-      final UserCredential userCredential = await _auth.signInWithProvider(googleAuthProvider);
-
-      // Get the currently logged-in user
-      final User? user = userCredential.user;
-
-      if (user != null) {
-        print('Signed in: ${user.uid}');
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        // The user canceled the sign-in
+        return;
       }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+      setState(() {
+        _user = userCredential.user;
+      });
+
+      // Save user data to Firestore after successful sign-in
+      if (_user != null) {
+        UserHelper.saveUser(_user!);
+      }
+
+      print('Signed in: ${_user?.email}');
     } catch (error) {
-      print(error);
+      print('Error during Google Sign-In: $error');
+    }
+  }
+}
+
+class UserHelper {
+  static FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  static saveUser(User user) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    int buildNumber = int.parse(packageInfo.buildNumber);
+    Map<String, dynamic> data = {
+      'email': user.email,
+      'name': user.displayName,
+      'role': 'user',
+      'photoURL': user.photoURL,
+      'last_login': user.metadata.lastSignInTime?.millisecondsSinceEpoch,
+      'created_at': user.metadata.creationTime?.millisecondsSinceEpoch,
+      'lastSeen': DateTime.now(),
+      'buildNumber': buildNumber,
+    };
+
+    final userRef = _db.collection('users').doc(user.uid);
+    if ((await userRef.get()).exists) {
+      print("User exists, updating data");
+      await userRef.update({
+        'last_login': user.metadata.lastSignInTime,
+        'buildNumber': buildNumber,
+      });
+    } else {
+      print("User doesn't exist, creating new document");
+      await userRef.set(data);
+    }
+    await _saveDevice(user);
+  }
+
+  static Future<void> _saveDevice(User user) async {
+    DeviceInfoPlugin devicePlugin = DeviceInfoPlugin();
+    String? deviceId;
+    Map<String, dynamic> deviceData;
+
+    if (Platform.isAndroid) {
+      final deviceInfo = await devicePlugin.androidInfo;
+      deviceId = deviceInfo.id; // Use deviceInfo.id instead of androidId
+      deviceData = {
+        'os_version': deviceInfo.version.sdkInt.toString(),
+        'platform': 'android',
+        'model': deviceInfo.model,
+        'device': deviceInfo.device,
+      };
+    } else if (Platform.isIOS) {
+      final deviceInfo = await devicePlugin.iosInfo;
+      deviceId = deviceInfo.identifierForVendor;
+      deviceData = {
+        'os_version': deviceInfo.systemVersion,
+        'platform': 'ios',
+        'model': deviceInfo.model,
+        'device': deviceInfo.name,
+      };
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+
+    final nowMs = DateTime.now().millisecondsSinceEpoch;
+    final userRef = _db.collection('users').doc(user.uid);
+    final deviceRef = userRef.collection('devices').doc(deviceId);
+
+    if ((await deviceRef.get()).exists) {
+      await deviceRef.update({
+        'last_seen': nowMs,
+      });
+    } else {
+      await deviceRef.set({
+        'last_seen': nowMs,
+        ...deviceData,
+      });
     }
   }
 }
