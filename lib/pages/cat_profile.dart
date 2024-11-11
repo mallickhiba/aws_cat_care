@@ -24,7 +24,7 @@ class CatProfilePage extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            'Location: ${cat.breed.toString()}',
+            'Location: ${cat.location.toString()}',
             style: const TextStyle(fontSize: 18),
           ),
         ],

@@ -126,42 +126,43 @@ class _SignInPageState extends State<SignInPage> {
         UserHelper.saveUser(_user!);
       }
 
-      print('Signed in: ${_user?.email}');
+      // print('Signed in: ${_user?.email}');
     } catch (error) {
-      print('Error during Google Sign-In: $error');
+      // print('Error during Google Sign-In: $error');
     }
   }
 }
 
 class UserHelper {
-  static FirebaseFirestore _db = FirebaseFirestore.instance;
-
+  static final FirebaseFirestore _db = FirebaseFirestore.instance;
   static saveUser(User user) async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    int buildNumber = int.parse(packageInfo.buildNumber);
-    Map<String, dynamic> data = {
-      'email': user.email,
-      'name': user.displayName,
-      'role': 'user',
-      'photoURL': user.photoURL,
-      'last_login': user.metadata.lastSignInTime?.millisecondsSinceEpoch,
-      'created_at': user.metadata.creationTime?.millisecondsSinceEpoch,
-      'lastSeen': DateTime.now(),
-      'buildNumber': buildNumber,
-    };
-
-    final userRef = _db.collection('users').doc(user.uid);
-    if ((await userRef.get()).exists) {
-      print("User exists, updating data");
-      await userRef.update({
-        'last_login': user.metadata.lastSignInTime,
+    try {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      int buildNumber = int.parse(packageInfo.buildNumber);
+      Map<String, dynamic> data = {
+        'email': user.email,
+        'name': user.displayName,
+        'role': 'user',
+        'photoURL': user.photoURL,
+        'last_login': user.metadata.lastSignInTime?.millisecondsSinceEpoch,
+        'created_at': user.metadata.creationTime?.millisecondsSinceEpoch,
+        'lastSeen': DateTime.now(),
         'buildNumber': buildNumber,
-      });
-    } else {
-      print("User doesn't exist, creating new document");
-      await userRef.set(data);
+      };
+
+      final userRef = _db.collection('users').doc(user.uid);
+      if ((await userRef.get()).exists) {
+        await userRef.update({
+          'last_login': user.metadata.lastSignInTime,
+          'buildNumber': buildNumber,
+        });
+      } else {
+        await userRef.set(data);
+      }
+      await _saveDevice(user);
+    } catch (e) {
+      print('Error saving user: $e'); // This will show specific error details
     }
-    await _saveDevice(user);
   }
 
   static Future<void> _saveDevice(User user) async {

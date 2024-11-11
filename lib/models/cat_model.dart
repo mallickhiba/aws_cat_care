@@ -3,11 +3,9 @@ class CatModel {
   String? name;
   String? location;
   String? sex;
-  String? breed;
   int? age;
   bool? isFixed;
-  // bool? isVaccinated;
-  // bool? isAdopted;
+  bool? isAdopted;
   String? color;
   String? imageUrl;
   String? description;
@@ -17,8 +15,8 @@ class CatModel {
       this.name,
       this.location,
       this.sex,
-      this.breed,
       this.age,
+      this.isFixed,
       this.color,
       this.imageUrl,
       this.description});
@@ -28,8 +26,8 @@ class CatModel {
     name = json['name'];
     location = json['location'];
     sex = json['sex'];
-    breed = json['breed'];
     age = json['age'];
+    isFixed = json['is_fixed'];
     color = json['color'];
     imageUrl = json['image_url'];
     description = json['description'];
@@ -41,8 +39,8 @@ class CatModel {
     data['name'] = name;
     data['location'] = location;
     data['sex'] = sex;
-    data['breed'] = breed;
     data['age'] = age;
+    data['is_fixed'] = isFixed;
     data['color'] = color;
     data['image_url'] = imageUrl;
     data['description'] = description;

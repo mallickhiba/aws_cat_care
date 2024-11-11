@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class VolunteerDashboard extends StatelessWidget {
+  const VolunteerDashboard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Volunteer Dashboard'),
+        title: const Text('Volunteer Dashboard'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Welcome to the Volunteer Dashboard!'),
       ),
     );

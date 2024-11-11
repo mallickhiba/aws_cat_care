@@ -1,9 +1,8 @@
 import 'package:aws_cat_care/pages/signin_page.dart';
 import 'package:aws_cat_care/pages/signup_page.dart';
-
-import 'package:aws_cat_care/pages/welcome_page.dart';
+// import 'package:aws_cat_care/pages/welcome_page.dart';
 import 'package:aws_cat_care/pages/volunteer_dashboard.dart';
-import 'package:aws_cat_care/pages/panel_dashboard.dart';
+import 'package:aws_cat_care/pages/panel_homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,10 +26,12 @@ Future<void> main() async {
     await Firebase.initializeApp();
   }
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -42,18 +43,21 @@ class MyApp extends StatelessWidget {
           '/', // Set initial route to home, where the welcome page will be shown
       routes: {
         '/': (context) =>
-            MainScreen(), // Main screen checks the user login status
-        '/signin': (context) => SignInPage(), // SignIn page
-        '/signup': (context) => SignUpPage(), // SignUp page
-        '/panel-dashboard': (context) => PanelDashboard(), // Admin dashboard
+            const MainScreen(), // Main screen checks the user login status
+        '/signin': (context) => const SignInPage(), // SignIn page
+        '/signup': (context) => const SignUpPage(), // SignUp page
+        '/panel-homepage': (context) =>
+            const PanelHomePage(), // Admin dashboard
         '/volunteer-dashboard': (context) =>
-            VolunteerDashboard(), // Volunteer dashboard
+            const VolunteerDashboard(), // Volunteer dashboard
       },
     );
   }
 }
 
 class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
@@ -87,11 +91,11 @@ class MainScreen extends StatelessWidget {
                 final userDoc = snapshot.data;
                 final user = userDoc?.data() as Map<String, dynamic>?;
                 if (user?['role'] == 'admin') {
-                  // Navigate to the panel dashboard if admin
-                  return PanelDashboard();
+                  // Navigate to the panel homepage if admin
+                  return const PanelHomePage();
                 } else {
                   // Navigate to the volunteer dashboard
-                  return VolunteerDashboard();
+                  return const VolunteerDashboard();
                 }
               }
 
@@ -101,7 +105,7 @@ class MainScreen extends StatelessWidget {
         }
 
         // Show Welcome page if user is not signed in
-        return SignInPage();
+        return const SignInPage();
       },
     );
   }
