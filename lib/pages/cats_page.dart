@@ -1,12 +1,8 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class CatsPage extends StatefulWidget {
-  const CatsPage({Key? key}) : super(key: key);
+  const CatsPage({super.key});
 
   @override
   _CatsPageState createState() => _CatsPageState();
@@ -15,58 +11,43 @@ class CatsPage extends StatefulWidget {
 class _CatsPageState extends State<CatsPage> {
   final CollectionReference _cats =
       FirebaseFirestore.instance.collection('cats');
-  final ImagePicker _picker = ImagePicker();
-  String? _uploadedImageUrl;
 
   // Text controllers
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _sexController = TextEditingController();
-  final TextEditingController _isFixedController = TextEditingController();
-  final TextEditingController _isVaccinatedController = TextEditingController();
+  final TextEditingController _imageUrlController =
+      TextEditingController(); // Controller for image URL
 
-  Future<void> _pickAndUploadImage() async {
-    final XFile? pickedFile =
-        await _picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      final Reference storageRef = FirebaseStorage.instance
-          .ref()
-          .child('cat_images/${DateTime.now().toIso8601String()}');
-      await storageRef.putFile(File(pickedFile.path));
-      final String downloadUrl = await storageRef.getDownloadURL();
-
-      setState(() {
-        _uploadedImageUrl = downloadUrl;
-      });
-    }
-  }
+  // Dropdown values and boolean flags for checkboxes
+  String? _location = 'Tabba';
+  String? _sex = 'M';
+  bool _isFixed = false;
+  bool _isVaccinated = false;
 
   Future<void> _createOrUpdate([DocumentSnapshot? documentSnapshot]) async {
     if (documentSnapshot != null) {
-      _nameController.text = documentSnapshot['name'];
-      _ageController.text = documentSnapshot['age'].toString();
-      _colorController.text = documentSnapshot['color'];
-      _descriptionController.text = documentSnapshot['description'];
-      _locationController.text = documentSnapshot['location'];
-      _sexController.text = documentSnapshot['sex'];
-      _isFixedController.text = documentSnapshot['isFixed'].toString();
-      _isVaccinatedController.text =
-          documentSnapshot['isVaccinated'].toString();
-      _uploadedImageUrl = documentSnapshot['imageURL'];
+      final data = documentSnapshot.data() as Map<String, dynamic>;
+      _nameController.text = data['name'];
+      _ageController.text = data['age'].toString();
+      _colorController.text = data['color'];
+      _descriptionController.text = data['description'];
+      _location = data['location'];
+      _sex = data['sex'];
+      _isFixed = data['isFixed'];
+      _isVaccinated = data['isVaccinated'];
+      _imageUrlController.text = data['imageURL'] ?? '';
     } else {
       _nameController.clear();
       _ageController.clear();
       _colorController.clear();
       _descriptionController.clear();
-      _locationController.clear();
-      _sexController.clear();
-      _isFixedController.clear();
-      _isVaccinatedController.clear();
-      _uploadedImageUrl = null;
+      _imageUrlController.clear();
+      _location = 'Tabba';
+      _sex = 'M';
+      _isFixed = false;
+      _isVaccinated = false;
     }
 
     await showModalBottomSheet(
@@ -100,31 +81,67 @@ class _CatsPageState extends State<CatsPage> {
                 controller: _descriptionController,
                 decoration: const InputDecoration(labelText: 'Description'),
               ),
-              TextField(
-                controller: _locationController,
+              DropdownButtonFormField<String>(
+                value: _location,
                 decoration: const InputDecoration(labelText: 'Location'),
+                items: [
+                  'Tabba',
+                  'Courtyard',
+                  'Library',
+                  'Student Centre',
+                ].map((location) {
+                  return DropdownMenuItem(
+                    value: location,
+                    child: Text(location),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _location = value;
+                  });
+                },
               ),
-              TextField(
-                controller: _sexController,
+              DropdownButtonFormField<String>(
+                value: _sex,
                 decoration: const InputDecoration(labelText: 'Sex'),
+                items: ['M', 'F'].map((sex) {
+                  return DropdownMenuItem(
+                    value: sex,
+                    child: Text(sex),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _sex = value;
+                  });
+                },
               ),
               TextField(
-                controller: _isFixedController,
-                decoration:
-                    const InputDecoration(labelText: 'Fixed (true/false)'),
+                controller: _imageUrlController,
+                decoration: const InputDecoration(labelText: 'Image URL'),
               ),
-              TextField(
-                controller: _isVaccinatedController,
-                decoration:
-                    const InputDecoration(labelText: 'Vaccinated (true/false)'),
+              Row(
+                children: [
+                  Checkbox(
+                    value: _isFixed,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _isFixed = value ?? false;
+                      });
+                    },
+                  ),
+                  const Text('Fixed'),
+                  Checkbox(
+                    value: _isVaccinated,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _isVaccinated = value ?? false;
+                      });
+                    },
+                  ),
+                  const Text('Vaccinated'),
+                ],
               ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: _pickAndUploadImage,
-                child: const Text('Upload Image'),
-              ),
-              if (_uploadedImageUrl != null)
-                Image.network(_uploadedImageUrl!, height: 100),
               const SizedBox(height: 20),
               ElevatedButton(
                 child: Text(documentSnapshot != null ? 'Update' : 'Create'),
@@ -133,26 +150,21 @@ class _CatsPageState extends State<CatsPage> {
                   final int? age = int.tryParse(_ageController.text);
                   final String color = _colorController.text;
                   final String description = _descriptionController.text;
-                  final String location = _locationController.text;
-                  final String sex = _sexController.text;
-                  final bool isFixed =
-                      _isFixedController.text.toLowerCase() == 'true';
-                  final bool isVaccinated =
-                      _isVaccinatedController.text.toLowerCase() == 'true';
+                  final String? imageURL = _imageUrlController.text.isNotEmpty
+                      ? _imageUrlController.text
+                      : null;
 
-                  if (name.isNotEmpty &&
-                      age != null &&
-                      _uploadedImageUrl != null) {
+                  if (name.isNotEmpty && age != null) {
                     final catData = {
                       "name": name,
                       "age": age,
                       "color": color,
                       "description": description,
-                      "location": location,
-                      "sex": sex,
-                      "isFixed": isFixed,
-                      "isVaccinated": isVaccinated,
-                      "imageURL": _uploadedImageUrl,
+                      "location": _location,
+                      "sex": _sex,
+                      "isFixed": _isFixed,
+                      "isVaccinated": _isVaccinated,
+                      "imageURL": imageURL,
                     };
 
                     if (documentSnapshot != null) {
@@ -160,17 +172,6 @@ class _CatsPageState extends State<CatsPage> {
                     } else {
                       await _cats.add(catData);
                     }
-
-                    // Clear input fields
-                    _nameController.clear();
-                    _ageController.clear();
-                    _colorController.clear();
-                    _descriptionController.clear();
-                    _locationController.clear();
-                    _sexController.clear();
-                    _isFixedController.clear();
-                    _isVaccinatedController.clear();
-                    _uploadedImageUrl = null;
 
                     Navigator.of(context).pop();
                   }
@@ -185,7 +186,6 @@ class _CatsPageState extends State<CatsPage> {
 
   Future<void> _delete(String catId) async {
     await _cats.doc(catId).delete();
-
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('You have successfully deleted a cat')));
   }
@@ -205,22 +205,31 @@ class _CatsPageState extends State<CatsPage> {
               itemBuilder: (context, index) {
                 final DocumentSnapshot documentSnapshot =
                     streamSnapshot.data!.docs[index];
+                final data = documentSnapshot.data() as Map<String, dynamic>;
                 return Card(
                   margin: const EdgeInsets.all(10),
                   child: ListTile(
-                    title: Text(documentSnapshot['name']),
+                    leading: data['imageURL'] != null
+                        ? CircleAvatar(
+                            backgroundImage: NetworkImage(data['imageURL']),
+                            radius: 30,
+                          )
+                        : CircleAvatar(
+                            child: const Icon(Icons.pets),
+                            radius: 30,
+                          ),
+                    title: Text(data['name']),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Age: ${documentSnapshot['age']}"),
-                        Text("Color: ${documentSnapshot['color']}"),
-                        Text("Description: ${documentSnapshot['description']}"),
-                        Text("Location: ${documentSnapshot['location']}"),
-                        Text("Sex: ${documentSnapshot['sex']}"),
+                        Text("Age: ${data['age']}"),
+                        Text("Color: ${data['color']}"),
+                        Text("Description: ${data['description']}"),
+                        Text("Location: ${data['location']}"),
+                        Text("Sex: ${data['sex']}"),
+                        Text("Fixed: ${data['isFixed'] ? 'Yes' : 'No'}"),
                         Text(
-                            "Fixed: ${documentSnapshot['isFixed'] ? 'Yes' : 'No'}"),
-                        Text(
-                            "Vaccinated: ${documentSnapshot['isVaccinated'] ? 'Yes' : 'No'}"),
+                            "Vaccinated: ${data['isVaccinated'] ? 'Yes' : 'No'}"),
                       ],
                     ),
                     trailing: SizedBox(
@@ -248,8 +257,8 @@ class _CatsPageState extends State<CatsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _createOrUpdate(),
-        child: const Icon(Icons.add),
         tooltip: 'Add New Cat',
+        child: const Icon(Icons.add),
       ),
     );
   }

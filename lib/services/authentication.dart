@@ -6,7 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AuthHelper {
-  static FirebaseAuth _auth = FirebaseAuth.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static signInWithEmail(
       {required String email, required String password}) async {
@@ -38,10 +38,14 @@ class AuthHelper {
     GoogleSignIn().signOut();
     return _auth.signOut();
   }
+
+  static User? getCurrentUser() {
+    return _auth.currentUser;
+  }
 }
 
 class UserHelper {
-  static FirebaseFirestore _db = FirebaseFirestore.instance;
+  static final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   static saveUser(User user) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
