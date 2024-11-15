@@ -1,3 +1,4 @@
+import 'package:aws_cat_care/pages/cat_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -21,8 +22,8 @@ class _CatsPageState extends State<CatsPage> {
       TextEditingController(); // Controller for image URL
 
   // Dropdown values and boolean flags for checkboxes
-  String? _location = 'Tabba';
-  String? _sex = 'M';
+  String? _location = '';
+  String? _sex = '';
   bool _isFixed = false;
   bool _isVaccinated = false;
 
@@ -214,8 +215,8 @@ class _CatsPageState extends State<CatsPage> {
                             backgroundImage: NetworkImage(data['imageURL']),
                             radius: 30,
                           )
-                        : CircleAvatar(
-                            child: const Icon(Icons.pets),
+                        : const CircleAvatar(
+                            child: Icon(Icons.pets),
                             radius: 30,
                           ),
                     title: Text(data['name']),
@@ -232,6 +233,15 @@ class _CatsPageState extends State<CatsPage> {
                             "Vaccinated: ${data['isVaccinated'] ? 'Yes' : 'No'}"),
                       ],
                     ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CatProfilePage(cat: documentSnapshot),
+                        ),
+                      );
+                    },
                     trailing: SizedBox(
                       width: 100,
                       child: Row(

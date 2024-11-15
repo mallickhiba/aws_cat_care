@@ -31,53 +31,60 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    const String awsLogoPath = '../logo.png';
     return Scaffold(
-      backgroundColor: const Color(0xFF2E2E33), // Dark background
+      backgroundColor: const Color.fromRGBO(234, 177, 254, 100),
       body: SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // App Title
+              Image.asset(
+                awsLogoPath,
+                height: 300,
+                width: 300,
+              ),
+              const SizedBox(height: 20),
               const Text(
-                'AWSA Cat Care',
+                'FELINES OF TOMORROW',
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 30, 1, 1),
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 40),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/signup');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF9B60F9),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text(
+                  'GET STARTED >',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Email & Password Text Fields (for future implementation)
-              // You can uncomment and modify these if needed
-              // TextField(
-              //   decoration: const InputDecoration(
-              //     hintText: 'Email',
-              //     enabledBorder: OutlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.white),
-              //     ),
-              //     focusedBorder: OutlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.blue),
-              //     ),
-              //   ),
-              // ),
-              // const SizedBox(height: 10),
-              // TextField(
-              //   obscureText: true,
-              //   decoration: const InputDecoration(
-              //     hintText: 'Password',
-              //     enabledBorder: OutlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.white),
-              //     ),
-              //     focusedBorder: OutlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.blue),
-              //     ),
-              //   ),
-              // ),
-              // const SizedBox(height: 20),
-
-              // Google Sign In Button
+              TextButton(
+                onPressed: () {
+                  // Navigate to SignIn page
+                  Navigator.pushNamed(context, '/signup');
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('ALREADY HAVE AN ACCOUNT? LOGIN'),
+              ),
+              SizedBox(height: 20),
               _user != null
                   ? Text('Signed in as: ${_user?.email}')
                   : _googleSignInButton(),
@@ -91,11 +98,14 @@ class _SignInPageState extends State<SignInPage> {
   Widget _googleSignInButton() {
     return SizedBox(
       height: 50,
-      width: double.infinity, // Occupy full width
+      width: 200,
       child: SignInButton(
         Buttons.google,
         text: "Sign in with Google",
         onPressed: _handleGoogleSignIn,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
       ),
     );
   }
