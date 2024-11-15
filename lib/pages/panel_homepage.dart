@@ -64,7 +64,8 @@ class PanelHomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VolunteersPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const VolunteersPage()),
                 );
               },
             ),
@@ -74,7 +75,7 @@ class PanelHomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AdoptionPage()),
+                  MaterialPageRoute(builder: (context) => const AdoptionPage()),
                 );
               },
             ),
@@ -83,7 +84,8 @@ class PanelHomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CommunityForumPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const CommunityForumPage()),
                 );
               },
             ),
@@ -92,7 +94,8 @@ class PanelHomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DonationsPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const DonationsPage()),
                 );
               },
             ),
@@ -101,7 +104,8 @@ class PanelHomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FeedingSchedule()),
+                  MaterialPageRoute(
+                      builder: (context) => const FeedingSchedule()),
                 );
               },
             ),
@@ -110,7 +114,8 @@ class PanelHomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FeedingSchedule()),
+                  MaterialPageRoute(
+                      builder: (context) => const FeedingSchedule()),
                 );
               },
             ),
@@ -119,7 +124,8 @@ class PanelHomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => IncidentsPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const IncidentsPage()),
                 );
               },
             ),

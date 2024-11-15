@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class VolunteersPage extends StatelessWidget {
-  const VolunteersPage({Key? key}) : super(key: key);
+  const VolunteersPage({super.key});
 
   @override
   Widget build(BuildContext context) {

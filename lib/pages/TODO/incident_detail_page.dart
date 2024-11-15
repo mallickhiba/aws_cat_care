@@ -4,14 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class IncidentDetailPage extends StatefulWidget {
   final DocumentReference? incidentReference;
 
-  const IncidentDetailPage({Key? key, this.incidentReference})
-      : super(key: key);
+  const IncidentDetailPage({super.key, this.incidentReference});
 
   @override
-  _IncidentDetailPageState createState() => _IncidentDetailPageState();
+  State<IncidentDetailPage> createState() => _IncidentDetailPage();
 }
 
-class _IncidentDetailPageState extends State<IncidentDetailPage> {
+class _IncidentDetailPage extends State<IncidentDetailPage> {
   final _formKey = GlobalKey<FormState>();
 
   bool isEditMode = false;
@@ -92,7 +91,7 @@ class _IncidentDetailPageState extends State<IncidentDetailPage> {
 
       if (widget.incidentReference != null) {
         await widget.incidentReference!.update(incidentData);
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(context.mounted as BuildContext).showSnackBar(
           const SnackBar(content: Text('Incident updated successfully')),
         );
       }

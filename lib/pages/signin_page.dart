@@ -84,7 +84,7 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 child: const Text('ALREADY HAVE AN ACCOUNT? LOGIN'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _user != null
                   ? Text('Signed in as: ${_user?.email}')
                   : _googleSignInButton(),
@@ -171,7 +171,7 @@ class UserHelper {
       }
       await _saveDevice(user);
     } catch (e) {
-      print('Error saving user: $e'); // This will show specific error details
+      // print('Error saving user: $e'); // This will show specific error details
     }
   }
 

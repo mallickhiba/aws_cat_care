@@ -7,17 +7,19 @@ class PanelBottomNavBar extends StatefulWidget {
   const PanelBottomNavBar({super.key});
 
   @override
-  _PanelBottomNavBarState createState() => _PanelBottomNavBarState();
+  State<PanelBottomNavBar> createState() {
+    return _PanelBottomNavBar();
+  }
 }
 
-class _PanelBottomNavBarState extends State<PanelBottomNavBar> {
+class _PanelBottomNavBar extends State<PanelBottomNavBar> {
   int _selectedIndex = 0; // Track the currently selected tab index
 
   // List of pages that each tab should navigate to
   final List<Widget> _pages = [
     const PanelHomePage(),
-    CatsPage(),
-    IncidentsPage(),
+    const CatsPage(),
+    const IncidentsPage(),
   ];
 
   void _onItemTapped(int index) {

@@ -6,10 +6,10 @@ class CatsPage extends StatefulWidget {
   const CatsPage({super.key});
 
   @override
-  _CatsPageState createState() => _CatsPageState();
+  State<CatsPage> createState() => _CatsPage();
 }
 
-class _CatsPageState extends State<CatsPage> {
+class _CatsPage extends State<CatsPage> {
   final CollectionReference _cats =
       FirebaseFirestore.instance.collection('cats');
 
@@ -174,7 +174,7 @@ class _CatsPageState extends State<CatsPage> {
                       await _cats.add(catData);
                     }
 
-                    Navigator.of(context).pop();
+                    Navigator.of(context.mounted as BuildContext).pop();
                   }
                 },
               ),
@@ -187,7 +187,7 @@ class _CatsPageState extends State<CatsPage> {
 
   Future<void> _delete(String catId) async {
     await _cats.doc(catId).delete();
-    ScaffoldMessenger.of(context).showSnackBar(
+    ScaffoldMessenger.of(context.mounted as BuildContext).showSnackBar(
         const SnackBar(content: Text('You have successfully deleted a cat')));
   }
 
@@ -216,8 +216,8 @@ class _CatsPageState extends State<CatsPage> {
                             radius: 30,
                           )
                         : const CircleAvatar(
-                            child: Icon(Icons.pets),
                             radius: 30,
+                            child: Icon(Icons.pets),
                           ),
                     title: Text(data['name']),
                     subtitle: Column(

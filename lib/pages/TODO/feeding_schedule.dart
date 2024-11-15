@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class FeedingSchedule extends StatelessWidget {
+  const FeedingSchedule({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Feeding Schedule'),
+        title: const Text('Feeding Schedule'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Feeding Schedule Page'),
       ),
     );
@@ -15,7 +17,7 @@ class FeedingSchedule extends StatelessWidget {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: FeedingSchedule(),
   ));
 }

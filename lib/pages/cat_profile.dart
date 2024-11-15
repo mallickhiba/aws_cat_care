@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class CatProfilePage extends StatelessWidget {
   final DocumentSnapshot cat;
 
-  const CatProfilePage({Key? key, required this.cat}) : super(key: key);
+  const CatProfilePage({super.key, required this.cat});
 
   @override
   Widget build(BuildContext context) {

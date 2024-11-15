@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AdoptionPage extends StatelessWidget {
+  const AdoptionPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Adoption Page'),
+        title: const Text('Adoption Page'),
       ),
       body: ListView(
         children: <Widget>[
@@ -19,7 +21,7 @@ class AdoptionPage extends StatelessWidget {
 
   Widget _buildAdoptionCard(String name, String imagePath) {
     return Card(
-      margin: EdgeInsets.all(10.0),
+      margin: const EdgeInsets.all(10.0),
       child: Column(
         children: <Widget>[
           Image.asset(imagePath),
@@ -27,7 +29,8 @@ class AdoptionPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               name,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              style:
+                  const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
@@ -36,7 +39,7 @@ class AdoptionPage extends StatelessWidget {
               onPressed: () {
                 // Handle adoption logic here
               },
-              child: Text('Adopt Me'),
+              child: const Text('Adopt Me'),
             ),
           ),
         ],
