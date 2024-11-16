@@ -31,7 +31,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -52,9 +52,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     controller: tabController,
                     unselectedLabelColor: Theme.of(context)
                         .colorScheme
-                        .onBackground
+                        .onSurface
                         .withOpacity(0.5),
-                    labelColor: Theme.of(context).colorScheme.onBackground,
+                    labelColor: Theme.of(context).colorScheme.onSurface,
                     tabs: const [
                       Padding(
                         padding: EdgeInsets.all(12.0),
