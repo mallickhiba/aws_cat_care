@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../screens/home/home_screen.dart';
 
 import '../../blocs/sign_in_bloc/sign_in_bloc.dart';
 import '../../components/strings.dart';
@@ -26,15 +27,20 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return BlocListener<SignInBloc, SignInState>(
       listener: (context, state) {
-        if (state is SignInSuccess) {
+        if (state is SignInSuccess || state is GoogleSignInSuccess) {
           setState(() {
             signInRequired = false;
           });
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ),
+          );
         } else if (state is SignInProcess) {
           setState(() {
             signInRequired = true;
           });
-        } else if (state is SignInFailure) {
+        } else if (state is SignInFailure || state is GoogleSignInFailure) {
           setState(() {
             signInRequired = false;
             _errorMsg = 'Invalid email or password';
@@ -130,7 +136,38 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           )),
                     )
-                  : const CircularProgressIndicator()
+                  : const CircularProgressIndicator(),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: 50,
+                child: TextButton(
+                  onPressed: () {
+                    context.read<SignInBloc>().add(GoogleSignInRequested());
+                  },
+                  style: TextButton.styleFrom(
+                      elevation: 3.0,
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(60))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/google_logo.png',
+                        height: 24,
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Sign In with Google',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           )),
     );

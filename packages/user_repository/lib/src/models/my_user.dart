@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
 import 'package:user_repository/src/entities/entities.dart';
 
@@ -6,9 +8,9 @@ class MyUser extends Equatable {
   final String email;
   final String name;
   final String role;
-  final String? picture;
+  String? picture;
 
-  const MyUser({
+  MyUser({
     required this.id,
     required this.email,
     required this.name,
@@ -16,8 +18,7 @@ class MyUser extends Equatable {
     this.picture,
   });
 
-  static var empty =
-      const MyUser(id: '', email: '', name: '', role: '', picture: '');
+  static var empty = MyUser(id: '', email: '', name: '', role: '', picture: '');
 
   MyUser copyWith({
     String? id,

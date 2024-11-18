@@ -19,3 +19,7 @@ class SignInFailure extends SignInState {
 }
 
 class SignInProcess extends SignInState {}
+
+class GoogleSignInSuccess extends SignInState {}
+
+class GoogleSignInFailure extends SignInState {}

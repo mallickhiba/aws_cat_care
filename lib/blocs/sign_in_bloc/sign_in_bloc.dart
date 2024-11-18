@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:equatable/equatable.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -26,6 +27,21 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     });
     on<SignOutRequired>((event, emit) async {
       await _userRepository.logOut();
+    });
+    on<GoogleSignInRequested>((event, emit) async {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      try {
+        emit(SignInProcess());
+        final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+        if (googleUser != null) {
+          emit(GoogleSignInSuccess());
+        } else {
+          throw Exception('User cancelled sign-in');
+        }
+      } catch (error) {
+        // print('Google Sign-In Error: $error');
+        emit(GoogleSignInFailure());
+      }
     });
   }
 }
