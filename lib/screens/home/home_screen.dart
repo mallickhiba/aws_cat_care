@@ -1,3 +1,6 @@
+import 'package:aws_cat_care/blocs/get_cat_bloc/get_cat_bloc.dart';
+import 'package:aws_cat_care/blocs/update_cat_bloc/update_cat_bloc.dart';
+import 'package:aws_cat_care/screens/home/cat_detail_screen.dart';
 import 'package:aws_cat_care/screens/home/cat_screen.dart';
 import 'package:cat_repository/cat_repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -72,10 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () async {
                               final ImagePicker picker = ImagePicker();
                               final XFile? image = await picker.pickImage(
-                                  source: ImageSource.gallery,
-                                  maxHeight: 500,
-                                  maxWidth: 500,
-                                  imageQuality: 40);
+                                source: ImageSource.gallery,
+                                maxHeight: 500,
+                                maxWidth: 500,
+                                imageQuality: 40,
+                              );
                               if (image != null) {
                                 CroppedFile? croppedFile =
                                     await ImageCropper().cropImage(
@@ -84,14 +88,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ratioX: 1, ratioY: 1),
                                   uiSettings: [
                                     AndroidUiSettings(
-                                        toolbarTitle: 'Cropper',
-                                        toolbarColor: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        toolbarWidgetColor: Colors.white,
-                                        initAspectRatio:
-                                            CropAspectRatioPreset.original,
-                                        lockAspectRatio: false),
+                                      toolbarTitle: 'Cropper',
+                                      toolbarColor:
+                                          Theme.of(context).colorScheme.primary,
+                                      toolbarWidgetColor: Colors.white,
+                                      initAspectRatio:
+                                          CropAspectRatioPreset.original,
+                                      lockAspectRatio: false,
+                                    ),
                                     IOSUiSettings(
                                       title: 'Cropper',
                                     ),
@@ -100,13 +104,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 if (croppedFile != null) {
                                   setState(() {
                                     context.read<UpdateUserInfoBloc>().add(
-                                        UploadPicture(
+                                          UploadPicture(
                                             croppedFile.path,
                                             context
                                                 .read<MyUserBloc>()
                                                 .state
                                                 .user!
-                                                .id));
+                                                .id,
+                                          ),
+                                        );
                                   });
                                 }
                               }
@@ -115,8 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: 50,
                               height: 50,
                               decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  shape: BoxShape.circle),
+                                color: Colors.grey.shade300,
+                                shape: BoxShape.circle,
+                              ),
                               child: Icon(CupertinoIcons.person,
                                   color: Colors.grey.shade400),
                             ),
@@ -125,13 +132,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             width: 50,
                             height: 50,
                             decoration: BoxDecoration(
-                                color: Colors.grey,
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                      state.user!.picture!,
-                                    ),
-                                    fit: BoxFit.cover)),
+                              color: Colors.grey,
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  state.user!.picture!,
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                     const SizedBox(width: 10),
                     Text("Welcome ${state.user!.name}")
@@ -144,66 +153,130 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             IconButton(
-                onPressed: () {
-                  context.read<SignInBloc>().add(const SignOutRequired());
-                },
-                icon: Icon(
-                  CupertinoIcons.square_arrow_right,
-                  color: Theme.of(context).colorScheme.onBackground,
-                ))
+              onPressed: () {
+                context.read<SignInBloc>().add(const SignOutRequired());
+              },
+              icon: Icon(
+                CupertinoIcons.square_arrow_right,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+            )
           ],
         ),
-        body: ListView.builder(
-            itemCount: 8,
-            itemBuilder: (context, int i) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: double.infinity,
-                  // height: 400,
-                  // color: Colors.blue,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 50,
-                              height: 50,
-                              decoration: const BoxDecoration(
-                                  color: Colors.red, shape: BoxShape.circle),
+        body: BlocBuilder<GetCatBloc, GetCatState>(
+          builder: (context, state) {
+            if (state is GetCatSuccess) {
+              return ListView.builder(
+                itemCount: state.cats.length,
+                itemBuilder: (context, index) {
+                  final cat = state.cats[index];
+
+                  // Wrap the card in GestureDetector or InkWell
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigate to CatDetailScreen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider<UpdateCatBloc>(
+                            create: (context) => UpdateCatBloc(
+                              catRepository: FirebaseCatRepository(),
                             ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Rom",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                                SizedBox(height: 5),
-                                Text("2023-04-12")
-                              ],
-                            )
-                          ],
+                            child: CatDetailScreen(cat: cat),
+                          ),
                         ),
-                        const SizedBox(height: 10),
-                        Container(
-                          // color: Colors.amber,
-                          child: const Text(
-                              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac quam feugiat, efficitur ligula et, tincidunt metus. Donec vel dictum quam. In quis orci non metus aliquam fermentum a a lorem. Vivamus vestibulum ante risus, quis mattis nibh vulputate in. Ut tincidunt felis vitae cursus lobortis. Pellentesque convallis mauris vel."),
-                        )
-                      ],
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        elevation: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        image: NetworkImage(cat.image),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        cat.catName,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Age: ${cat.age} years",
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                cat.description,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Location: ${cat.location}",
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                  Text(
+                                    cat.isAdopted ? "Adopted" : "Available",
+                                    style: TextStyle(
+                                      color: cat.isAdopted
+                                          ? Colors.green
+                                          : Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               );
-            }),
+            } else if (state is GetCatFailure) {
+              return const Center(
+                child: Text("An error has occurred"),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'package:aws_cat_care/blocs/get_cat_bloc/get_cat_bloc.dart';
+import 'package:cat_repository/cat_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aws_cat_care/blocs/my_user_bloc/my_user_bloc.dart';
@@ -31,6 +33,10 @@ class MyAppView extends StatelessWidget {
             ..add(
                 GetMyUser(context.read<AuthenticationBloc>().state.user!.uid)),
         ),
+        BlocProvider(
+            create: (context) =>
+                GetCatBloc(catRepository: FirebaseCatRepository())
+                  ..add(GetCats()))
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

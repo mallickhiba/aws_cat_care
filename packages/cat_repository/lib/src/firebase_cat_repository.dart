@@ -2,9 +2,7 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cat_repository/cat_repository.dart';
-import 'package:cat_repository/src/models/cat.dart';
 import 'package:uuid/uuid.dart';
-import 'cat_repo.dart';
 
 class FirebaseCatRepository implements CatRepository {
   final catCollection = FirebaseFirestore.instance.collection('cats');
@@ -33,5 +31,11 @@ class FirebaseCatRepository implements CatRepository {
       print(e.toString());
       rethrow;
     }
+  }
+
+  @override
+  Future<void> updateCat(Cat cat) async {
+    final catDoc = FirebaseFirestore.instance.collection('cats').doc(cat.catId);
+    await catDoc.update(cat.toEntity().toDocument());
   }
 }
