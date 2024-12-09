@@ -38,4 +38,10 @@ class FirebaseCatRepository implements CatRepository {
     final catDoc = FirebaseFirestore.instance.collection('cats').doc(cat.catId);
     await catDoc.update(cat.toEntity().toDocument());
   }
+
+  @override
+  Future<void> deleteCat(String catId) async {
+    final catDoc = FirebaseFirestore.instance.collection('cats').doc(catId);
+    await catDoc.delete();
+  }
 }

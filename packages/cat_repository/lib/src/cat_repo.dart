@@ -6,4 +6,6 @@ abstract class CatRepository {
   Future<List<Cat>> getCat();
 
   updateCat(Cat cat) {}
+
+  deleteCat(String catId) {}
 }

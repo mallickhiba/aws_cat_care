@@ -8,3 +8,9 @@ sealed class GetCatEvent extends Equatable {
 }
 
 class GetCats extends GetCatEvent {}
+
+class DeleteCat extends GetCatEvent {
+  final String catId;
+
+  DeleteCat(this.catId);
+}

@@ -1,3 +1,4 @@
+import 'package:aws_cat_care/blocs/get_cat_bloc/get_cat_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cat_repository/cat_repository.dart';
@@ -57,6 +58,15 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Cat Details"),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                context.read<GetCatBloc>().add(DeleteCat(widget.cat.catId));
+                Navigator.pop(context); // Go back to the previous screen
+              },
+            ),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),

@@ -20,5 +20,13 @@ class GetCatBloc extends Bloc<GetCatEvent, GetCatState> {
         emit(GetCatFailure());
       }
     });
+    on<DeleteCat>((event, emit) async {
+      try {
+        await catRepository.deleteCat(event.catId);
+        add(GetCats()); // Refresh the list after deletion
+      } catch (error) {
+        emit(GetCatFailure());
+      }
+    });
   }
 }
