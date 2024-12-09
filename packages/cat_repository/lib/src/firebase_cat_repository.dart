@@ -13,7 +13,6 @@ class FirebaseCatRepository implements CatRepository {
   Future<Cat> createCat(Cat cat) async {
     try {
       cat.catId = const Uuid().v1();
-      cat.createAt = DateTime.now();
 
       await catCollection.doc(cat.catId).set(cat.toEntity().toDocument());
 

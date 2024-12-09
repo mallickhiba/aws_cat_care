@@ -49,14 +49,18 @@ dependencies:
   # Custom Repository
   user_repository: 
      path: packages/user_repository
+
+  cat_repository: 
+     path: packages/cat_repository
+     
+  incident_repository: 
+     path: packages/incident_repository
+
   meta: ^1.15.0
   image_picker: ^1.1.2
   image_cropper: ^8.0.2
   
-  cat_repository: 
-     path: packages/cat_repository
-  incident_repository: 
-     path: packages/incident_repository
+  
   intl: ^0.20.1
 
 

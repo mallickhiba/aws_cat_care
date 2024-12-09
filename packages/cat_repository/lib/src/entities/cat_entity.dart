@@ -1,24 +1,44 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:user_repository/user_repository.dart';
 
 class CatEntity {
   String catId;
-  String cat;
-  DateTime createAt;
+  String catName;
+  String location;
+  int age;
+  String sex;
+  String color;
+  String description;
+  String image;
+  bool isFixed;
+  bool isAdopted;
   MyUser myUser;
 
   CatEntity({
     required this.catId,
-    required this.cat,
-    required this.createAt,
+    required this.catName,
+    required this.location,
+    required this.age,
+    required this.sex,
+    required this.color,
+    required this.description,
+    required this.image,
+    required this.isFixed,
+    required this.isAdopted,
     required this.myUser,
   });
 
   Map<String, Object?> toDocument() {
     return {
       'catId': catId,
-      'cat': cat,
-      'createAt': createAt,
+      'catName': catName,
+      'location': location,
+      'age': age,
+      'sex': sex,
+      'color': color,
+      'description': description,
+      'image': image,
+      'isFixed': isFixed,
+      'isAdopted': isAdopted,
       'myUser': myUser.toEntity().toDocument(),
     };
   }
@@ -26,20 +46,46 @@ class CatEntity {
   static CatEntity fromDocument(Map<String, dynamic> doc) {
     return CatEntity(
         catId: doc['catId'] as String,
-        cat: doc['cat'] as String,
-        createAt: (doc['createAt'] as Timestamp).toDate(),
+        catName: doc['catName'] as String,
+        location: doc['location'] as String,
+        age: doc['age'] as int,
+        sex: doc['sex'] as String,
+        color: doc['color'] as String,
+        description: doc['description'] as String,
+        image: doc['image'] as String,
+        isFixed: doc['isFixed'] as bool,
+        isAdopted: doc['isAdopted'] as bool,
         myUser: MyUser.fromEntity(MyUserEntity.fromDocument(doc['myUser'])));
   }
 
   @override
-  List<Object?> get props => [catId, cat, createAt, myUser];
+  List<Object?> get props => [
+        catId,
+        catName,
+        location,
+        age,
+        sex,
+        color,
+        description,
+        image,
+        isFixed,
+        isAdopted,
+        myUser
+      ];
 
   @override
   String toString() {
     return '''CatEntity: {
       catId: $catId
-      cat: $cat
-      createAt: $createAt
+      catName: $catName
+       location: $location
+      age: $age
+      sex: $sex
+      color: $color
+      description: $description
+      image: $image
+      isFixed: $isFixed
+      isAdopted: $isAdopted
       myUser: $myUser
     }''';
   }

@@ -1,15 +1,14 @@
 import 'package:aws_cat_care/screens/home/cat_screen.dart';
+import 'package:cat_repository/cat_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:image_cropper/image_cropper.dart';
-// import 'package:image_picker/image_picker.dart';
 import 'package:aws_cat_care/blocs/sign_in_bloc/sign_in_bloc.dart';
-
-import '../../blocs/my_user_bloc/my_user_bloc.dart';
-import '../../blocs/update_user_info_bloc/update_user_info_bloc.dart';
+import 'package:aws_cat_care/blocs/my_user_bloc/my_user_bloc.dart';
+import 'package:aws_cat_care/blocs/update_user_info_bloc/update_user_info_bloc.dart';
+import 'package:aws_cat_care/blocs/create_cat_bloc/create_cat_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocListener<UpdateUserInfoBloc, UpdateUserInfoState>(
       listener: (context, state) {
         if (state is UploadPictureSuccess) {
-          //doesnt work on web
           setState(() {
             context.read<MyUserBloc>().state.user!.picture = state.userImage;
           });
@@ -32,16 +30,33 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute<void>(
-                builder: (BuildContext context) => const CatScreen(),
-              ),
-            );
+        floatingActionButton: BlocBuilder<MyUserBloc, MyUserState>(
+          builder: (context, state) {
+            if (state.status == MyUserStatus.success) {
+              return FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) =>
+                          BlocProvider<CreateCatBloc>(
+                        create: (context) => CreateCatBloc(
+                          catRepository: FirebaseCatRepository(),
+                        ),
+                        child: CatScreen(state.user!),
+                      ),
+                    ),
+                  );
+                },
+                child: const Icon(CupertinoIcons.add),
+              );
+            } else {
+              return const FloatingActionButton(
+                onPressed: null,
+                child: Icon(CupertinoIcons.clear),
+              );
+            }
           },
-          child: const Icon(CupertinoIcons.add),
         ),
         appBar: AppBar(
           centerTitle: false,

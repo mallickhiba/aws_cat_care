@@ -4,32 +4,70 @@ import '../entities/entities.dart';
 
 class Cat {
   String catId;
-  String cat;
-  DateTime createAt;
+  String catName;
+  String location;
+  int age;
+  String sex;
+  String color;
+  String description;
+  String image;
+  bool isFixed;
+  bool isAdopted;
   MyUser myUser;
 
   Cat({
     required this.catId,
-    required this.cat,
-    required this.createAt,
+    required this.catName,
+    required this.location,
+    required this.age,
+    required this.sex,
+    required this.color,
+    required this.description,
+    required this.image,
+    required this.isFixed,
+    required this.isAdopted,
     required this.myUser,
   });
 
   /// Empty user which represents an unauthenticated user.
-  static final empty =
-      Cat(catId: '', cat: '', createAt: DateTime.now(), myUser: MyUser.empty);
+  static final empty = Cat(
+      catId: '',
+      catName: '',
+      location: '',
+      age: 0,
+      sex: '',
+      color: '',
+      description: '',
+      image: '',
+      isFixed: false,
+      isAdopted: false,
+      myUser: MyUser.empty);
 
   /// Modify MyUser parameters
   Cat copyWith({
     String? catId,
-    String? cat,
-    DateTime? createAt,
+    String? catName,
+    String? location,
+    int? age,
+    String? sex,
+    String? color,
+    String? description,
+    String? image,
+    bool? isFixed,
+    bool? isAdopted,
     MyUser? myUser,
   }) {
     return Cat(
       catId: catId ?? this.catId,
-      cat: cat ?? this.cat,
-      createAt: createAt ?? this.createAt,
+      catName: catName ?? this.catName,
+      location: location ?? this.location,
+      age: age ?? this.age,
+      sex: sex ?? this.sex,
+      color: color ?? this.color,
+      description: description ?? this.description,
+      image: image ?? this.image,
+      isFixed: isFixed ?? this.isFixed,
+      isAdopted: isAdopted ?? this.isAdopted,
       myUser: myUser ?? this.myUser,
     );
   }
@@ -43,8 +81,15 @@ class Cat {
   CatEntity toEntity() {
     return CatEntity(
       catId: catId,
-      cat: cat,
-      createAt: createAt,
+      catName: catName,
+      location: location,
+      age: age,
+      sex: sex,
+      color: color,
+      description: description,
+      image: image,
+      isFixed: isFixed,
+      isAdopted: isAdopted,
       myUser: myUser,
     );
   }
@@ -52,8 +97,15 @@ class Cat {
   static Cat fromEntity(CatEntity entity) {
     return Cat(
       catId: entity.catId,
-      cat: entity.cat,
-      createAt: entity.createAt,
+      catName: entity.catName,
+      location: entity.location,
+      age: entity.age,
+      sex: entity.sex,
+      color: entity.color,
+      description: entity.description,
+      image: entity.image,
+      isFixed: entity.isFixed,
+      isAdopted: entity.isAdopted,
       myUser: entity.myUser,
     );
   }
@@ -62,8 +114,15 @@ class Cat {
   String toString() {
     return '''Cat: {
       catId: $catId
-      cat: $cat
-      createAt: $createAt
+      catName: $catName
+      location: $location
+      age: $age
+      sex: $sex
+      color: $color
+      description: $description
+      image: $image
+      isFixed: $isFixed
+      isAdopted: $isAdopted
       myUser: $myUser
     }''';
   }
