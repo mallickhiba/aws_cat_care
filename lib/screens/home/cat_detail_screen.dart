@@ -96,6 +96,56 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                 const SizedBox(height: 10),
                 _buildTextField(_descriptionController, "Description",
                     maxLines: 3),
+                const SizedBox(height: 10),
+
+                // Dropdown for Sex
+                _buildDropdown(
+                  label: "Sex",
+                  value: editableCat.sex,
+                  items: ["Male", "Female", "Unknown"],
+                  onChanged: (value) {
+                    setState(() {
+                      editableCat = editableCat.copyWith(sex: value);
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+
+                // Dropdown for Color
+                _buildDropdown(
+                  label: "Color",
+                  value: editableCat.color,
+                  items: ["Black", "White", "Brown", "Orange", "Mixed"],
+                  onChanged: (value) {
+                    setState(() {
+                      editableCat = editableCat.copyWith(color: value);
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+
+                // Switch for Is Fixed
+                _buildSwitch(
+                  label: "Fixed",
+                  value: editableCat.isFixed,
+                  onChanged: (value) {
+                    setState(() {
+                      editableCat = editableCat.copyWith(isFixed: value);
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+
+                // Switch for Is Adopted
+                _buildSwitch(
+                  label: "Adopted",
+                  value: editableCat.isAdopted,
+                  onChanged: (value) {
+                    setState(() {
+                      editableCat = editableCat.copyWith(isAdopted: value);
+                    });
+                  },
+                ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
@@ -135,6 +185,48 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
           borderRadius: BorderRadius.circular(8),
         ),
       ),
+    );
+  }
+
+  Widget _buildDropdown({
+    required String label,
+    required String value,
+    required List<String> items,
+    required void Function(String?) onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        DropdownButtonFormField<String>(
+          value: value,
+          items: items.map((item) {
+            return DropdownMenuItem<String>(
+              value: item,
+              child: Text(item),
+            );
+          }).toList(),
+          onChanged: onChanged,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSwitch({
+    required String label,
+    required bool value,
+    required void Function(bool) onChanged,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Switch(
+          value: value,
+          onChanged: onChanged,
+        ),
+      ],
     );
   }
 }
