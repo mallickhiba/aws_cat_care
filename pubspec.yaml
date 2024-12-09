@@ -44,7 +44,7 @@ dependencies:
 
   #Bloc
   flutter_bloc: ^8.1.6
-  equatable: ^2.0.5
+  equatable: ^2.0.7
 
   # Custom Repository
   user_repository: 
@@ -53,6 +53,12 @@ dependencies:
   image_picker: ^1.1.2
   image_cropper: ^8.0.2
   
+  cat_repository: 
+     path: packages/cat_repository
+  incident_repository: 
+     path: packages/incident_repository
+  intl: ^0.20.1
+
 
 
 dev_dependencies:

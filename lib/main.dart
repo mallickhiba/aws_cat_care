@@ -2,7 +2,6 @@
 // import 'package:aws_cat_care/components/volunteer_bottom_nav_bar.dart';
 import 'package:aws_cat_care/simple_bloc_observer.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';

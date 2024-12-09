@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aws_cat_care/screens/authentication/sign_in_screen.dart';
 import 'package:aws_cat_care/screens/authentication/sign_up_screen.dart';
 
-import '../../blocs/authentication_bloc/authentication_bloc.dart';
-import '../../blocs/sign_in_bloc/sign_in_bloc.dart';
-import '../../blocs/sign_up_bloc/sign_up_bloc.dart';
+import 'package:aws_cat_care/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:aws_cat_care/blocs/sign_in_bloc/sign_in_bloc.dart';
+import 'package:aws_cat_care/blocs/sign_up_bloc/sign_up_bloc.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -21,6 +21,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   void initState() {
     super.initState();
+    debugDumpApp();
+
     tabController = TabController(
       initialIndex: 0,
       length: 2,
@@ -44,7 +46,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             child: Column(
               children: [
                 const Text(
-                  'Welcome Back !',
+                  'Welcome Back!',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: kToolbarHeight),

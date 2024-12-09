@@ -1,8 +1,11 @@
+import 'package:aws_cat_care/screens/home/cat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+// import 'package:image_cropper/image_cropper.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:aws_cat_care/blocs/sign_in_bloc/sign_in_bloc.dart';
 
 import '../../blocs/my_user_bloc/my_user_bloc.dart';
@@ -21,21 +24,29 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocListener<UpdateUserInfoBloc, UpdateUserInfoState>(
       listener: (context, state) {
         if (state is UploadPictureSuccess) {
+          //doesnt work on web
           setState(() {
             context.read<MyUserBloc>().state.user!.picture = state.userImage;
           });
         }
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: Theme.of(context).colorScheme.background,
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (BuildContext context) => const CatScreen(),
+              ),
+            );
+          },
           child: const Icon(CupertinoIcons.add),
         ),
         appBar: AppBar(
           centerTitle: false,
           elevation: 0,
-          backgroundColor: Theme.of(context).colorScheme.surface,
+          backgroundColor: Theme.of(context).colorScheme.background,
           title: BlocBuilder<MyUserBloc, MyUserState>(
             builder: (context, state) {
               if (state.status == MyUserStatus.success) {
@@ -56,7 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   sourcePath: image.path,
                                   aspectRatio: const CropAspectRatio(
                                       ratioX: 1, ratioY: 1),
-                                  // aspectRatios: [CropAspectRatioPreset.square],
                                   uiSettings: [
                                     AndroidUiSettings(
                                         toolbarTitle: 'Cropper',
@@ -76,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   setState(() {
                                     context.read<UpdateUserInfoBloc>().add(
                                         UploadPicture(
-                                            image.path,
+                                            croppedFile.path,
                                             context
                                                 .read<MyUserBloc>()
                                                 .state
@@ -124,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 icon: Icon(
                   CupertinoIcons.square_arrow_right,
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: Theme.of(context).colorScheme.onBackground,
                 ))
           ],
         ),
@@ -133,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (context, int i) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
+                child: Container(
                   width: double.infinity,
                   // height: 400,
                   // color: Colors.blue,
@@ -168,8 +178,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        const Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac quam feugiat, efficitur ligula et, tincidunt metus. Donec vel dictum quam. In quis orci non metus aliquam fermentum a a lorem. Vivamus vestibulum ante risus, quis mattis nibh vulputate in. Ut tincidunt felis vitae cursus lobortis. Pellentesque convallis mauris vel.")
+                        Container(
+                          // color: Colors.amber,
+                          child: const Text(
+                              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac quam feugiat, efficitur ligula et, tincidunt metus. Donec vel dictum quam. In quis orci non metus aliquam fermentum a a lorem. Vivamus vestibulum ante risus, quis mattis nibh vulputate in. Ut tincidunt felis vitae cursus lobortis. Pellentesque convallis mauris vel."),
+                        )
                       ],
                     ),
                   ),

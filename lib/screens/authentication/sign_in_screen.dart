@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../screens/home/home_screen.dart';
 
-import '../../blocs/sign_in_bloc/sign_in_bloc.dart';
-import '../../components/strings.dart';
-import '../../components/textfield.dart';
+import 'package:aws_cat_care/blocs/sign_in_bloc/sign_in_bloc.dart';
+import 'package:aws_cat_care/components/strings.dart';
+import 'package:aws_cat_care/components/textfield.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -137,7 +137,6 @@ class _SignInScreenState extends State<SignInScreen> {
                           )),
                     )
                   : const CircularProgressIndicator(),
-              const SizedBox(height: 20),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: 50,
@@ -151,15 +150,15 @@ class _SignInScreenState extends State<SignInScreen> {
                       foregroundColor: Colors.black,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(60))),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        'assets/google_logo.png',
-                        height: 24,
-                      ),
-                      const SizedBox(width: 10),
-                      const Text(
+                      // Image.asset(
+                      //   'assets/google_logo.png',
+                      //   height: 24,
+                      // ),
+                      SizedBox(width: 10),
+                      Text(
                         'Sign In with Google',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
