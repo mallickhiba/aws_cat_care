@@ -6,7 +6,7 @@ part 'get_cat_event.dart';
 part 'get_cat_state.dart';
 
 class GetCatBloc extends Bloc<GetCatEvent, GetCatState> {
-  CatRepository _catRepository;
+  final CatRepository _catRepository;
 
   GetCatBloc({required CatRepository catRepository})
       : _catRepository = catRepository,

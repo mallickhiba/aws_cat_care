@@ -28,7 +28,7 @@ class FirebaseCatRepository implements CatRepository {
           .map((e) => Cat.fromEntity(CatEntity.fromDocument(e.data())))
           .toList());
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
       rethrow;
     }
   }
@@ -43,5 +43,19 @@ class FirebaseCatRepository implements CatRepository {
   Future<void> deleteCat(String catId) async {
     final catDoc = FirebaseFirestore.instance.collection('cats').doc(catId);
     await catDoc.delete();
+  }
+
+  Future<void> addIncidentToCat(String catId, String incidentId) async {
+    final catDoc = FirebaseFirestore.instance.collection('cats').doc(catId);
+    await catDoc.update({
+      'incidents': FieldValue.arrayUnion([incidentId]),
+    });
+  }
+
+  Future<List<String>> getCatIncidents(String catId) async {
+    final catDoc =
+        await FirebaseFirestore.instance.collection('cats').doc(catId).get();
+    final incidents = List<String>.from(catDoc['incidents'] ?? []);
+    return incidents;
   }
 }

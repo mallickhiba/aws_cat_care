@@ -15,5 +15,5 @@ class UpdateCatSuccess extends UpdateCatState {}
 
 class UpdateCatFailure extends UpdateCatState {
   final String error;
-  UpdateCatFailure(this.error);
+  const UpdateCatFailure(this.error);
 }

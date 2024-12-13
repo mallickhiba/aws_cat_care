@@ -12,5 +12,5 @@ class GetCats extends GetCatEvent {}
 class DeleteCat extends GetCatEvent {
   final String catId;
 
-  DeleteCat(this.catId);
+  const DeleteCat(this.catId);
 }

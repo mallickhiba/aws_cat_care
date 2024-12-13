@@ -8,10 +8,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:user_repository/user_repository.dart';
 import 'app.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
@@ -28,5 +29,6 @@ Future<void> main() async {
   Bloc.observer = SimpleBlocObserver();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp]); //only up
+  FlutterNativeSplash.remove();
   runApp(MyApp(FirebaseUserRepository()));
 }

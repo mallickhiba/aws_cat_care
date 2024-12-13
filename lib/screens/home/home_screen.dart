@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         floatingActionButton: BlocBuilder<MyUserBloc, MyUserState>(
           builder: (context, state) {
             if (state.status == MyUserStatus.success) {
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           centerTitle: false,
           elevation: 0,
-          backgroundColor: Theme.of(context).colorScheme.background,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           title: BlocBuilder<MyUserBloc, MyUserState>(
             builder: (context, state) {
               if (state.status == MyUserStatus.success) {
@@ -158,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               icon: Icon(
                 CupertinoIcons.square_arrow_right,
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             )
           ],

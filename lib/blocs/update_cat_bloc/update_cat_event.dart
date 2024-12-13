@@ -10,5 +10,5 @@ abstract class UpdateCatEvent extends Equatable {
 class UpdateCat extends UpdateCatEvent {
   final Cat cat;
 
-  UpdateCat(this.cat);
+  const UpdateCat(this.cat);
 }

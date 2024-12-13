@@ -1,5 +1,4 @@
 import 'package:user_repository/user_repository.dart';
-
 import '../entities/entities.dart';
 
 class Cat {
@@ -14,6 +13,7 @@ class Cat {
   bool isFixed;
   bool isAdopted;
   MyUser myUser;
+  List<String> incidents;
 
   Cat({
     required this.catId,
@@ -27,6 +27,7 @@ class Cat {
     required this.isFixed,
     required this.isAdopted,
     required this.myUser,
+    this.incidents = const [],
   });
 
   /// Empty user which represents an unauthenticated user.
@@ -41,7 +42,8 @@ class Cat {
       image: '',
       isFixed: false,
       isAdopted: false,
-      myUser: MyUser.empty);
+      myUser: MyUser.empty,
+      incidents: []);
 
   /// Modify MyUser parameters
   Cat copyWith({
@@ -56,6 +58,7 @@ class Cat {
     bool? isFixed,
     bool? isAdopted,
     MyUser? myUser,
+    List<String>? incidents,
   }) {
     return Cat(
       catId: catId ?? this.catId,
@@ -69,6 +72,7 @@ class Cat {
       isFixed: isFixed ?? this.isFixed,
       isAdopted: isAdopted ?? this.isAdopted,
       myUser: myUser ?? this.myUser,
+      incidents: incidents ?? this.incidents,
     );
   }
 
@@ -91,6 +95,7 @@ class Cat {
       isFixed: isFixed,
       isAdopted: isAdopted,
       myUser: myUser,
+      incidents: incidents,
     );
   }
 
@@ -107,6 +112,7 @@ class Cat {
       isFixed: entity.isFixed,
       isAdopted: entity.isAdopted,
       myUser: entity.myUser,
+      incidents: entity.incidents,
     );
   }
 
@@ -126,4 +132,8 @@ class Cat {
       myUser: $myUser
     }''';
   }
+
+  toDocument() {}
+
+  static fromDocument(Map<String, dynamic> json) {}
 }

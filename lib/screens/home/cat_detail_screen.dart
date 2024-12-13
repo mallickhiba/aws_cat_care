@@ -1,13 +1,18 @@
+import 'package:aws_cat_care/blocs/create_incident_bloc/create_incident_bloc.dart';
 import 'package:aws_cat_care/blocs/get_cat_bloc/get_cat_bloc.dart';
+import 'package:aws_cat_care/blocs/get_incident_bloc/get_incident_bloc.dart';
+import 'package:aws_cat_care/screens/home/add_incident.dart';
+import 'package:aws_cat_care/screens/home/incidents_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cat_repository/cat_repository.dart';
 import 'package:aws_cat_care/blocs/update_cat_bloc/update_cat_bloc.dart';
+import 'package:incident_repository/incident_repository.dart';
 
 class CatDetailScreen extends StatefulWidget {
   final Cat cat;
 
-  const CatDetailScreen({Key? key, required this.cat}) : super(key: key);
+  const CatDetailScreen({super.key, required this.cat});
 
   @override
   State<CatDetailScreen> createState() => _CatDetailScreenState();
@@ -147,6 +152,39 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (context) => GetIncidentBloc(
+                              incidentRepository: FirebaseIncidentRepository())
+                            ..add(LoadIncident(catId: editableCat.catId)),
+                          child: IncidentPage(catId: editableCat.catId),
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text("View Incidents"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (context) => CreateIncidentBloc(
+                            incidentRepository: FirebaseIncidentRepository(),
+                          ),
+                          child: AddIncidentPage(catId: editableCat.catId),
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text("Create Incident"),
+                ),
+
                 ElevatedButton(
                   onPressed: () {
                     // Update the editableCat object

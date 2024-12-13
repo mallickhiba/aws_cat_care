@@ -66,4 +66,6 @@ class MyUser extends Equatable {
 
   @override
   List<Object?> get props => [id, email, name, role, picture];
+
+  toDocument() {}
 }

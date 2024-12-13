@@ -6,7 +6,7 @@ part 'create_cat_event.dart';
 part 'create_cat_state.dart';
 
 class CreateCatBloc extends Bloc<CreateCatEvent, CreateCatState> {
-  CatRepository _catRepository;
+  final CatRepository _catRepository;
 
   CreateCatBloc({required CatRepository catRepository})
       : _catRepository = catRepository,
