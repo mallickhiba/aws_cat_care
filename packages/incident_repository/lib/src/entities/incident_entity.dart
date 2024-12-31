@@ -1,10 +1,9 @@
-import 'package:cat_repository/cat_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:user_repository/user_repository.dart';
 
 class IncidentEntity {
   final String id;
-  final Cat cat;
+  final String catId;
   final DateTime reportDate;
   final MyUserEntity reportedBy;
   final bool vetVisit;
@@ -14,7 +13,7 @@ class IncidentEntity {
 
   IncidentEntity({
     required this.id,
-    required this.cat,
+    required this.catId,
     required this.reportDate,
     required this.reportedBy,
     required this.vetVisit,
@@ -26,7 +25,7 @@ class IncidentEntity {
   Map<String, dynamic> toDocument() {
     return {
       'id': id,
-      'cat': cat.toDocument(),
+      'catId': catId,
       'reportDate': reportDate.toIso8601String(),
       'reportedBy': reportedBy.toDocument(),
       'vetVisit': vetVisit,
@@ -36,10 +35,10 @@ class IncidentEntity {
     };
   }
 
-  static IncidentEntity fromJson(Map<String, dynamic> json) {
+  static IncidentEntity fromDocument(Map<String, dynamic> json) {
     return IncidentEntity(
       id: json['id'] as String,
-      cat: Cat.fromDocument(json['cat'] as Map<String, dynamic>),
+      catId: json['catId'] as String,
       reportDate: DateTime.parse(json['reportDate'] as String),
       reportedBy:
           MyUserEntity.fromDocument(json['reportedBy'] as Map<String, dynamic>),
@@ -53,8 +52,31 @@ class IncidentEntity {
 
   static IncidentEntity fromSnapshot(DocumentSnapshot snap) {
     final data = snap.data() as Map<String, dynamic>;
-    return fromJson(data);
+    return fromDocument(data);
   }
 
-  copyWith({required String id}) {}
+  List<Object?> get props => [
+        id,
+        catId,
+        reportDate,
+        reportedBy,
+        vetVisit,
+        description,
+        followUp,
+        volunteer
+      ];
+
+  @override
+  String toString() {
+    return '''IncidentEntity: {
+      id: $id,
+      catId: $catId,
+      reportDate: $reportDate,
+      reportedBy: $reportedBy,
+      vetVisit: $vetVisit,
+      description: $description,
+      followUp: $followUp,
+      volunteer: $volunteer
+    }''';
+  }
 }

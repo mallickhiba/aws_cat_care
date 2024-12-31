@@ -9,16 +9,12 @@ abstract class CreateIncidentState extends Equatable {
 
 final class CreateIncidentInitial extends CreateIncidentState {}
 
-class CreateIncidentLoading extends CreateIncidentState {}
+final class CreateIncidentFailure extends CreateIncidentState {}
 
-class CreateIncidentSuccess extends CreateIncidentState {}
+final class CreateIncidentLoading extends CreateIncidentState {}
 
-class CreateIncidentFailure extends CreateIncidentState {
-  final Object error;
+final class CreateIncidentSuccess extends CreateIncidentState {
+  final Incident incident;
 
-  const CreateIncidentFailure(this.error,
-      {required String message, required String errorDetails});
-
-  @override
-  List<Object> get props => [error];
+  const CreateIncidentSuccess(this.incident);
 }

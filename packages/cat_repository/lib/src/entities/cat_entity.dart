@@ -12,7 +12,7 @@ class CatEntity {
   bool isFixed;
   bool isAdopted;
   MyUser myUser;
-  List<String> incidents;
+  List<String> incidentIds;
 
   CatEntity({
     required this.catId,
@@ -26,7 +26,7 @@ class CatEntity {
     required this.isFixed,
     required this.isAdopted,
     required this.myUser,
-    this.incidents = const [],
+    this.incidentIds = const [],
   });
 
   Map<String, Object?> toDocument() {
@@ -42,7 +42,7 @@ class CatEntity {
       'isFixed': isFixed,
       'isAdopted': isAdopted,
       'myUser': myUser.toEntity().toDocument(),
-      'incidents': incidents,
+      'incidentIds': incidentIds,
     };
   }
 
@@ -59,8 +59,8 @@ class CatEntity {
         isFixed: doc['isFixed'] as bool,
         isAdopted: doc['isAdopted'] as bool,
         myUser: MyUser.fromEntity(MyUserEntity.fromDocument(doc['myUser'])),
-        incidents: doc['incidents'] != null
-            ? List<String>.from(doc['incidents'] as List)
+        incidentIds: doc['incidentIds'] != null
+            ? List<String>.from(doc['incidentIds'] as List)
             : []);
   }
 
@@ -76,7 +76,7 @@ class CatEntity {
         isFixed,
         isAdopted,
         myUser,
-        incidents
+        incidentIds
       ];
 
   @override
@@ -93,7 +93,7 @@ class CatEntity {
       isFixed: $isFixed
       isAdopted: $isAdopted
       myUser: $myUser
-      incidents: $incidents
+      incidentIds: $incidentIds
     }''';
   }
 }

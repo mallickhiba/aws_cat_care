@@ -9,9 +9,10 @@ abstract class CreateIncidentEvent extends Equatable {
 
 class CreateIncident extends CreateIncidentEvent {
   final Incident incident;
+  final String catId;
 
-  const CreateIncident(this.incident);
+  const CreateIncident(this.incident, this.catId);
 
   @override
-  List<Object> get props => [incident];
+  List<Object> get props => [incident, catId];
 }

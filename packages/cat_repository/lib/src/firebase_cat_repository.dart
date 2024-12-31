@@ -28,7 +28,7 @@ class FirebaseCatRepository implements CatRepository {
           .map((e) => Cat.fromEntity(CatEntity.fromDocument(e.data())))
           .toList());
     } catch (e) {
-      // print(e.toString());
+      log(e.toString());
       rethrow;
     }
   }

@@ -1,4 +1,3 @@
-import 'package:cat_repository/cat_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:incident_repository/incident_repository.dart';
@@ -36,7 +35,7 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
           Navigator.pop(context); // Go back after successful creation
         } else if (state is CreateIncidentFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Failed to add incident: ${state.error}")),
+            const SnackBar(content: Text("Failed to add incident")),
           );
         }
       },
@@ -91,8 +90,8 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
                       onPressed: () {
                         if (_descriptionController.text.isNotEmpty) {
                           final incident = Incident(
-                            id: '', // Let the repository handle ID generation
-                            cat: Cat(id: widget.catId),
+                            id: '',
+                            catId: widget.catId,
                             reportDate: DateTime.now(),
                             reportedBy: user,
                             vetVisit: _vetVisit,
@@ -103,7 +102,7 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
 
                           context
                               .read<CreateIncidentBloc>()
-                              .add(CreateIncident(incident));
+                              .add(CreateIncident(incident, widget.catId));
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

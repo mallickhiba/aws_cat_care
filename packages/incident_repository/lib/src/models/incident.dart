@@ -1,11 +1,10 @@
 import 'package:user_repository/user_repository.dart';
-import 'package:cat_repository/cat_repository.dart';
 
 import '../entities/entities.dart';
 
 class Incident {
   String id; // Unique ID for the incident
-  Cat cat;
+  String catId;
   DateTime reportDate; // Timestamp for when the incident was reported
   MyUser reportedBy; // The user who reported the incident
   bool vetVisit; // Indicates if a vet visit was required
@@ -15,7 +14,7 @@ class Incident {
 
   Incident({
     required this.id,
-    required this.cat,
+    required this.catId,
     required this.reportDate,
     required this.reportedBy,
     required this.vetVisit,
@@ -27,7 +26,7 @@ class Incident {
   /// Empty incident for initialization
   static final empty = Incident(
     id: '',
-    cat: Cat.empty,
+    catId: '',
     reportDate: DateTime.now(),
     reportedBy: MyUser.empty,
     vetVisit: false,
@@ -37,7 +36,7 @@ class Incident {
   );
   Incident copyWith({
     String? id,
-    Cat? cat,
+    String? catId,
     DateTime? reportDate,
     MyUser? reportedBy,
     bool? vetVisit,
@@ -47,7 +46,7 @@ class Incident {
   }) {
     return Incident(
       id: id ?? this.id,
-      cat: cat ?? this.cat,
+      catId: catId ?? this.catId,
       reportDate: reportDate ?? this.reportDate,
       reportedBy: reportedBy ?? this.reportedBy,
       vetVisit: vetVisit ?? this.vetVisit,
@@ -64,7 +63,7 @@ class Incident {
   IncidentEntity toEntity() {
     return IncidentEntity(
       id: id,
-      cat: cat,
+      catId: catId,
       reportDate: reportDate,
       reportedBy: reportedBy.toEntity(),
       vetVisit: vetVisit,
@@ -77,7 +76,7 @@ class Incident {
   static Incident fromEntity(IncidentEntity entity) {
     return Incident(
       id: entity.id,
-      cat: Cat.fromEntity(entity.cat as CatEntity),
+      catId: entity.catId,
       reportDate: entity.reportDate,
       reportedBy: MyUser.fromEntity(entity.reportedBy),
       vetVisit: entity.vetVisit,
@@ -91,7 +90,7 @@ class Incident {
   String toString() {
     return '''Incident: {
       id: $id,
-      cat: $cat,
+      catId: $catId,
       reportDate: $reportDate,
       reportedBy: $reportedBy,
       vetVisit: $vetVisit,
@@ -104,7 +103,7 @@ class Incident {
   Map<String, dynamic> toDocument() {
     return {
       'id': id,
-      'cat': cat.toDocument(),
+      'catId': catId,
       'reportDate': reportDate.toIso8601String(),
       'reportedBy': reportedBy.toDocument(),
       'vetVisit': vetVisit,

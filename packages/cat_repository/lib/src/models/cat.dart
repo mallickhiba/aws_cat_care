@@ -13,7 +13,7 @@ class Cat {
   bool isFixed;
   bool isAdopted;
   MyUser myUser;
-  List<String> incidents;
+  List<String> incidentIds;
 
   Cat({
     required this.catId,
@@ -27,7 +27,7 @@ class Cat {
     required this.isFixed,
     required this.isAdopted,
     required this.myUser,
-    this.incidents = const [],
+    this.incidentIds = const [],
   });
 
   /// Empty user which represents an unauthenticated user.
@@ -43,7 +43,7 @@ class Cat {
       isFixed: false,
       isAdopted: false,
       myUser: MyUser.empty,
-      incidents: []);
+      incidentIds: []);
 
   /// Modify MyUser parameters
   Cat copyWith({
@@ -58,7 +58,7 @@ class Cat {
     bool? isFixed,
     bool? isAdopted,
     MyUser? myUser,
-    List<String>? incidents,
+    List<String>? incidentIds,
   }) {
     return Cat(
       catId: catId ?? this.catId,
@@ -72,7 +72,7 @@ class Cat {
       isFixed: isFixed ?? this.isFixed,
       isAdopted: isAdopted ?? this.isAdopted,
       myUser: myUser ?? this.myUser,
-      incidents: incidents ?? this.incidents,
+      incidentIds: incidentIds ?? this.incidentIds,
     );
   }
 
@@ -95,7 +95,7 @@ class Cat {
       isFixed: isFixed,
       isAdopted: isAdopted,
       myUser: myUser,
-      incidents: incidents,
+      incidentIds: incidentIds,
     );
   }
 
@@ -112,7 +112,7 @@ class Cat {
       isFixed: entity.isFixed,
       isAdopted: entity.isAdopted,
       myUser: entity.myUser,
-      incidents: entity.incidents,
+      incidentIds: entity.incidentIds,
     );
   }
 
@@ -130,6 +130,7 @@ class Cat {
       isFixed: $isFixed
       isAdopted: $isAdopted
       myUser: $myUser
+      incidentIds: $incidentIds
     }''';
   }
 

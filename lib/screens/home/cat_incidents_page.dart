@@ -1,8 +1,8 @@
-import 'package:aws_cat_care/blocs/get_cat_bloc/get_cat_bloc.dart';
+import 'package:aws_cat_care/blocs/get_incidents_for_cat_bloc/get_incidents_for_cat_bloc.dart';
 import 'package:aws_cat_care/blocs/my_user_bloc/my_user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:aws_cat_care/blocs/get_incident_bloc/get_incident_bloc.dart';
+import 'package:aws_cat_care/blocs/get_all_incidents_bloc/get_all_incidents_bloc.dart';
 import 'package:aws_cat_care/blocs/create_incident_bloc/create_incident_bloc.dart';
 import 'package:incident_repository/incident_repository.dart';
 
@@ -20,6 +20,15 @@ class _IncidentPageState extends State<IncidentPage> {
   bool vetVisit = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Load incidents for the given catId when the page is displayed
+    context
+        .read<GetIncidentsForCatBloc>()
+        .add(GetIncidentsForCat(catId: widget.catId));
+  }
+
+  @override
   void dispose() {
     _descriptionController.dispose();
     super.dispose();
@@ -33,9 +42,13 @@ class _IncidentPageState extends State<IncidentPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Incident added successfully!")),
           );
+          // Reload incidents after adding a new incident
+          context
+              .read<GetIncidentsForCatBloc>()
+              .add(GetIncidentsForCat(catId: widget.catId));
         } else if (state is CreateIncidentFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Failed to add incident: ${state.error}")),
+            const SnackBar(content: Text("Failed to add incident")),
           );
         }
       },
@@ -46,9 +59,10 @@ class _IncidentPageState extends State<IncidentPage> {
         body: Column(
           children: [
             Expanded(
-              child: BlocBuilder<GetIncidentBloc, GetIncidentState>(
+              child:
+                  BlocBuilder<GetIncidentsForCatBloc, GetIncidentsForCatState>(
                 builder: (context, state) {
-                  if (state is GetIncidentSuccess) {
+                  if (state is GetIncidentsForCatSuccess) {
                     final incidents = state.incidents;
                     return ListView.builder(
                       itemCount: incidents.length,
@@ -59,10 +73,21 @@ class _IncidentPageState extends State<IncidentPage> {
                           subtitle: Text(incident.vetVisit
                               ? "Vet Visit: Yes"
                               : "Vet Visit: No"),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              context
+                                  .read<GetIncidentsForCatBloc>()
+                                  .add(DeleteIncidentForCat(
+                                    incident.id,
+                                    widget.catId,
+                                  ));
+                            },
+                          ),
                         );
                       },
                     );
-                  } else if (state is GetIncidentLoading) {
+                  } else if (state is GetIncidentsForCatLoading) {
                     return const Center(child: CircularProgressIndicator());
                   } else {
                     return const Center(
@@ -100,21 +125,18 @@ class _IncidentPageState extends State<IncidentPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_descriptionController.text.isNotEmpty) {
-                        final incident = IncidentEntity(
-                          id: "",
-                          cat: context.read<GetCatBloc>().state.cat!.toEntity(),
+                        final incident = Incident(
+                          id: '',
+                          catId: widget.catId,
                           reportDate: DateTime.now(),
-                          reportedBy:
-                              context.read<MyUserBloc>().state.user!.toEntity(),
+                          reportedBy: context.read<MyUserBloc>().state.user!,
                           vetVisit: vetVisit,
                           description: _descriptionController.text,
-                          followUp: null,
-                          volunteer:
-                              context.read<MyUserBloc>().state.user!.toEntity(),
+                          followUp: false,
+                          volunteer: context.read<MyUserBloc>().state.user!,
                         );
-
                         context.read<CreateIncidentBloc>().add(
-                              CreateIncident(incident as Incident),
+                              CreateIncident(incident, widget.catId),
                             );
                       }
                     },

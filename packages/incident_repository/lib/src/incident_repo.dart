@@ -1,16 +1,13 @@
 import 'package:incident_repository/src/models/incident.dart';
 
 abstract class IncidentRepository {
-  createIncident(Incident incident) {}
-  Future<List<Incident>> getIncident();
+  createIncident(Incident incident, String catId) {}
 
   updateIncident(Incident incident) {}
 
   deleteIncident(String incidentId) {}
 
-  Future<List<Incident>> fetchIncidentsForCat(String catId) {
-    throw UnimplementedError();
-  }
+  Future<List<Incident>> getAllIncidents();
 
-  associateIncidentWithCat(String catId, String incidentId) {}
+  Future<List<Incident>> getIncidentsForCat(String catId);
 }

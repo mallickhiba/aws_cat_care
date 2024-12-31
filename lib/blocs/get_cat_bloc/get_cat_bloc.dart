@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cat_repository/cat_repository.dart';
 import 'package:equatable/equatable.dart';
-
 part 'get_cat_event.dart';
 part 'get_cat_state.dart';
 

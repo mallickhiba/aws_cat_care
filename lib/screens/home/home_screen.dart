@@ -1,6 +1,7 @@
 import 'package:aws_cat_care/blocs/get_cat_bloc/get_cat_bloc.dart';
 import 'package:aws_cat_care/blocs/update_cat_bloc/update_cat_bloc.dart';
 import 'package:aws_cat_care/screens/home/cat_detail_screen.dart';
+
 import 'package:aws_cat_care/screens/home/cat_screen.dart';
 import 'package:cat_repository/cat_repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -182,7 +183,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             create: (context) => UpdateCatBloc(
                               catRepository: FirebaseCatRepository(),
                             ),
-                            child: CatDetailScreen(cat: cat),
+                            child: CatDetailScreen(
+                                cat: cat), //OR EditCatDetailScreen(cat:cat)
                           ),
                         ),
                       );

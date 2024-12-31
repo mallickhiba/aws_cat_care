@@ -13,27 +13,15 @@ class CreateIncidentBloc
       : super(CreateIncidentInitial()) {
     on<CreateIncident>((event, emit) async {
       emit(CreateIncidentLoading());
-      // try {
-      //   await incidentRepository.createIncident(event.incident);
-      //   emit(CreateIncidentSuccess());
-      // } catch (e) {
-      //   emit(CreateIncidentFailure(e.toString()));
-      // }
       try {
-        final incidentRef =
-            await incidentRepository.createIncident(event.incident);
-
-        // Associate the new incident ID with the cat
-        await incidentRepository.associateIncidentWithCat(
-          event.incident
-              .cat, // Ensure the catId is included in the incident model
-          incidentRef.id, // Use Firestore's generated ID
+        // Pass catId to the repository
+        Incident incident = await incidentRepository.createIncident(
+          event.incident,
+          event.catId,
         );
-
-        emit(CreateIncidentSuccess());
+        emit(CreateIncidentSuccess(incident));
       } catch (e) {
-        emit(CreateIncidentFailure(
-            message: 'Failed to create incident', errorDetails: e.toString()));
+        emit(CreateIncidentFailure());
       }
     });
   }

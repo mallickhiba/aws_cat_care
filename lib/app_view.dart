@@ -1,4 +1,7 @@
+import 'package:aws_cat_care/blocs/create_incident_bloc/create_incident_bloc.dart';
 import 'package:aws_cat_care/blocs/get_cat_bloc/get_cat_bloc.dart';
+import 'package:aws_cat_care/blocs/get_all_incidents_bloc/get_all_incidents_bloc.dart';
+import 'package:aws_cat_care/blocs/get_incidents_for_cat_bloc/get_incidents_for_cat_bloc.dart';
 import 'package:cat_repository/cat_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +9,7 @@ import 'package:aws_cat_care/blocs/my_user_bloc/my_user_bloc.dart';
 import 'package:aws_cat_care/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:aws_cat_care/blocs/update_user_info_bloc/update_user_info_bloc.dart';
 import 'package:aws_cat_care/screens/authentication/welcome_screen.dart';
+import 'package:incident_repository/incident_repository.dart';
 import 'blocs/authentication_bloc/authentication_bloc.dart';
 import 'screens/home/home_screen.dart';
 
@@ -36,7 +40,22 @@ class MyAppView extends StatelessWidget {
         BlocProvider(
             create: (context) =>
                 GetCatBloc(catRepository: FirebaseCatRepository())
-                  ..add(GetCats()))
+                  ..add(GetCats())),
+        BlocProvider<GetAllIncidentsBloc>(
+          create: (context) => GetAllIncidentsBloc(
+            incidentRepository: FirebaseIncidentRepository(),
+          ),
+        ),
+        BlocProvider<GetIncidentsForCatBloc>(
+          create: (context) => GetIncidentsForCatBloc(
+            incidentRepository: FirebaseIncidentRepository(),
+          ),
+        ),
+        BlocProvider<CreateIncidentBloc>(
+          create: (context) => CreateIncidentBloc(
+            incidentRepository: FirebaseIncidentRepository(),
+          ),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
