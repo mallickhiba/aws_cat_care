@@ -56,7 +56,7 @@ class FirebaseIncidentRepository implements IncidentRepository {
           await FirebaseFirestore.instance.collection('cats').doc(catId).get();
 
       if (!catDoc.exists) {
-        print("cat with id not found");
+        log("cat with id not found");
         return [];
       }
 
@@ -65,7 +65,7 @@ class FirebaseIncidentRepository implements IncidentRepository {
       final List<String> incidentIds =
           incidentIdsDynamic.map((id) => id.toString()).toList();
       if (incidentIds.isEmpty) {
-        print("No incidents found for cat with ID $catId.");
+        log("No incidents found for cat with ID $catId.");
         return [];
       }
 

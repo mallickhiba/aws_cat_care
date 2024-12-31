@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:incident_repository/incident_repository.dart';
@@ -17,8 +19,7 @@ class GetIncidentsForCatBloc
       try {
         final incidents =
             await _incidentRepository.getIncidentsForCat(event.catId);
-        print("Fetched incidents: ${incidents.length}");
-        print(incidents[0]);
+        log("Fetched incidents: ${incidents.length}");
         emit(GetIncidentsForCatSuccess(incidents));
       } catch (e) {
         emit(GetIncidentsForCatFailure(e.toString()));

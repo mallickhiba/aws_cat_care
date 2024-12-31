@@ -33,19 +33,18 @@ class _IncidentPageState extends State<IncidentPage> {
       appBar: AppBar(
         title: const Text("Incidents"),
         actions: [
-          if (userRole == 'admin') // Allow adding incidents only for admins
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                // Navigate to the AddIncidentPage
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddIncidentPage(catId: widget.catId),
-                  ),
-                );
-              },
-            ),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              // Navigate to the AddIncidentPage
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddIncidentPage(catId: widget.catId),
+                ),
+              );
+            },
+          ),
         ],
       ),
       body: BlocBuilder<GetIncidentsForCatBloc, GetIncidentsForCatState>(
