@@ -2,7 +2,7 @@ import 'package:aws_cat_care/screens/home/add_incident_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aws_cat_care/blocs/get_incidents_for_cat_bloc/get_incidents_for_cat_bloc.dart';
-import 'package:aws_cat_care/screens/home/add_incident_page.dart';
+import 'package:aws_cat_care/blocs/my_user_bloc/my_user_bloc.dart';
 import 'package:incident_repository/incident_repository.dart';
 
 class IncidentPage extends StatefulWidget {
@@ -26,22 +26,26 @@ class _IncidentPageState extends State<IncidentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userRole =
+        context.read<MyUserBloc>().state.user?.role ?? ""; // Get the user role
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Incidents"),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              // Navigate to the AddIncidentPage
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddIncidentPage(catId: widget.catId),
-                ),
-              );
-            },
-          ),
+          if (userRole == 'admin') // Allow adding incidents only for admins
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                // Navigate to the AddIncidentPage
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddIncidentPage(catId: widget.catId),
+                  ),
+                );
+              },
+            ),
         ],
       ),
       body: BlocBuilder<GetIncidentsForCatBloc, GetIncidentsForCatState>(
@@ -62,7 +66,7 @@ class _IncidentPageState extends State<IncidentPage> {
                     showModalBottomSheet(
                       context: context,
                       builder: (context) {
-                        return _buildIncidentDetails(incident);
+                        return _buildIncidentDetails(incident, userRole);
                       },
                     );
                   },
@@ -79,7 +83,7 @@ class _IncidentPageState extends State<IncidentPage> {
     );
   }
 
-  Widget _buildIncidentDetails(Incident incident) {
+  Widget _buildIncidentDetails(Incident incident, String userRole) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -97,6 +101,40 @@ class _IncidentPageState extends State<IncidentPage> {
           Text("Reported By: ${incident.reportedBy.name}"),
           Text("Volunteer: ${incident.volunteer.name}"),
           Text("Report Date: ${incident.reportDate.toString()}"),
+          if (userRole == 'admin') ...[
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to AddIncidentPage for editing the incident
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddIncidentPage(
+                          catId: incident.catId,
+                        ), // Pre-fill fields for editing
+                      ),
+                    );
+                  },
+                  child: const Text("Edit"),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
+                  onPressed: () {
+                    context
+                        .read<GetIncidentsForCatBloc>()
+                        .add(DeleteIncidentForCat(incident.id, widget.catId));
+                    Navigator.pop(context); // Close the details modal
+                  },
+                  child: const Text("Delete"),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );
