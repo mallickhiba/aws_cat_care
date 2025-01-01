@@ -8,6 +8,7 @@ class FeedingSchedule {
   String slot;
   MyUser volunteer;
   MyUser backup;
+  bool completed;
 
   FeedingSchedule({
     required this.feedingScheduleId,
@@ -16,6 +17,7 @@ class FeedingSchedule {
     required this.slot,
     required this.volunteer,
     required this.backup,
+    required this.completed,
   });
 
   /// Empty user which represents an unauthenticated user.
@@ -26,6 +28,7 @@ class FeedingSchedule {
     slot: '',
     volunteer: MyUser.empty,
     backup: MyUser.empty,
+    completed: false,
   );
 
   /// Modify MyUser parameters
@@ -36,6 +39,7 @@ class FeedingSchedule {
     String? slot,
     MyUser? volunteer,
     MyUser? backup,
+    bool? completed,
   }) {
     return FeedingSchedule(
       feedingScheduleId: feedingScheduleId ?? this.feedingScheduleId,
@@ -44,6 +48,7 @@ class FeedingSchedule {
       slot: slot ?? this.slot,
       volunteer: volunteer ?? this.volunteer,
       backup: backup ?? this.backup,
+      completed: completed ?? this.completed,
     );
   }
 
@@ -61,6 +66,7 @@ class FeedingSchedule {
       slot: slot,
       volunteer: volunteer,
       backup: backup,
+      completed: completed,
     );
   }
 
@@ -72,6 +78,7 @@ class FeedingSchedule {
       slot: entity.slot,
       volunteer: entity.volunteer,
       backup: entity.backup,
+      completed: entity.completed,
     );
   }
 
@@ -83,6 +90,7 @@ class FeedingSchedule {
       slot: $slot,
       volunteer: $volunteer,
       backup: $backup,
+      completed: $completed,
     }''';
   }
 

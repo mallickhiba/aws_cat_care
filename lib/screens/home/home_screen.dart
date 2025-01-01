@@ -1,10 +1,10 @@
 import 'package:aws_cat_care/blocs/get_cat_bloc/get_cat_bloc.dart';
 import 'package:aws_cat_care/blocs/update_cat_bloc/update_cat_bloc.dart';
-import 'package:aws_cat_care/screens/home/available_cats_page.dart';
-import 'package:aws_cat_care/screens/home/cat_detail_screen.dart';
+import 'package:aws_cat_care/screens/home/adoption/available_cats_page.dart';
+import 'package:aws_cat_care/screens/home/cat/cat_detail_screen.dart';
 
-import 'package:aws_cat_care/screens/home/cat_screen.dart';
-import 'package:aws_cat_care/screens/home/feeding_schedule_page.dart';
+import 'package:aws_cat_care/screens/home/cat/cat_screen.dart';
+import 'package:aws_cat_care/screens/home/feeding/feeding_schedule_page.dart';
 import 'package:cat_repository/cat_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

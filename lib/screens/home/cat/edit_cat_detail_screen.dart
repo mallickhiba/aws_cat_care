@@ -1,8 +1,8 @@
 import 'package:aws_cat_care/blocs/create_incident_bloc/create_incident_bloc.dart';
 import 'package:aws_cat_care/blocs/get_cat_bloc/get_cat_bloc.dart';
 import 'package:aws_cat_care/blocs/get_incidents_for_cat_bloc/get_incidents_for_cat_bloc.dart';
-import 'package:aws_cat_care/screens/home/add_incident_page.dart';
-import 'package:aws_cat_care/screens/home/cat_incidents_page.dart';
+import 'package:aws_cat_care/screens/home/incidents/add_incident_page.dart';
+import 'package:aws_cat_care/screens/home/incidents/cat_incidents_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cat_repository/cat_repository.dart';

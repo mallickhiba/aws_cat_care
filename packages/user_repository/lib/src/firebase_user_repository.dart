@@ -95,6 +95,20 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
+  Future<List<MyUser>> getAllUsers() async {
+    try {
+      final querySnapshot = await usersCollection.get();
+      return querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        return MyUser.fromEntity(MyUserEntity.fromDocument(data));
+      }).toList();
+    } catch (e) {
+      log("Error fetching all users: $e");
+      rethrow;
+    }
+  }
+
+  @override
   Future<String> uploadPicture(String file, String userId) async {
     try {
       File imageFile = File(file); //path of the image

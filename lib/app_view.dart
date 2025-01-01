@@ -1,4 +1,5 @@
 import 'package:aws_cat_care/blocs/create_incident_bloc/create_incident_bloc.dart';
+import 'package:aws_cat_care/blocs/get_all_users_bloc/get_all_users_bloc.dart';
 import 'package:aws_cat_care/blocs/get_cat_bloc/get_cat_bloc.dart';
 import 'package:aws_cat_care/blocs/get_all_incidents_bloc/get_all_incidents_bloc.dart';
 import 'package:aws_cat_care/blocs/get_incidents_for_cat_bloc/get_incidents_for_cat_bloc.dart';
@@ -55,6 +56,12 @@ class MyAppView extends StatelessWidget {
           create: (context) => CreateIncidentBloc(
             incidentRepository: FirebaseIncidentRepository(),
           ),
+        ),
+        BlocProvider<GetAllUsersBloc>(
+          // Add this bloc
+          create: (context) => GetAllUsersBloc(
+            userRepository: context.read<AuthenticationBloc>().userRepository,
+          )..add(FetchAllUsers()), // Trigger fetching users when app starts
         ),
       ],
       child: MaterialApp(

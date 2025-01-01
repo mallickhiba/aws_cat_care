@@ -16,5 +16,7 @@ abstract class UserRepository {
 
   Future<MyUser> getMyUser(String myUserId);
 
+  Future<List<MyUser>> getAllUsers();
+
   Future<String> uploadPicture(String file, String userId);
 }

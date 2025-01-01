@@ -7,6 +7,7 @@ class FeedingScheduleEntity {
   String slot;
   MyUser volunteer;
   MyUser backup;
+  bool completed;
 
   FeedingScheduleEntity({
     required this.feedingScheduleId,
@@ -15,6 +16,7 @@ class FeedingScheduleEntity {
     required this.slot,
     required this.volunteer,
     required this.backup,
+    required this.completed,
   });
 
   Map<String, Object?> toDocument() {
@@ -25,18 +27,20 @@ class FeedingScheduleEntity {
       'slot': slot,
       'volunteer': volunteer.toEntity().toDocument(),
       'backup': backup.toEntity().toDocument(),
+      'completed': completed,
     };
   }
 
   static FeedingScheduleEntity fromDocument(Map<String, dynamic> doc) {
     return FeedingScheduleEntity(
-        feedingScheduleId: doc['feedingScheduleId'] as String,
-        datetime: doc['datetime'] as DateTime,
-        location: doc['location'] as String,
-        slot: doc['slot'] as String,
-        volunteer:
-            MyUser.fromEntity(MyUserEntity.fromDocument(doc['volunteer'])),
-        backup: MyUser.fromEntity(MyUserEntity.fromDocument(doc['backup'])));
+      feedingScheduleId: doc['feedingScheduleId'] as String,
+      datetime: doc['datetime'] as DateTime,
+      location: doc['location'] as String,
+      slot: doc['slot'] as String,
+      volunteer: MyUser.fromEntity(MyUserEntity.fromDocument(doc['volunteer'])),
+      backup: MyUser.fromEntity(MyUserEntity.fromDocument(doc['backup'])),
+      completed: doc['completed'] as bool,
+    );
   }
 
   List<Object?> get props => [
@@ -46,6 +50,7 @@ class FeedingScheduleEntity {
         slot,
         volunteer,
         backup,
+        completed,
       ];
 
   @override
@@ -57,6 +62,7 @@ class FeedingScheduleEntity {
         slot: $slot,
         volunteer: $volunteer,
         backup: $backup,
+        completed: $completed,
     }''';
   }
 }
