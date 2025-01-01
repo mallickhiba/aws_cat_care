@@ -28,15 +28,15 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
 
     for (var doc in querySnapshot.docs) {
       final data = doc.data();
-      final date = DateTime.parse(data['date']);
+      final date = DateTime.parse(data['datetime']);
       if (!tasks.containsKey(date)) {
         tasks[date] = [];
       }
       tasks[date]!.add({
         'id': doc.id,
-        'timeSlot': data['timeSlot'],
+        'slot': data['slot'],
         'location': data['location'],
-        'volunteers': data['volunteers'],
+        'volunteer': data['volunteer'],
       });
     }
 
@@ -89,9 +89,9 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
             child: ListView(
               children: _getTasksForSelectedDay().map((task) {
                 return ListTile(
-                  title: Text(task['timeSlot']),
+                  title: Text(task['slot']),
                   subtitle: Text("Location: ${task['location']}"),
-                  trailing: Text("Volunteers: ${task['volunteers'].length}"),
+                  trailing: Text("Volunteers: ${task['volunteer'].length}"),
                   onTap: () {
                     // Add functionality to view or edit task
                   },

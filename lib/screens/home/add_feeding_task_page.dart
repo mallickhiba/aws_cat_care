@@ -12,17 +12,17 @@ class _AddFeedingTaskPageState extends State<AddFeedingTaskPage> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeSlotController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
-  final List<Map<String, String>> _volunteers = [];
+  final List<Map<String, String>> _volunteer = [];
 
   Future<void> _addFeedingTask() async {
     if (_dateController.text.isNotEmpty &&
         _timeSlotController.text.isNotEmpty &&
         _locationController.text.isNotEmpty) {
       await FirebaseFirestore.instance.collection('feeding_schedules').add({
-        'date': _dateController.text,
-        'timeSlot': _timeSlotController.text,
+        'datetime': _dateController.text,
+        'slot': _timeSlotController.text,
         'location': _locationController.text,
-        'volunteers': _volunteers,
+        'volunteer': _volunteer,
       });
       Navigator.pop(context);
     } else {

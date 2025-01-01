@@ -26,8 +26,7 @@ class _IncidentPageState extends State<IncidentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userRole =
-        context.read<MyUserBloc>().state.user?.role ?? ""; // Get the user role
+    final userRole = context.read<MyUserBloc>().state.user?.role ?? "";
 
     return Scaffold(
       appBar: AppBar(
@@ -127,7 +126,7 @@ class _IncidentPageState extends State<IncidentPage> {
                     context
                         .read<GetIncidentsForCatBloc>()
                         .add(DeleteIncidentForCat(incident.id, widget.catId));
-                    Navigator.pop(context); // Close the details modal
+                    Navigator.pop(context);
                   },
                   child: const Text("Delete"),
                 ),
