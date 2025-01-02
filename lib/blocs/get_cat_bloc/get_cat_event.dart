@@ -9,6 +9,12 @@ sealed class GetCatEvent extends Equatable {
 
 class GetCats extends GetCatEvent {}
 
+class GetCatById extends GetCatEvent {
+  final String catId;
+
+  const GetCatById(this.catId);
+}
+
 class DeleteCat extends GetCatEvent {
   final String catId;
 

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:user_repository/user_repository.dart';
 
 class CatEntity {
@@ -62,6 +63,11 @@ class CatEntity {
         incidentIds: doc['incidentIds'] != null
             ? List<String>.from(doc['incidentIds'] as List)
             : []);
+  }
+
+  static CatEntity fromSnapshot(DocumentSnapshot snap) {
+    final data = snap.data() as Map<String, dynamic>;
+    return fromDocument(data);
   }
 
   List<Object?> get props => [

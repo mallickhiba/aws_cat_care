@@ -2,7 +2,8 @@ import 'package:aws_cat_care/blocs/get_cat_bloc/get_cat_bloc.dart';
 import 'package:aws_cat_care/blocs/update_cat_bloc/update_cat_bloc.dart';
 import 'package:aws_cat_care/screens/home/adoption/available_cats_page.dart';
 import 'package:aws_cat_care/screens/home/cat/cat_detail_screen.dart';
-
+import 'package:aws_cat_care/screens/home/incidents/all_incidents_page.dart';
+import 'package:aws_cat_care/screens/home/donations_page.dart';
 import 'package:aws_cat_care/screens/home/cat/cat_screen.dart';
 import 'package:aws_cat_care/screens/home/feeding/feeding_schedule_page.dart';
 import 'package:cat_repository/cat_repository.dart';
@@ -194,6 +195,34 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
                 child: const Text("View Feeding Schedule"),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AllIncidentsPage(),
+                    ),
+                  );
+                },
+                child: const Text("View All Incident Reports"),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DonationsPage(),
+                    ),
+                  );
+                },
+                child: const Text("View Donation Campaigns"),
               ),
             ),
             Expanded(

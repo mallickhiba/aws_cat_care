@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cat_repository/cat_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -16,14 +18,28 @@ class GetCatBloc extends Bloc<GetCatEvent, GetCatState> {
         List<Cat> cats = await _catRepository.getCat();
         emit(GetCatSuccess(cats));
       } catch (e) {
+        log('Error fetching all cats: $e');
         emit(GetCatFailure());
       }
     });
+
+    on<GetCatById>((event, emit) async {
+      emit(GetCatLoading());
+      try {
+        Cat cat = await _catRepository.getCatByID(event.catId);
+        emit(GetCatByIDSuccess(cat));
+      } catch (e) {
+        log('Error fetching cat by ID: $e');
+        emit(GetCatFailure());
+      }
+    });
+
     on<DeleteCat>((event, emit) async {
       try {
-        await catRepository.deleteCat(event.catId);
+        await _catRepository.deleteCat(event.catId);
         add(GetCats()); // Refresh the list after deletion
       } catch (error) {
+        log('Error deleting cat: $error');
         emit(GetCatFailure());
       }
     });

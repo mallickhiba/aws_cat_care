@@ -39,9 +39,18 @@ class FirebaseIncidentRepository implements IncidentRepository {
       final querySnapshot =
           await FirebaseFirestore.instance.collection('incidents').get();
 
-      return querySnapshot.docs
-          .map((doc) => Incident.fromEntity(IncidentEntity.fromSnapshot(doc)))
-          .toList();
+      log('Fetched ${querySnapshot.docs.length} incidents');
+
+      return querySnapshot.docs.map((doc) {
+        try {
+          log('Processing document ID: ${doc.id}');
+          log('Document Data: ${doc.data()}');
+          return Incident.fromEntity(IncidentEntity.fromSnapshot(doc));
+        } catch (e) {
+          log('Error processing document ID: ${doc.id} - $e');
+          throw Exception('Invalid document structure for ID: ${doc.id}');
+        }
+      }).toList();
     } catch (e) {
       log('Error fetching all incidents: $e');
       rethrow;

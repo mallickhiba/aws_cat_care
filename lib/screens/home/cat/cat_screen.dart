@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cat_repository/cat_repository.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:user_repository/user_repository.dart';
-// import 'package:aws_cat_care/blocs/my_user_bloc/my_user_bloc.dart';
 import 'package:aws_cat_care/blocs/create_cat_bloc/create_cat_bloc.dart';
 
 class CatScreen extends StatefulWidget {
@@ -19,12 +18,12 @@ class CatScreen extends StatefulWidget {
 class _CatScreenState extends State<CatScreen> {
   late Cat cat;
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _colorController = TextEditingController();
   String? _imagePath;
   String _selectedSex = "Male";
-  String _selectedColor = "Black";
+  String _selectedLocation = "Student Center";
   bool _isFixed = false;
   bool _isAdopted = false;
 
@@ -37,9 +36,9 @@ class _CatScreenState extends State<CatScreen> {
   @override
   void dispose() {
     _nameController.dispose();
-    _locationController.dispose();
     _ageController.dispose();
     _descriptionController.dispose();
+    _colorController.dispose();
     super.dispose();
   }
 
@@ -71,16 +70,17 @@ class _CatScreenState extends State<CatScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (_nameController.text.isNotEmpty &&
-                  _locationController.text.isNotEmpty &&
+                  _selectedLocation.isNotEmpty &&
                   _ageController.text.isNotEmpty &&
-                  _descriptionController.text.isNotEmpty) {
+                  _descriptionController.text.isNotEmpty &&
+                  _colorController.text.isNotEmpty) {
                 setState(() {
                   cat = cat.copyWith(
                     catName: _nameController.text,
-                    location: _locationController.text,
+                    location: _selectedLocation,
                     age: int.tryParse(_ageController.text) ?? 0,
                     sex: _selectedSex,
-                    color: _selectedColor,
+                    color: _colorController.text,
                     description: _descriptionController.text,
                     image: _imagePath ?? '',
                     isFixed: _isFixed,
@@ -126,7 +126,26 @@ class _CatScreenState extends State<CatScreen> {
                 const SizedBox(height: 20),
                 _buildTextField(_nameController, "Cat Name"),
                 const SizedBox(height: 10),
-                _buildTextField(_locationController, "Location"),
+
+                // Dropdown for Location
+                _buildDropdown(
+                  label: "Location",
+                  value: _selectedLocation,
+                  items: [
+                    "Student Center",
+                    "Library",
+                    "Tabba",
+                    "Aman",
+                    "Fauji",
+                    "Adamjee",
+                    "Courtyard"
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedLocation = value!;
+                    });
+                  },
+                ),
                 const SizedBox(height: 10),
                 _buildTextField(_ageController, "Age",
                     inputType: TextInputType.number),
@@ -145,17 +164,8 @@ class _CatScreenState extends State<CatScreen> {
                 ),
                 const SizedBox(height: 10),
 
-                // Dropdown for Color
-                _buildDropdown(
-                  label: "Color",
-                  value: _selectedColor,
-                  items: ["Black", "White", "Brown", "Orange", "Mixed"],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedColor = value!;
-                    });
-                  },
-                ),
+                // TextField for Color
+                _buildTextField(_colorController, "Color"),
                 const SizedBox(height: 10),
 
                 // Switch for Is Fixed

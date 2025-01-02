@@ -18,3 +18,9 @@ final class GetCatSuccess extends GetCatState {
 
   const GetCatSuccess(this.cats);
 }
+
+final class GetCatByIDSuccess extends GetCatState {
+  final Cat cat;
+
+  const GetCatByIDSuccess(this.cat);
+}

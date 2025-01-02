@@ -58,4 +58,19 @@ class FirebaseCatRepository implements CatRepository {
     final incidents = List<String>.from(catDoc['incidents'] ?? []);
     return incidents;
   }
+
+  @override
+  Future<Cat> getCatByID(String catId) async {
+    try {
+      final catDoc =
+          await FirebaseFirestore.instance.collection('cats').doc(catId).get();
+      if (!catDoc.exists) {
+        throw Exception("Cat not found for ID: $catId");
+      }
+      return Cat.fromEntity(CatEntity.fromDocument(catDoc.data()!));
+    } catch (e) {
+      log('Error fetching cat by ID: $e');
+      rethrow;
+    }
+  }
 }

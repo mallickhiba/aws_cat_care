@@ -13,101 +13,141 @@ class CatDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5), // Light background
       appBar: AppBar(
         title: const Text("Cat Details"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: NetworkImage(cat.image),
-                      fit: BoxFit.cover,
-                    ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: NetworkImage(cat.image),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+            ),
+            const SizedBox(height: 20),
 
-              // Name
-              _buildReadOnlyField("Name", cat.catName),
-              const SizedBox(height: 10),
-
-              // Age
-              _buildReadOnlyField("Age", cat.age.toString()),
-              const SizedBox(height: 10),
-
-              // Location
-              _buildReadOnlyField("Location", cat.location),
-              const SizedBox(height: 10),
-
-              // Description
-              _buildReadOnlyField("Description", cat.description),
-              const SizedBox(height: 10),
-
-              // Sex
-              _buildReadOnlyField("Sex", cat.sex),
-              const SizedBox(height: 10),
-
-              // Color
-              _buildReadOnlyField("Color", cat.color),
-              const SizedBox(height: 10),
-
-              // Is Fixed
-              _buildReadOnlyField("Fixed", cat.isFixed ? "Yes" : "No"),
-              const SizedBox(height: 10),
-
-              // Is Adopted
-              _buildReadOnlyField("Adopted", cat.isAdopted ? "Yes" : "No"),
-              const SizedBox(height: 20),
-
-              // View Incidents Button
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (context) => GetIncidentsForCatBloc(
-                          incidentRepository: FirebaseIncidentRepository(),
-                        )..add(GetIncidentsForCat(catId: cat.catId)),
-                        child: IncidentPage(catId: cat.catId),
-                      ),
-                    ),
-                  );
-                },
-                child: const Text("View Incidents"),
+            // Cat Name and Location
+            Text(
+              cat.catName,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.location_pin, color: Colors.pink),
+                Text(
+                  cat.location,
+                  style: const TextStyle(fontSize: 16, color: Colors.black),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade300,
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "🐾 About ${cat.catName}",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Info Badges
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: [
+                      _buildBadge("Age", cat.age.toString()),
+                      _buildBadge("Adopted", cat.isAdopted ? "Yes" : "No"),
+                      _buildBadge("Fixed", cat.isFixed ? "Yes" : "No"),
+                      _buildBadge("Color", cat.color),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Description
+                  Text(
+                    cat.description,
+                    style: const TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            // View Incidents Button
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => GetIncidentsForCatBloc(
+                        incidentRepository: FirebaseIncidentRepository(),
+                      )..add(GetIncidentsForCat(catId: cat.catId)),
+                      child: IncidentPage(catId: cat.catId),
+                    ),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text("View Incidents"),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildReadOnlyField(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        const SizedBox(height: 5),
-        Text(
-          value,
-          style: const TextStyle(fontSize: 16),
-        ),
-        const Divider(height: 20, color: Colors.grey),
-      ],
+  Widget _buildBadge(String label, String value) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE1BEE7), // Light purple
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        "$label: $value",
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+      ),
     );
   }
 }
