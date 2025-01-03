@@ -6,6 +6,7 @@ import 'package:aws_cat_care/screens/home/incidents/all_incidents_page.dart';
 import 'package:aws_cat_care/screens/home/donations_page.dart';
 import 'package:aws_cat_care/screens/home/cat/cat_screen.dart';
 import 'package:aws_cat_care/screens/home/feeding/feeding_schedule_page.dart';
+import 'package:aws_cat_care/screens/home/user_duties_page.dart';
 import 'package:cat_repository/cat_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -223,6 +224,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
                 child: const Text("View Donation Campaigns"),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const UserDutiesPage(),
+                    ),
+                  );
+                },
+                child: const Text("View Your Duties"),
               ),
             ),
             Expanded(
