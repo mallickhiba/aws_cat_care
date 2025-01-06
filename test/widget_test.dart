@@ -6,11 +6,14 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/material.dart';
 import 'package:aws_app/app.dart';
+import 'package:aws_app/app_view.dart';
 import 'package:mockito/mockito.dart';
 import 'package:user_repository/user_repository.dart';
+import 'package:aws_app/screens/home/incidents/add_incident_page.dart';
 
-class MockUserRepository extends Mock implements UserRepository {}
+// class MockUserRepository extends Mock implements UserRepository {}
 
 void main() {
   // testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -30,10 +33,28 @@ void main() {
   //   expect(find.text('1'), findsOneWidget);
   // });
   // Create a mock UserRepository instance
-  final mockUserRepository = MockUserRepository();
+  // final mockUserRepository = MockUserRepository();
 
-  testWidgets('MyApp initializes correctly with UserRepository',
+  // testWidgets('MyApp initializes correctly with UserRepository',
+  //     (WidgetTester tester) async {
+  //   await tester.pumpWidget(MyApp(mockUserRepository));
+  // });
+  testWidgets('AddIncidentPage shows necessary UI elements',
       (WidgetTester tester) async {
-    await tester.pumpWidget(MyApp(mockUserRepository));
+    await tester.pumpWidget(
+      MaterialApp(home: AddIncidentPage(catId: '123')),
+    );
+
+    // Verify description text field exists
+    expect(find.byType(TextField), findsOneWidget);
+
+    // Verify switches exist
+    expect(find.byType(SwitchListTile), findsNWidgets(2));
+
+    // Verify dropdowns exist
+    expect(find.byType(DropdownButtonFormField), findsNWidgets(1));
+
+    // Verify submit button exists
+    expect(find.text("Submit"), findsOneWidget);
   });
 }

@@ -1,10 +1,7 @@
 import 'package:aws_app/blocs/update_user_info_bloc/update_user_info_bloc.dart';
-import 'package:aws_app/screens/home/cat/cat_screen.dart';
 import 'package:aws_app/screens/home/incidents/report_incident_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:aws_app/blocs/get_cat_bloc/get_cat_bloc.dart';
-import 'package:aws_app/screens/home/cat/cat_detail_screen.dart';
 import 'package:aws_app/screens/home/adoption/available_cats_page.dart';
 import 'package:aws_app/screens/home/products_page.dart';
 import 'package:aws_app/screens/home/feeding/feeding_schedule_page.dart';
@@ -13,8 +10,6 @@ import 'package:aws_app/screens/home/user_duties_page.dart';
 import 'package:aws_app/screens/home/incidents/all_incidents_page.dart';
 import 'package:aws_app/blocs/my_user_bloc/my_user_bloc.dart';
 import 'package:aws_app/blocs/sign_in_bloc/sign_in_bloc.dart';
-import 'package:aws_app/blocs/create_cat_bloc/create_cat_bloc.dart';
-import 'package:cat_repository/cat_repository.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

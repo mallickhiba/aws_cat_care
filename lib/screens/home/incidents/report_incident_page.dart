@@ -33,7 +33,7 @@ class _ReportIncidentPageState extends State<ReportIncidentPage> {
 
   Future<void> _pickImages() async {
     final ImagePicker picker = ImagePicker();
-    final List<XFile>? images = await picker.pickMultiImage();
+    final List<XFile> images = await picker.pickMultiImage();
 
     if (images != null) {
       setState(() {
@@ -75,7 +75,7 @@ class _ReportIncidentPageState extends State<ReportIncidentPage> {
               Navigator.pop(context);
             } else if (state is CreateIncidentFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Failed to report incident: ${state}")),
+                SnackBar(content: Text("Failed to report incident: $state")),
               );
             }
           },
@@ -114,7 +114,7 @@ class _ReportIncidentPageState extends State<ReportIncidentPage> {
                           value: cat.catId,
                           child: Text(cat.catName),
                         );
-                      }).toList(),
+                      }),
                     ];
 
                     return DropdownButtonFormField<String>(
