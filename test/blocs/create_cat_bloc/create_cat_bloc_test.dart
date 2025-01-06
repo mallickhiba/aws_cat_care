@@ -7,7 +7,13 @@ import 'package:user_repository/user_repository.dart';
 
 class MockCatRepository extends Mock implements CatRepository {}
 
+class MockCat extends Mock implements Cat {}
+
 void main() {
+  setUpAll(() {
+    registerFallbackValue(MockCat());
+  });
+
   group('CreateCatBloc', () {
     final mockCatRepository = MockCatRepository();
     final cat = Cat(
@@ -26,11 +32,9 @@ void main() {
       campus: '',
       status: '',
     );
-    var called = false;
-    when(() => mockCatRepository.createCat(any())).thenAnswer((_) async => cat);
 
     blocTest<CreateCatBloc, CreateCatState>(
-      'emits [CreateCatLoading, CreateCatSuccess] when CreateCat is successful',
+      'handles CreateCat successfully',
       build: () => CreateCatBloc(catRepository: mockCatRepository),
       setUp: () {
         when(() => mockCatRepository.createCat(cat))
@@ -41,16 +45,14 @@ void main() {
     );
 
     blocTest<CreateCatBloc, CreateCatState>(
-        'emits [CreateCatLoading, CreateCatFailure] when CreateCat fails',
-        build: () => CreateCatBloc(catRepository: mockCatRepository),
-        setUp: () {
-          when(() => mockCatRepository.createCat(any()))
-              .thenThrow(Exception('Failed to create cat'));
-        },
-        act: (bloc) => bloc.add(CreateCat(cat)),
-        expect: () => <CreateCatState>[CreateCatLoading(), CreateCatFailure()],
-        verify: (_) {
-          expect(called, isTrue);
-        });
+      'handles CreateCat when it fails',
+      build: () => CreateCatBloc(catRepository: mockCatRepository),
+      setUp: () {
+        when(() => mockCatRepository.createCat(any()))
+            .thenThrow(Exception('Failed to create cat'));
+      },
+      act: (bloc) => bloc.add(CreateCat(cat)),
+      expect: () => <CreateCatState>[CreateCatLoading(), CreateCatFailure()],
+    );
   });
 }

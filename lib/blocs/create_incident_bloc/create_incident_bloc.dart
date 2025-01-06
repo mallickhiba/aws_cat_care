@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:incident_repository/incident_repository.dart';
-
 part 'create_incident_event.dart';
 part 'create_incident_state.dart';
 
