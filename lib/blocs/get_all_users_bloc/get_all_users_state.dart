@@ -19,10 +19,8 @@ class GetAllUsersSuccess extends GetAllUsersState {
 }
 
 class GetAllUsersFailure extends GetAllUsersState {
-  final String error;
-
-  const GetAllUsersFailure({required this.error});
+  const GetAllUsersFailure();
 
   @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [];
 }
