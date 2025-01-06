@@ -15,7 +15,7 @@ class GetCatBloc extends Bloc<GetCatEvent, GetCatState> {
     on<GetCats>((event, emit) async {
       emit(GetCatLoading());
       try {
-        List<Cat> cats = await _catRepository.getCat();
+        List<Cat> cats = await _catRepository.getCats();
         emit(GetCatSuccess(cats));
       } catch (e) {
         log('Error fetching all cats: $e');
@@ -37,7 +37,7 @@ class GetCatBloc extends Bloc<GetCatEvent, GetCatState> {
     on<DeleteCat>((event, emit) async {
       try {
         await _catRepository.deleteCat(event.catId);
-        add(GetCats()); // Refresh the list after deletion
+        add(GetCats());
       } catch (error) {
         log('Error deleting cat: $error');
         emit(GetCatFailure());

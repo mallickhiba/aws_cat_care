@@ -24,7 +24,7 @@ class FirebaseCatRepository implements CatRepository {
   }
 
   @override
-  Future<List<Cat>> getCat() {
+  Future<List<Cat>> getCats() {
     try {
       return catCollection.get().then((value) => value.docs
           .map((e) => Cat.fromEntity(CatEntity.fromDocument(e.data())))

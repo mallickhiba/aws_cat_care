@@ -89,8 +89,8 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
   flutter_launcher_icons: ^0.14.2
-  mockito: ^5.4.4
   bloc_test: ^9.1.7
+  mocktail: ^1.0.4
 
 flutter_launcher_icons:
   android: true

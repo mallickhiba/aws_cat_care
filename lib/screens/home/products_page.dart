@@ -47,7 +47,7 @@ class _ProductsPageState extends State<ProductsPage> {
           return ListTile(
             title: Text(products[index]['name']),
             subtitle: Text(
-                'Category: ${products[index]['category']} - Campus: ${products[index]['campus']}'),
+                '${products[index]['category']} -  ${products[index]['campus']} Campus -  ${products[index]['location']}'),
             trailing: Text('Qty: ${products[index]['quantity']}'),
           );
         },
@@ -61,10 +61,10 @@ class _ProductsPageState extends State<ProductsPage> {
     final locationController = TextEditingController();
     final quantityController = TextEditingController();
 
-    String selectedCategory = 'Food'; // Default value
-    List<String> categories = ['Food', 'Medicine', 'Carrier']; // Options
-    String selectedCampus = 'Main'; // Default value
-    List<String> campuses = ['Main', 'City']; // Options
+    String selectedCategory = 'Food';
+    List<String> categories = ['Food', 'Medicine', 'Carrier'];
+    String selectedCampus = 'Main';
+    List<String> campuses = ['Main', 'City'];
 
     showDialog(
       context: context,

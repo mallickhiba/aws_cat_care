@@ -113,7 +113,6 @@ class AvailableCatsPage extends StatelessWidget {
 
   Widget _buildCatList(BuildContext context, List<Cat> cats,
       {bool showAdoptButton = true}) {
-    final theme = Theme.of(context);
     return ListView.builder(
       itemCount: cats.length,
       itemBuilder: (context, index) {
