@@ -22,6 +22,14 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _colorController = TextEditingController();
+
+  String _selectedCampus = "Main Campus";
+  String _selectedStatus = "Available";
+  bool _isVaccinated = false;
+  bool _isHealthy = true;
+  bool _isFixed = false;
+
   bool _isLoading = false;
 
   @override
@@ -33,6 +41,14 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
     _nameController.text = editableCat.catName;
     _ageController.text = editableCat.age.toString();
     _descriptionController.text = editableCat.description;
+    _colorController.text = editableCat.color;
+    _selectedCampus =
+        editableCat.campus.isNotEmpty ? editableCat.campus : "Main Campus";
+    _selectedStatus =
+        editableCat.status.isNotEmpty ? editableCat.status : "Available";
+    _isVaccinated = editableCat.isVaccinated;
+    _isHealthy = editableCat.isHealthy;
+    _isFixed = editableCat.isFixed;
   }
 
   @override
@@ -40,6 +56,7 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
     _nameController.dispose();
     _ageController.dispose();
     _descriptionController.dispose();
+    _colorController.dispose();
     super.dispose();
   }
 
@@ -87,7 +104,7 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Cat updated successfully!")),
           );
-          Navigator.pop(context);
+          Navigator.pop(context, editableCat); // Return the updated cat
         } else if (state is UpdateCatFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Failed to update cat: ${state.error}")),
@@ -124,10 +141,7 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
                             shape: BoxShape.circle,
                             image: editableCat.image.isNotEmpty
                                 ? DecorationImage(
-                                    image: editableCat.image.startsWith('http')
-                                        ? NetworkImage(editableCat.image)
-                                        : FileImage(File(editableCat.image))
-                                            as ImageProvider,
+                                    image: NetworkImage(editableCat.image),
                                     fit: BoxFit.cover,
                                   )
                                 : null,
@@ -149,70 +163,69 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
                     _buildTextField(_descriptionController, "Description",
                         maxLines: 3),
                     const SizedBox(height: 10),
-
-                    // Dropdown for Location
-                    _buildDropdown(
-                      label: "Location",
-                      value: editableCat.location.isNotEmpty
-                          ? editableCat.location
-                          : "Student Center",
-                      items: [
-                        "Student Center",
-                        "Library",
-                        "Tabba",
-                        "Aman",
-                        "Fauji",
-                        "Adamjee",
-                        "Courtyard",
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          editableCat = editableCat.copyWith(location: value!);
-                        });
-                      },
-                    ),
-
+                    _buildTextField(_colorController, "Color"),
                     const SizedBox(height: 10),
 
-                    // Dropdown for Sex
+                    // Dropdown for Campus
                     _buildDropdown(
-                      label: "Sex",
-                      value:
-                          editableCat.sex.isNotEmpty ? editableCat.sex : "Male",
-                      items: ["Male", "Female", "Unknown"],
+                      label: "Campus",
+                      value: _selectedCampus,
+                      items: ["Main Campus", "City Campus"],
                       onChanged: (value) {
                         setState(() {
-                          editableCat = editableCat.copyWith(sex: value!);
+                          _selectedCampus = value!;
                         });
                       },
                     ),
+                    const SizedBox(height: 10),
 
+                    // Dropdown for Status
+                    _buildDropdown(
+                      label: "Status",
+                      value: _selectedStatus,
+                      items: ["Lost", "Deceased", "Adopted", "Available"],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedStatus = value!;
+                        });
+                      },
+                    ),
                     const SizedBox(height: 10),
 
                     // Switch for Is Fixed
                     _buildSwitch(
                       label: "Fixed",
-                      value: editableCat.isFixed,
+                      value: _isFixed,
                       onChanged: (value) {
                         setState(() {
-                          editableCat = editableCat.copyWith(isFixed: value);
+                          _isFixed = value;
                         });
                       },
                     ),
-
                     const SizedBox(height: 10),
 
-                    // Switch for Is Adopted
+                    // Switch for Is Vaccinated
                     _buildSwitch(
-                      label: "Adopted",
-                      value: editableCat.isAdopted,
+                      label: "Vaccinated",
+                      value: _isVaccinated,
                       onChanged: (value) {
                         setState(() {
-                          editableCat = editableCat.copyWith(isAdopted: value);
+                          _isVaccinated = value;
                         });
                       },
                     ),
+                    const SizedBox(height: 10),
 
+                    // Switch for Is Healthy
+                    _buildSwitch(
+                      label: "Healthy",
+                      value: _isHealthy,
+                      onChanged: (value) {
+                        setState(() {
+                          _isHealthy = value;
+                        });
+                      },
+                    ),
                     const SizedBox(height: 20),
 
                     ElevatedButton(
@@ -228,6 +241,12 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
                               age: int.tryParse(_ageController.text) ??
                                   editableCat.age,
                               description: _descriptionController.text,
+                              color: _colorController.text,
+                              campus: _selectedCampus,
+                              status: _selectedStatus,
+                              isVaccinated: _isVaccinated,
+                              isHealthy: _isHealthy,
+                              isFixed: _isFixed,
                             );
                           });
 

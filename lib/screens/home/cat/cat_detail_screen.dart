@@ -6,11 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:incident_repository/incident_repository.dart';
 import 'package:cat_repository/cat_repository.dart';
 import 'package:user_repository/user_repository.dart';
-import 'edit_cat_detail_screen.dart'; // Import the edit screen
+import 'edit_cat_detail_screen.dart';
 
 class CatDetailScreen extends StatefulWidget {
   final Cat cat;
-  final MyUser user; // Pass the user object to check the role
+  final MyUser user;
 
   const CatDetailScreen({super.key, required this.cat, required this.user});
 
@@ -30,9 +30,8 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5), // Light background
       appBar: AppBar(
-        title: const Text("Cat Details"),
+        title: const Text(""),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -105,8 +104,12 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                     spacing: 10,
                     runSpacing: 10,
                     children: [
-                      _buildBadge("Age", cat.age.toString()),
-                      _buildBadge("Adopted", cat.isAdopted ? "Yes" : "No"),
+                      _buildBadge("Age", "${cat.age} years"),
+                      _buildBadge("Status", cat.status),
+                      _buildBadge("Campus", cat.campus),
+                      _buildBadge(
+                          "Vaccinated", cat.isVaccinated ? "Yes" : "No"),
+                      _buildBadge("Healthy", cat.isHealthy ? "Yes" : "No"),
                       _buildBadge("Fixed", cat.isFixed ? "Yes" : "No"),
                       _buildBadge("Color", cat.color),
                     ],
@@ -121,6 +124,40 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                 ],
               ),
             ),
+
+            const SizedBox(height: 10),
+
+            // Display Photos
+            if (cat.photos.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "📷 Photos",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: 100,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: cat.photos.length,
+                      itemBuilder: (context, index) {
+                        final photoUrl = cat.photos[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.network(
+                            photoUrl,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
 
             const SizedBox(height: 10),
 

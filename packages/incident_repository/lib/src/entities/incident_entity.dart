@@ -10,6 +10,7 @@ class IncidentEntity {
   final String description;
   final bool? followUp;
   final MyUserEntity volunteer;
+  List<String> photos;
 
   IncidentEntity({
     required this.id,
@@ -20,6 +21,7 @@ class IncidentEntity {
     required this.description,
     this.followUp,
     required this.volunteer,
+    this.photos = const [],
   });
 
   Map<String, dynamic> toDocument() {
@@ -32,6 +34,7 @@ class IncidentEntity {
       'description': description,
       'followUp': followUp,
       'volunteer': volunteer.toDocument(),
+      'photos': photos,
     };
   }
 
@@ -47,6 +50,9 @@ class IncidentEntity {
       followUp: json['followUp'] as bool,
       volunteer:
           MyUserEntity.fromDocument(json['volunteer'] as Map<String, dynamic>),
+      photos: json['photos'] != null
+          ? List<String>.from(json['photos'] as List)
+          : [],
     );
   }
 
@@ -63,7 +69,8 @@ class IncidentEntity {
         vetVisit,
         description,
         followUp,
-        volunteer
+        volunteer,
+        photos,
       ];
 
   @override
@@ -77,6 +84,7 @@ class IncidentEntity {
       description: $description,
       followUp: $followUp,
       volunteer: $volunteer
+            photos: $photos
     }''';
   }
 }

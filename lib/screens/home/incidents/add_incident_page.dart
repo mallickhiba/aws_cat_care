@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'package:aws_app/blocs/my_user_bloc/my_user_bloc.dart';
 import 'package:aws_app/blocs/get_all_users_bloc/get_all_users_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aws_app/blocs/create_incident_bloc/create_incident_bloc.dart';
 import 'package:incident_repository/incident_repository.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AddIncidentPage extends StatefulWidget {
   final String catId;
@@ -19,11 +22,56 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
   bool vetVisit = false;
   bool followUpRequired = false;
   String? selectedVolunteer;
+  List<String> photoUrls = [];
+  List<File> selectedImages = [];
+  bool isUploading = false;
 
   @override
   void dispose() {
     _descriptionController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickImages() async {
+    final ImagePicker picker = ImagePicker();
+    final List<XFile>? images = await picker.pickMultiImage();
+
+    if (images != null) {
+      setState(() {
+        selectedImages = images.map((image) => File(image.path)).toList();
+      });
+    }
+  }
+
+  Future<void> _uploadImages() async {
+    if (selectedImages.isEmpty) return;
+
+    setState(() {
+      isUploading = true;
+    });
+
+    try {
+      for (var image in selectedImages) {
+        final storageRef = FirebaseStorage.instance.ref().child(
+            'incident_photos/${DateTime.now().millisecondsSinceEpoch}.jpg');
+        final uploadTask = storageRef.putFile(image);
+
+        final snapshot = await uploadTask;
+        final imageUrl = await snapshot.ref.getDownloadURL();
+
+        setState(() {
+          photoUrls.add(imageUrl);
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to upload images: $e")),
+      );
+    } finally {
+      setState(() {
+        isUploading = false;
+      });
+    }
   }
 
   @override
@@ -89,15 +137,39 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
                       });
                     },
                     decoration: const InputDecoration(
-                      labelText: "Assign Volunteer",
+                      labelText: "Volunteer",
                       border: OutlineInputBorder(),
                     ),
                   ),
                   const SizedBox(height: 20),
+
+                  // Image Picker Section
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: _pickImages,
+                    child: const Text("Pick Images"),
+                  ),
+                  const SizedBox(height: 10),
+                  if (selectedImages.isNotEmpty)
+                    Wrap(
+                      spacing: 10,
+                      children: selectedImages
+                          .map((image) => Image.file(image,
+                              width: 100, height: 100, fit: BoxFit.cover))
+                          .toList(),
+                    ),
+                  if (isUploading)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: CircularProgressIndicator(),
+                    ),
+
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
                       if (_descriptionController.text.isNotEmpty &&
                           selectedVolunteer != null) {
+                        await _uploadImages();
+
                         final incident = Incident(
                           id: '',
                           catId: widget.catId,
@@ -108,11 +180,11 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
                           followUp: followUpRequired,
                           volunteer: users.firstWhere(
                               (user) => user.id == selectedVolunteer),
+                          photos: photoUrls,
                         );
                         context.read<CreateIncidentBloc>().add(
                               CreateIncident(incident, widget.catId),
                             );
-                        Navigator.pop(context);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

@@ -11,9 +11,13 @@ class CatEntity {
   String description;
   String image;
   bool isFixed;
-  bool isAdopted;
   MyUser myUser;
   List<String> incidentIds;
+  List<String> photos;
+  bool isVaccinated;
+  bool isHealthy;
+  String campus;
+  String status; //lost, deceased, adopted, available
 
   CatEntity({
     required this.catId,
@@ -25,9 +29,13 @@ class CatEntity {
     required this.description,
     required this.image,
     required this.isFixed,
-    required this.isAdopted,
     required this.myUser,
     this.incidentIds = const [],
+    this.photos = const [],
+    required this.isVaccinated,
+    required this.isHealthy,
+    required this.campus,
+    required this.status,
   });
 
   Map<String, Object?> toDocument() {
@@ -41,28 +49,38 @@ class CatEntity {
       'description': description,
       'image': image,
       'isFixed': isFixed,
-      'isAdopted': isAdopted,
       'myUser': myUser.toEntity().toDocument(),
       'incidentIds': incidentIds,
+      'photos': photos,
+      'isVaccinated': isVaccinated,
+      'isHealthy': isHealthy,
+      'campus': campus,
+      'status': status,
     };
   }
 
   static CatEntity fromDocument(Map<String, dynamic> doc) {
     return CatEntity(
-        catId: doc['catId'] as String,
-        catName: doc['catName'] as String,
-        location: doc['location'] as String,
-        age: doc['age'] as int,
-        sex: doc['sex'] as String,
-        color: doc['color'] as String,
-        description: doc['description'] as String,
-        image: doc['image'] as String,
-        isFixed: doc['isFixed'] as bool,
-        isAdopted: doc['isAdopted'] as bool,
-        myUser: MyUser.fromEntity(MyUserEntity.fromDocument(doc['myUser'])),
-        incidentIds: doc['incidentIds'] != null
-            ? List<String>.from(doc['incidentIds'] as List)
-            : []);
+      catId: doc['catId'] as String,
+      catName: doc['catName'] as String,
+      location: doc['location'] as String,
+      age: doc['age'] as int,
+      sex: doc['sex'] as String,
+      color: doc['color'] as String,
+      description: doc['description'] as String,
+      image: doc['image'] as String,
+      isFixed: doc['isFixed'] as bool,
+      myUser: MyUser.fromEntity(MyUserEntity.fromDocument(doc['myUser'])),
+      incidentIds: doc['incidentIds'] != null
+          ? List<String>.from(doc['incidentIds'] as List)
+          : [],
+      photos:
+          doc['photos'] != null ? List<String>.from(doc['photos'] as List) : [],
+      isVaccinated: doc['isVaccinated'] as bool,
+      isHealthy: doc['isHealthy'] as bool,
+      campus: doc['campus'] as String,
+      status: doc['status'] as String,
+    );
   }
 
   static CatEntity fromSnapshot(DocumentSnapshot snap) {
@@ -80,9 +98,13 @@ class CatEntity {
         description,
         image,
         isFixed,
-        isAdopted,
         myUser,
-        incidentIds
+        incidentIds,
+        photos,
+        isVaccinated,
+        isHealthy,
+        campus,
+        status,
       ];
 
   @override
@@ -97,9 +119,13 @@ class CatEntity {
       description: $description
       image: $image
       isFixed: $isFixed
-      isAdopted: $isAdopted
       myUser: $myUser
       incidentIds: $incidentIds
+      photos: $photos
+      isVaccinated: $isVaccinated
+      isHealthy: $isHealthy
+      campus: $campus
+      status: $status
     }''';
   }
 }

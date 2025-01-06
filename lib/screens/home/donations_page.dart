@@ -110,7 +110,7 @@ class _DonationsPageState extends State<DonationsPage> {
                   backgroundColor: Colors.grey.shade300,
                 ),
                 const SizedBox(height: 4),
-                Text("Raised: \$$progress / \$$goal"),
+                Text("Raised: \Rs. $progress / \Rs. $goal"),
               ],
             ),
           ),

@@ -11,9 +11,13 @@ class Cat {
   String description;
   String image;
   bool isFixed;
-  bool isAdopted;
   MyUser myUser;
   List<String> incidentIds;
+  List<String> photos;
+  bool isVaccinated;
+  bool isHealthy;
+  String campus;
+  String status; //lost, deceased, adopted, available
 
   Cat({
     required this.catId,
@@ -25,9 +29,13 @@ class Cat {
     required this.description,
     required this.image,
     required this.isFixed,
-    required this.isAdopted,
     required this.myUser,
     this.incidentIds = const [],
+    this.photos = const [],
+    required this.isVaccinated,
+    required this.isHealthy,
+    required this.campus,
+    required this.status,
   });
 
   /// Empty user which represents an unauthenticated user.
@@ -41,9 +49,13 @@ class Cat {
       description: '',
       image: '',
       isFixed: false,
-      isAdopted: false,
       myUser: MyUser.empty,
-      incidentIds: []);
+      incidentIds: [],
+      photos: [],
+      isVaccinated: false,
+      isHealthy: false,
+      campus: '',
+      status: '');
 
   /// Modify MyUser parameters
   Cat copyWith({
@@ -56,9 +68,13 @@ class Cat {
     String? description,
     String? image,
     bool? isFixed,
-    bool? isAdopted,
     MyUser? myUser,
     List<String>? incidentIds,
+    List<String>? photos,
+    bool? isVaccinated,
+    bool? isHealthy,
+    String? campus,
+    String? status,
   }) {
     return Cat(
       catId: catId ?? this.catId,
@@ -70,9 +86,13 @@ class Cat {
       description: description ?? this.description,
       image: image ?? this.image,
       isFixed: isFixed ?? this.isFixed,
-      isAdopted: isAdopted ?? this.isAdopted,
       myUser: myUser ?? this.myUser,
       incidentIds: incidentIds ?? this.incidentIds,
+      photos: photos ?? this.photos,
+      isVaccinated: isVaccinated ?? this.isVaccinated,
+      isHealthy: isHealthy ?? this.isHealthy,
+      campus: campus ?? this.campus,
+      status: status ?? this.status,
     );
   }
 
@@ -93,9 +113,13 @@ class Cat {
       description: description,
       image: image,
       isFixed: isFixed,
-      isAdopted: isAdopted,
       myUser: myUser,
       incidentIds: incidentIds,
+      photos: photos,
+      isVaccinated: isVaccinated,
+      isHealthy: isHealthy,
+      campus: campus,
+      status: status,
     );
   }
 
@@ -110,9 +134,13 @@ class Cat {
       description: entity.description,
       image: entity.image,
       isFixed: entity.isFixed,
-      isAdopted: entity.isAdopted,
       myUser: entity.myUser,
       incidentIds: entity.incidentIds,
+      photos: entity.photos,
+      isVaccinated: entity.isVaccinated,
+      isHealthy: entity.isHealthy,
+      campus: entity.campus,
+      status: entity.status,
     );
   }
 
@@ -128,9 +156,13 @@ class Cat {
       description: $description
       image: $image
       isFixed: $isFixed
-      isAdopted: $isAdopted
       myUser: $myUser
       incidentIds: $incidentIds
+      photos: $photos
+      isVaccinated: $isVaccinated
+      isHealthy: $isHealthy
+      campus: $campus
+      status: $status
     }''';
   }
 

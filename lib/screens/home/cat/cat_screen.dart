@@ -26,8 +26,11 @@ class _CatScreenState extends State<CatScreen> {
   String? _imagePath;
   String _selectedSex = "Male";
   String _selectedLocation = "Student Center";
+  String _selectedCampus = "Main Campus";
+  String _selectedStatus = "Available"; // Default status
   bool _isFixed = false;
-  bool _isAdopted = false;
+  bool _isVaccinated = false;
+  bool _isHealthy = true;
 
   @override
   void initState() {
@@ -65,7 +68,9 @@ class _CatScreenState extends State<CatScreen> {
 
       setState(() {
         cat = cat.copyWith(
-            image: imageUrl); // Save the image URL in the Cat object
+          image: imageUrl,
+          // photos: [...cat.photos, imageUrl], // Add the image to the photos list
+        );
       });
     }
   }
@@ -107,7 +112,10 @@ class _CatScreenState extends State<CatScreen> {
                     color: _colorController.text,
                     description: _descriptionController.text,
                     isFixed: _isFixed,
-                    isAdopted: _isAdopted,
+                    isVaccinated: _isVaccinated,
+                    isHealthy: _isHealthy,
+                    campus: _selectedCampus,
+                    status: _selectedStatus,
                   );
                 });
                 context.read<CreateCatBloc>().add(CreateCat(cat));
@@ -191,6 +199,32 @@ class _CatScreenState extends State<CatScreen> {
                 _buildTextField(_colorController, "Color"),
                 const SizedBox(height: 10),
 
+                // Dropdown for Campus
+                _buildDropdown(
+                  label: "Campus",
+                  value: _selectedCampus,
+                  items: ["Main Campus", "City Campus"],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCampus = value!;
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+
+                // Dropdown for Status
+                _buildDropdown(
+                  label: "Status",
+                  value: _selectedStatus,
+                  items: ["Lost", "Deceased", "Adopted", "Available"],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedStatus = value!;
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+
                 // Switch for Is Fixed
                 _buildSwitch(
                   label: "Fixed",
@@ -203,17 +237,30 @@ class _CatScreenState extends State<CatScreen> {
                 ),
                 const SizedBox(height: 10),
 
-                // Switch for Is Adopted
+                // Switch for Is Vaccinated
                 _buildSwitch(
-                  label: "Adopted",
-                  value: _isAdopted,
+                  label: "Vaccinated",
+                  value: _isVaccinated,
                   onChanged: (value) {
                     setState(() {
-                      _isAdopted = value;
+                      _isVaccinated = value;
                     });
                   },
                 ),
                 const SizedBox(height: 10),
+
+                // Switch for Is Healthy
+                _buildSwitch(
+                  label: "Healthy",
+                  value: _isHealthy,
+                  onChanged: (value) {
+                    setState(() {
+                      _isHealthy = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+
                 _buildTextField(_descriptionController, "Description",
                     maxLines: 5),
               ],

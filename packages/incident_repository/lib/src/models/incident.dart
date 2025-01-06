@@ -3,14 +3,15 @@ import 'package:user_repository/user_repository.dart';
 import '../entities/entities.dart';
 
 class Incident {
-  String id; // Unique ID for the incident
+  String id;
   String catId;
-  DateTime reportDate; // Timestamp for when the incident was reported
-  MyUser reportedBy; // The user who reported the incident
-  bool vetVisit; // Indicates if a vet visit was required
-  String description; // Description of the incident
-  bool followUp; // Reference to another incident for follow-up
-  MyUser volunteer; // The user/volunteer handling the incident
+  DateTime reportDate;
+  MyUser reportedBy;
+  bool vetVisit;
+  String description;
+  bool followUp;
+  MyUser volunteer;
+  List<String> photos;
 
   Incident({
     required this.id,
@@ -21,6 +22,7 @@ class Incident {
     required this.description,
     required this.followUp,
     required this.volunteer,
+    this.photos = const [],
   });
 
   /// Empty incident for initialization
@@ -33,6 +35,7 @@ class Incident {
     description: '',
     followUp: false,
     volunteer: MyUser.empty,
+    photos: [],
   );
   Incident copyWith({
     String? id,
@@ -43,6 +46,7 @@ class Incident {
     String? description,
     bool? followUp,
     MyUser? volunteer,
+    List<String>? photos,
   }) {
     return Incident(
       id: id ?? this.id,
@@ -53,6 +57,7 @@ class Incident {
       description: description ?? this.description,
       followUp: followUp ?? this.followUp,
       volunteer: volunteer ?? this.volunteer,
+      photos: photos ?? this.photos,
     );
   }
 
@@ -70,6 +75,7 @@ class Incident {
       description: description,
       followUp: followUp,
       volunteer: volunteer.toEntity(),
+      photos: photos,
     );
   }
 
@@ -83,6 +89,7 @@ class Incident {
       description: entity.description,
       followUp: entity.followUp ?? false,
       volunteer: MyUser.fromEntity(entity.volunteer),
+      photos: entity.photos,
     );
   }
 
@@ -97,6 +104,8 @@ class Incident {
       description: $description,
       followUp: $followUp,
       volunteer: $volunteer
+            photos: $photos
+
     }''';
   }
 
