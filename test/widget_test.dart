@@ -42,7 +42,7 @@ void main() {
   testWidgets('AddIncidentPage shows necessary UI elements',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(home: AddIncidentPage(catId: '123')),
+      const MaterialApp(home: AddIncidentPage(catId: '123')),
     );
 
     // Verify description text field exists

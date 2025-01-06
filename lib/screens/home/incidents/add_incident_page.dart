@@ -36,11 +36,9 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
     final ImagePicker picker = ImagePicker();
     final List<XFile> images = await picker.pickMultiImage();
 
-    if (images != null) {
-      setState(() {
-        selectedImages = images.map((image) => File(image.path)).toList();
-      });
-    }
+    setState(() {
+      selectedImages = images.map((image) => File(image.path)).toList();
+    });
   }
 
   Future<void> _uploadImages() async {
