@@ -1,4 +1,4 @@
-import 'package:aws_app/screens/home/create_donations_page.dart';
+import 'package:aws_app/screens/donations/create_donations_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

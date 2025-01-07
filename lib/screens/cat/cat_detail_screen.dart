@@ -1,7 +1,7 @@
 import 'package:aws_app/blocs/get_incidents_for_cat_bloc/get_incidents_for_cat_bloc.dart';
 import 'package:aws_app/blocs/update_cat_bloc/update_cat_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:aws_app/screens/home/incidents/cat_incidents_page.dart';
+import 'package:aws_app/screens/incidents/cat_incidents_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:incident_repository/incident_repository.dart';
 import 'package:cat_repository/cat_repository.dart';

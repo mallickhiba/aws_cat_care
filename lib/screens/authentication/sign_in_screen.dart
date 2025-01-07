@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../screens/home/home_screen.dart';
+import '../home_screen.dart';
 
 import 'package:aws_app/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:aws_app/components/strings.dart';
@@ -47,33 +47,40 @@ class _SignInScreenState extends State<SignInScreen> {
           });
         }
       },
-      child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: MyTextField(
-                    controller: emailController,
-                    hintText: 'Email',
-                    obscureText: false,
-                    keyboardType: TextInputType.emailAddress,
-                    prefixIcon: const Icon(CupertinoIcons.mail_solid),
-                    errorMsg: _errorMsg,
-                    validator: (val) {
-                      if (val!.isEmpty) {
-                        return 'Please fill in this field';
-                      } else if (!emailRexExp.hasMatch(val)) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    }),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: MyTextField(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                Text(
+                  'Sign In',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 40),
+                MyTextField(
+                  controller: emailController,
+                  hintText: 'Email',
+                  obscureText: false,
+                  keyboardType: TextInputType.emailAddress,
+                  prefixIcon: const Icon(CupertinoIcons.mail_solid),
+                  errorMsg: _errorMsg,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return 'Please fill in this field';
+                    } else if (!emailRexExp.hasMatch(val)) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: obscurePassword,
@@ -92,83 +99,80 @@ class _SignInScreenState extends State<SignInScreen> {
                     onPressed: () {
                       setState(() {
                         obscurePassword = !obscurePassword;
-                        if (obscurePassword) {
-                          iconPassword = CupertinoIcons.eye_fill;
-                        } else {
-                          iconPassword = CupertinoIcons.eye_slash_fill;
-                        }
+                        iconPassword = obscurePassword
+                            ? CupertinoIcons.eye_fill
+                            : CupertinoIcons.eye_slash_fill;
                       });
                     },
                     icon: Icon(iconPassword),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              !signInRequired
-                  ? SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: 50,
-                      child: TextButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              context.read<SignInBloc>().add(SignInRequired(
-                                  emailController.text,
-                                  passwordController.text));
-                            }
-                          },
-                          style: TextButton.styleFrom(
-                              elevation: 3.0,
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(60))),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 25, vertical: 5),
-                            child: Text(
-                              'Sign In',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          )),
-                    )
-                  : const CircularProgressIndicator(),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: 50,
-                child: TextButton(
-                  onPressed: () {
-                    context.read<SignInBloc>().add(GoogleSignInRequested());
-                  },
-                  style: TextButton.styleFrom(
-                      elevation: 3.0,
+                const SizedBox(height: 40),
+                if (!signInRequired)
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: TextButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<SignInBloc>().add(SignInRequired(
+                              emailController.text, passwordController.text));
+                        }
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(60),
+                        ),
+                      ),
+                      child: const Text(
+                        'Sign In',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  const CircularProgressIndicator(),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: TextButton(
+                    onPressed: () {
+                      context.read<SignInBloc>().add(GoogleSignInRequested());
+                    },
+                    style: TextButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(60))),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Image.asset(
-                      //   'assets/google_logo.png',
-                      //   height: 24,
-                      // ),
-                      SizedBox(width: 10),
-                      Text(
-                        'Sign In with Google',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
+                        borderRadius: BorderRadius.circular(60),
                       ),
-                    ],
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(CupertinoIcons.mail_solid), // Example Icon
+                        SizedBox(width: 10),
+                        Text(
+                          'Sign In with Google',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

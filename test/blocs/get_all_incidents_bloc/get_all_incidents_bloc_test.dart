@@ -30,7 +30,7 @@ void main() {
       'handles GetAllIncidents sucessfully',
       build: () =>
           GetAllIncidentsBloc(incidentRepository: mockIncidentRepository),
-      act: (bloc) => bloc.add(GetAllIncidents()),
+      act: (bloc) => bloc.add(const GetAllIncidents()),
       expect: () => <GetAllIncidentsState>[
         GetAllIncidentsLoading(),
         GetAllIncidentsSuccess(incidents)
@@ -45,7 +45,7 @@ void main() {
         when(() => mockIncidentRepository.getAllIncidents())
             .thenThrow(Exception('Failed to fetch incidents'));
       },
-      act: (bloc) => bloc.add(GetAllIncidents()),
+      act: (bloc) => bloc.add(const GetAllIncidents()),
       expect: () => <GetAllIncidentsState>[
         GetAllIncidentsLoading(),
         GetAllIncidentsFailure()

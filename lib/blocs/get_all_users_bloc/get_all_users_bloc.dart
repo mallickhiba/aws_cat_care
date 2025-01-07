@@ -17,7 +17,7 @@ class GetAllUsersBloc extends Bloc<GetAllUsersEvent, GetAllUsersState> {
         final users = await _userRepository.getAllUsers();
         emit(GetAllUsersSuccess(users));
       } catch (e) {
-        emit(GetAllUsersFailure());
+        emit(const GetAllUsersFailure());
       }
     });
   }

@@ -1,4 +1,4 @@
-import 'package:aws_app/screens/home/incidents/add_incident_page.dart';
+import 'package:aws_app/screens/incidents/add_incident_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aws_app/blocs/get_incidents_for_cat_bloc/get_incidents_for_cat_bloc.dart';

@@ -1,11 +1,11 @@
 import 'package:aws_app/blocs/create_cat_bloc/create_cat_bloc.dart';
 import 'package:aws_app/blocs/my_user_bloc/my_user_bloc.dart';
-import 'package:aws_app/screens/home/cat/cat_screen.dart';
+import 'package:aws_app/screens/cat/cat_screen.dart';
 import 'package:cat_repository/cat_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aws_app/blocs/get_cat_bloc/get_cat_bloc.dart';
-import 'package:aws_app/screens/home/cat/cat_detail_screen.dart';
+import 'package:aws_app/screens/cat/cat_detail_screen.dart';
 import 'package:user_repository/user_repository.dart'; // Import MyUser if needed
 
 class AvailableCatsPage extends StatelessWidget {

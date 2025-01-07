@@ -33,7 +33,7 @@ void main() {
       'emits [GetIncidentsForCatLoading, GetIncidentsForCatSuccess] when GetIncidentsForCat is added',
       build: () =>
           GetIncidentsForCatBloc(incidentRepository: mockIncidentRepository),
-      act: (bloc) => bloc.add(GetIncidentsForCat(catId: '1')),
+      act: (bloc) => bloc.add(const GetIncidentsForCat(catId: '1')),
       expect: () => [
         GetIncidentsForCatLoading(),
         GetIncidentsForCatSuccess(mockIncidents)

@@ -12,7 +12,7 @@ import 'package:aws_app/blocs/update_user_info_bloc/update_user_info_bloc.dart';
 import 'package:aws_app/screens/authentication/welcome_screen.dart';
 import 'package:incident_repository/incident_repository.dart';
 import 'blocs/authentication_bloc/authentication_bloc.dart';
-import 'screens/home/home_screen.dart';
+import 'screens/home_screen.dart';
 
 class MyAppView extends StatelessWidget {
   const MyAppView({super.key});
@@ -58,15 +58,14 @@ class MyAppView extends StatelessWidget {
           ),
         ),
         BlocProvider<GetAllUsersBloc>(
-          // Add this bloc
           create: (context) => GetAllUsersBloc(
             userRepository: context.read<AuthenticationBloc>().userRepository,
-          )..add(FetchAllUsers()), // Trigger fetching users when app starts
+          )..add(FetchAllUsers()),
         ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'AWS Cat Care <3',
+        title: 'AWS Cat Care',
         theme: ThemeData(
           colorScheme: const ColorScheme.light(
             surface: Color.fromARGB(255, 234, 199, 247),

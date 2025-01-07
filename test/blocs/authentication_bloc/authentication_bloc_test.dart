@@ -19,7 +19,7 @@ void main() {
       mockUserRepository = MockUserRepository();
       mockUser = MockUser();
       when(() => mockUserRepository.user).thenAnswer(
-        (_) => Stream.empty(),
+        (_) => const Stream.empty(),
       );
       bloc = AuthenticationBloc(myUserRepository: mockUserRepository);
     });
@@ -50,8 +50,8 @@ void main() {
           (_) => Stream.value(null),
         );
       },
-      act: (bloc) => bloc.add(AuthenticationUserChanged(null)),
-      expect: () => [AuthenticationState.unauthenticated()],
+      act: (bloc) => bloc.add(const AuthenticationUserChanged(null)),
+      expect: () => [const AuthenticationState.unauthenticated()],
     );
   });
 }

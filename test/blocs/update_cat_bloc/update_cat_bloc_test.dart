@@ -46,7 +46,7 @@ void main() {
       act: (bloc) => bloc.add(UpdateCat(cat)),
       expect: () => <UpdateCatState>[
         UpdateCatLoading(),
-        UpdateCatFailure('Exception: Failed to update cat')
+        const UpdateCatFailure('Exception: Failed to update cat')
       ],
     );
   });
