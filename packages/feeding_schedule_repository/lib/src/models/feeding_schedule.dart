@@ -20,7 +20,6 @@ class FeedingSchedule {
     required this.completed,
   });
 
-  /// Empty user which represents an unauthenticated user.
   static final empty = FeedingSchedule(
     feedingScheduleId: '',
     datetime: DateTime.now(),
@@ -31,7 +30,6 @@ class FeedingSchedule {
     completed: false,
   );
 
-  /// Modify MyUser parameters
   FeedingSchedule copyWith({
     String? feedingScheduleId,
     DateTime? datetime,
@@ -52,10 +50,8 @@ class FeedingSchedule {
     );
   }
 
-  /// Convenience getter to determine whether the current user is empty.
   bool get isEmpty => this == FeedingSchedule.empty;
 
-  /// Convenience getter to determine whether the current user is not empty.
   bool get isNotEmpty => this != FeedingSchedule.empty;
 
   FeedingScheduleEntity toEntity() {

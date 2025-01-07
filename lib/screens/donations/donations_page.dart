@@ -20,11 +20,10 @@ class _DonationsPageState extends State<DonationsPage> {
       appBar: AppBar(
         title: const Text("Donation Campaigns"),
         actions: [
-          if (userRole == "admin") // Show create button only for admins
+          if (userRole == "admin")
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                // Navigate to a page to create a new campaign
                 Navigator.push(
                   context,
                   MaterialPageRoute(

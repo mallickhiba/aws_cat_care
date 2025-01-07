@@ -38,7 +38,6 @@ class Cat {
     required this.status,
   });
 
-  /// Empty user which represents an unauthenticated user.
   static final empty = Cat(
       catId: '',
       catName: '',
@@ -57,7 +56,6 @@ class Cat {
       campus: '',
       status: '');
 
-  /// Modify MyUser parameters
   Cat copyWith({
     String? catId,
     String? catName,
@@ -96,10 +94,8 @@ class Cat {
     );
   }
 
-  /// Convenience getter to determine whether the current user is empty.
   bool get isEmpty => this == Cat.empty;
 
-  /// Convenience getter to determine whether the current user is not empty.
   bool get isNotEmpty => this != Cat.empty;
 
   CatEntity toEntity() {

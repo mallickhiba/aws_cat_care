@@ -155,7 +155,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(CupertinoIcons.mail_solid), // Example Icon
+                        Icon(CupertinoIcons.mail_solid),
                         SizedBox(width: 10),
                         Text(
                           'Sign In with Google',

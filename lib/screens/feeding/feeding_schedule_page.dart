@@ -71,7 +71,7 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
 
             final rawVolunteer = data['volunteer'];
             final volunteerId = rawVolunteer is String
-                ? rawVolunteer.replaceAll('"', '') // Remove extra quotes
+                ? rawVolunteer.replaceAll('"', '')
                 : rawVolunteer;
 
             final volunteerName = users[volunteerId] ?? 'Unknown Volunteer';
@@ -81,7 +81,7 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
               'slot': data['slot'] ?? 'Unknown Slot',
               'location': data['location'] ?? 'Unknown Location',
               'volunteer': volunteerName,
-              'completed': data['completed'] ?? false, // Default to false
+              'completed': data['completed'] ?? false,
             });
           } else {
             log('Invalid datetime format for document: ${doc.id}');
@@ -108,7 +108,7 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
           .collection('feeding_schedules')
           .doc(taskId)
           .update({'completed': true});
-      _loadFeedingSchedules(); // Reload tasks to reflect the change
+      _loadFeedingSchedules();
     } catch (e) {
       log('Error marking task as done: $e');
       if (mounted) {
@@ -186,7 +186,7 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
                           },
                         ),
                   onTap: () {
-                    // Add functionality to view or edit task
+                    // TODO: Add functionality to view or edit task
                   },
                 );
               }).toList(),

@@ -96,7 +96,6 @@ class _ReportIncidentPageState extends State<ReportIncidentPage> {
                 maxLines: 3,
               ),
               const SizedBox(height: 10),
-              // Cat Dropdown
               BlocBuilder<GetCatBloc, GetCatState>(
                 builder: (context, catState) {
                   if (catState is GetCatLoading) {

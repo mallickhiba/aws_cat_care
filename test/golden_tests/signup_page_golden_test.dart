@@ -24,7 +24,6 @@ void main() {
 
       expect(find.byType(SignUpScreen), findsOneWidget);
 
-      // Generate the golden image
       await screenMatchesGolden(tester, 'sign_up_screen');
     });
   });

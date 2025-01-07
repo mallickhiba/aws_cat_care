@@ -28,7 +28,6 @@ class GetIncidentsForCatBloc
     on<DeleteIncidentForCat>((event, emit) async {
       try {
         await _incidentRepository.deleteIncident(event.incidentId);
-        // Refresh the list of incidents after deletion
         add(GetIncidentsForCat(catId: event.catId));
       } catch (error) {
         emit(const GetIncidentsForCatFailure("Failed to delete incident"));

@@ -28,7 +28,7 @@ class GetFeedingScheduleBloc
       try {
         await feedingScheduleRepository
             .deleteFeedingSchedule(event.feedingScheduleId);
-        add(GetFeedingSchedules()); // Refresh the list after deletion
+        add(GetFeedingSchedules());
       } catch (error) {
         emit(GetFeedingScheduleFailure());
       }

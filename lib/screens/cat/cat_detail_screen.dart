@@ -52,8 +52,6 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Cat Name and Location
             Text(
               cat.catName,
               style: const TextStyle(
@@ -73,7 +71,6 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
               ],
             ),
             const SizedBox(height: 20),
-
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -98,8 +95,6 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-
-                  // Info Badges
                   Wrap(
                     spacing: 10,
                     runSpacing: 10,
@@ -115,8 +110,6 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                     ],
                   ),
                   const SizedBox(height: 10),
-
-                  // Description
                   Text(
                     cat.description,
                     style: const TextStyle(fontSize: 16, color: Colors.black),
@@ -124,10 +117,7 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                 ],
               ),
             ),
-
             const SizedBox(height: 10),
-
-            // Display Photos
             if (cat.photos.isNotEmpty)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,10 +148,7 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                   ),
                 ],
               ),
-
             const SizedBox(height: 10),
-
-            // View Incidents Button
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -185,8 +172,6 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
               ),
               child: const Text("View Incidents"),
             ),
-
-            // Edit Button for Admin Users
             if (widget.user.role == "admin")
               ElevatedButton(
                 onPressed: () async {
@@ -202,7 +187,6 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                     ),
                   );
 
-                  // Refresh details if updatedCat is returned
                   if (updatedCat != null) {
                     setState(() {
                       cat = updatedCat;
@@ -228,7 +212,7 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFE1BEE7), // Light purple
+        color: const Color(0xFFE1BEE7),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(

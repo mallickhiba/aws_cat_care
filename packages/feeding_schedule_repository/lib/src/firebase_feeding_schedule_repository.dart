@@ -38,14 +38,6 @@ class FirebaseFeedingScheduleRepository implements FeedingScheduleRepository {
     }
   }
 
-  // @override
-  // Future<void> updateFeedingSchedule(FeedingSchedule feedingSchedule) async {
-  //   final feedingScheduleDoc = FirebaseFirestore.instance
-  //       .collection('feeding_schedules')
-  //       .doc(feedingScheduleId);
-  //   await feedingScheduleDoc.update(feedingSchedule.toEntity().toDocument());
-  // }
-
   @override
   Future<void> deleteFeedingSchedule(String feedingScheduleId) async {
     final feedingScheduleDoc = FirebaseFirestore.instance
@@ -55,11 +47,12 @@ class FirebaseFeedingScheduleRepository implements FeedingScheduleRepository {
   }
 
   @override
-  updateFeedingSchedule(FeedingSchedule feedingSchedule) {
-    // TODO: implement updateFeedingSchedule
-    throw UnimplementedError();
+  Future<void> updateFeedingSchedule(FeedingSchedule feedingSchedule) async {
+    final feedingScheduleDoc = FirebaseFirestore.instance
+        .collection('feeding_schedules')
+        .doc(feedingSchedule.feedingScheduleId);
+    await feedingScheduleDoc.update(feedingSchedule.toEntity().toDocument());
   }
 }
-
 
 // feeding_schedule

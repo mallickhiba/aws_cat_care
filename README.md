@@ -29,3 +29,17 @@ get feeding schedule bloc
 update user info bloc
 sign in bloc
 sign up bloc
+
+
+
+#### Golden Test Done:
+cat_detail
+home page
+signin page
+signup page
+welcome page
+
+available cats
+all incidents page
+cat incidents page
+edit cat detail screen

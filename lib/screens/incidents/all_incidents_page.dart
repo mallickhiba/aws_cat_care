@@ -13,7 +13,7 @@ class AllIncidentsPage extends StatefulWidget {
 }
 
 class _AllIncidentsPageState extends State<AllIncidentsPage> {
-  Map<String, String> _catNames = {}; // Map to cache cat names
+  Map<String, String> _catNames = {}; // to cache cat names
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _AllIncidentsPageState extends State<AllIncidentsPage> {
 
   Future<void> _preloadCatNames() async {
     final catBloc = context.read<GetCatBloc>();
-    catBloc.add(GetCats()); // Fetch all cats
+    catBloc.add(GetCats());
 
     final catState =
         await catBloc.stream.firstWhere((state) => state is GetCatSuccess);
@@ -35,14 +35,14 @@ class _AllIncidentsPageState extends State<AllIncidentsPage> {
         for (var cat in catState.cats) cat.catId: cat.catName,
       };
       log('Cat names preloaded: $_catNames');
-      setState(() {}); // Update UI with cat names
+      setState(() {});
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3, // Number of tabs
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: const Text("All Incidents"),
@@ -126,7 +126,7 @@ class _AllIncidentsPageState extends State<AllIncidentsPage> {
               ],
             ),
             onTap: () {
-              // Add functionality to navigate or view details
+              //TODO: tap to view details
             },
           ),
         );

@@ -13,7 +13,6 @@ class CreateIncidentBloc
     on<CreateIncident>((event, emit) async {
       emit(CreateIncidentLoading());
       try {
-        // Pass catId to the repository
         Incident incident = await incidentRepository.createIncident(
           event.incident,
           event.catId,

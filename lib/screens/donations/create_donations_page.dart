@@ -49,8 +49,7 @@ class _CreateDonationsPageState extends State<CreateDonationsPage> {
         _goalController.text.isNotEmpty &&
         _bankDetailsController.text.isNotEmpty &&
         _images.isNotEmpty) {
-      List<String> imageUrls =
-          await _uploadImages(); // Upload images and get URLs
+      List<String> imageUrls = await _uploadImages();
 
       final campaignData = {
         'title': _titleController.text,
@@ -62,7 +61,6 @@ class _CreateDonationsPageState extends State<CreateDonationsPage> {
         'createdAt': Timestamp.now(),
       };
 
-      // Add campaign to Firestore
       await FirebaseFirestore.instance
           .collection('donations')
           .add(campaignData);

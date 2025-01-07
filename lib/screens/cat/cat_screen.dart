@@ -27,7 +27,7 @@ class _CatScreenState extends State<CatScreen> {
   String _selectedSex = "Male";
   String _selectedLocation = "Student Center";
   String _selectedCampus = "Main Campus";
-  String _selectedStatus = "Available"; // Default status
+  String _selectedStatus = "Available";
   bool _isFixed = false;
   bool _isVaccinated = false;
   bool _isHealthy = true;
@@ -56,13 +56,11 @@ class _CatScreenState extends State<CatScreen> {
         _imagePath = image.path;
       });
 
-      // Upload the image to Firebase Storage
       final storageRef = FirebaseStorage.instance
           .ref()
           .child('cat_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
       final uploadTask = storageRef.putFile(File(_imagePath!));
 
-      // Get the download URL
       final snapshot = await uploadTask;
       final imageUrl = await snapshot.ref.getDownloadURL();
 
@@ -157,8 +155,6 @@ class _CatScreenState extends State<CatScreen> {
                 const SizedBox(height: 20),
                 _buildTextField(_nameController, "Cat Name"),
                 const SizedBox(height: 10),
-
-                // Dropdown for Location
                 _buildDropdown(
                   label: "Location",
                   value: _selectedLocation,
@@ -181,8 +177,6 @@ class _CatScreenState extends State<CatScreen> {
                 _buildTextField(_ageController, "Age",
                     inputType: TextInputType.number),
                 const SizedBox(height: 10),
-
-                // Dropdown for Sex
                 _buildDropdown(
                   label: "Sex",
                   value: _selectedSex,
@@ -194,12 +188,8 @@ class _CatScreenState extends State<CatScreen> {
                   },
                 ),
                 const SizedBox(height: 10),
-
-                // TextField for Color
                 _buildTextField(_colorController, "Color"),
                 const SizedBox(height: 10),
-
-                // Dropdown for Campus
                 _buildDropdown(
                   label: "Campus",
                   value: _selectedCampus,
@@ -211,8 +201,6 @@ class _CatScreenState extends State<CatScreen> {
                   },
                 ),
                 const SizedBox(height: 10),
-
-                // Dropdown for Status
                 _buildDropdown(
                   label: "Status",
                   value: _selectedStatus,
@@ -224,8 +212,6 @@ class _CatScreenState extends State<CatScreen> {
                   },
                 ),
                 const SizedBox(height: 10),
-
-                // Switch for Is Fixed
                 _buildSwitch(
                   label: "Fixed",
                   value: _isFixed,
@@ -236,8 +222,6 @@ class _CatScreenState extends State<CatScreen> {
                   },
                 ),
                 const SizedBox(height: 10),
-
-                // Switch for Is Vaccinated
                 _buildSwitch(
                   label: "Vaccinated",
                   value: _isVaccinated,
@@ -248,8 +232,6 @@ class _CatScreenState extends State<CatScreen> {
                   },
                 ),
                 const SizedBox(height: 10),
-
-                // Switch for Is Healthy
                 _buildSwitch(
                   label: "Healthy",
                   value: _isHealthy,
@@ -260,7 +242,6 @@ class _CatScreenState extends State<CatScreen> {
                   },
                 ),
                 const SizedBox(height: 10),
-
                 _buildTextField(_descriptionController, "Description",
                     maxLines: 5),
               ],

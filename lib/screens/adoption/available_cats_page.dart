@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aws_app/blocs/get_cat_bloc/get_cat_bloc.dart';
 import 'package:aws_app/screens/cat/cat_detail_screen.dart';
-import 'package:user_repository/user_repository.dart'; // Import MyUser if needed
+import 'package:user_repository/user_repository.dart';
 
 class AvailableCatsPage extends StatelessWidget {
-  final MyUser user; // Pass the user to check role in CatDetailScreen
+  final MyUser user;
 
   const AvailableCatsPage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Two tabs
+      length: 2,
       child: Scaffold(
         floatingActionButton: BlocBuilder<MyUserBloc, MyUserState>(
           builder: (context, state) {
@@ -55,7 +55,7 @@ class AvailableCatsPage extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            // Tab 1: Available Cats
+            // available Cats tab
             BlocBuilder<GetCatBloc, GetCatState>(
               builder: (context, state) {
                 if (state is GetCatLoading) {
@@ -80,7 +80,7 @@ class AvailableCatsPage extends StatelessWidget {
               },
             ),
 
-            // Tab 2: Other Cats
+            // other cats tab
             BlocBuilder<GetCatBloc, GetCatState>(
               builder: (context, state) {
                 if (state is GetCatLoading) {
@@ -119,7 +119,6 @@ class AvailableCatsPage extends StatelessWidget {
         final cat = cats[index];
         return GestureDetector(
           onTap: () {
-            // Navigate to CatDetailScreen
             Navigator.push(
               context,
               MaterialPageRoute(

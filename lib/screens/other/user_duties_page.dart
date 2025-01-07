@@ -20,7 +20,7 @@ class _UserDutiesPageState extends State<UserDutiesPage> {
     final userId = context.read<MyUserBloc>().state.user?.id ?? "Unknown User";
 
     return DefaultTabController(
-      length: 2, // Two tabs
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: const Text("My Duties"),

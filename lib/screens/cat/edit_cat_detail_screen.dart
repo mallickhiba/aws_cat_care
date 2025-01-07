@@ -36,8 +36,6 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
   void initState() {
     super.initState();
     editableCat = widget.cat;
-
-    // Initialize controllers with current cat data
     _nameController.text = editableCat.catName;
     _ageController.text = editableCat.age.toString();
     _descriptionController.text = editableCat.description;
@@ -67,10 +65,9 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
     if (image != null) {
       try {
         setState(() {
-          _isLoading = true; // Show the loading indicator
+          _isLoading = true;
         });
 
-        // Upload the image to Firebase Storage
         final storageRef = FirebaseStorage.instance
             .ref()
             .child('cat_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
@@ -79,18 +76,16 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
         final snapshot = await uploadTask;
         final imageUrl = await snapshot.ref.getDownloadURL();
 
-        // Update the `editableCat` object with the new image URL
         setState(() {
           editableCat = editableCat.copyWith(image: imageUrl);
         });
       } catch (e) {
-        // Handle upload errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Failed to upload image: $e")),
         );
       } finally {
         setState(() {
-          _isLoading = false; // Hide the loading indicator
+          _isLoading = false;
         });
       }
     }
@@ -104,7 +99,7 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Cat updated successfully!")),
           );
-          Navigator.pop(context, editableCat); // Return the updated cat
+          Navigator.pop(context, editableCat);
         } else if (state is UpdateCatFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Failed to update cat: ${state.error}")),
@@ -121,7 +116,7 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
                   icon: const Icon(Icons.delete),
                   onPressed: () {
                     context.read<GetCatBloc>().add(DeleteCat(widget.cat.catId));
-                    Navigator.pop(context); // Go back to the previous screen
+                    Navigator.pop(context);
                   },
                 ),
               ],
@@ -165,8 +160,6 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
                     const SizedBox(height: 10),
                     _buildTextField(_colorController, "Color"),
                     const SizedBox(height: 10),
-
-                    // Dropdown for Campus
                     _buildDropdown(
                       label: "Campus",
                       value: _selectedCampus,
@@ -178,8 +171,6 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
                       },
                     ),
                     const SizedBox(height: 10),
-
-                    // Dropdown for Status
                     _buildDropdown(
                       label: "Status",
                       value: _selectedStatus,
@@ -191,8 +182,6 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
                       },
                     ),
                     const SizedBox(height: 10),
-
-                    // Switch for Is Fixed
                     _buildSwitch(
                       label: "Fixed",
                       value: _isFixed,
@@ -203,8 +192,6 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
                       },
                     ),
                     const SizedBox(height: 10),
-
-                    // Switch for Is Vaccinated
                     _buildSwitch(
                       label: "Vaccinated",
                       value: _isVaccinated,
@@ -215,8 +202,6 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
                       },
                     ),
                     const SizedBox(height: 10),
-
-                    // Switch for Is Healthy
                     _buildSwitch(
                       label: "Healthy",
                       value: _isHealthy,
@@ -227,7 +212,6 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
                       },
                     ),
                     const SizedBox(height: 20),
-
                     ElevatedButton(
                       onPressed: () {
                         if (_nameController.text.isNotEmpty &&
@@ -250,7 +234,6 @@ class _EditCatDetailScreenState extends State<EditCatDetailScreen> {
                             );
                           });
 
-                          // Dispatch update event
                           context
                               .read<UpdateCatBloc>()
                               .add(UpdateCat(editableCat));

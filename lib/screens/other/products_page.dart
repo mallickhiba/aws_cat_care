@@ -165,10 +165,8 @@ class _ProductsPageState extends State<ProductsPage> {
       'quantity': quantity,
     }).then((docRef) {
       log("Product added successfully with ID: ${docRef.id}");
-      // Optionally, refresh the list or show a message
     }).catchError((error) {
       log("Failed to add product: $error");
-      // Handle errors here
     });
   }
 }

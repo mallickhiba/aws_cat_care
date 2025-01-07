@@ -39,7 +39,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
           throw Exception('User cancelled sign-in');
         }
       } catch (error) {
-        // print('Google Sign-In Error: $error');
         emit(GoogleSignInFailure());
       }
     });

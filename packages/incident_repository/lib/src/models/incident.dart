@@ -25,7 +25,6 @@ class Incident {
     this.photos = const [],
   });
 
-  /// Empty incident for initialization
   static final empty = Incident(
     id: '',
     catId: '',
@@ -64,7 +63,6 @@ class Incident {
   bool get isEmpty => this == Incident.empty;
   bool get isNotEmpty => this != Incident.empty;
 
-  /// Convert `Incident` to an `IncidentEntity`
   IncidentEntity toEntity() {
     return IncidentEntity(
       id: id,

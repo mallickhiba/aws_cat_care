@@ -18,7 +18,6 @@ class _IncidentPageState extends State<IncidentPage> {
   @override
   void initState() {
     super.initState();
-    // Load incidents for the given catId when the page is displayed
     context
         .read<GetIncidentsForCatBloc>()
         .add(GetIncidentsForCat(catId: widget.catId));
@@ -35,7 +34,6 @@ class _IncidentPageState extends State<IncidentPage> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              // Navigate to the AddIncidentPage
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -60,7 +58,6 @@ class _IncidentPageState extends State<IncidentPage> {
                     "Vet Visit: ${incident.vetVisit ? "Yes" : "No"}",
                   ),
                   onTap: () {
-                    // Show details of the incident
                     showModalBottomSheet(
                       context: context,
                       builder: (context) {
@@ -106,13 +103,12 @@ class _IncidentPageState extends State<IncidentPage> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to AddIncidentPage for editing the incident
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => AddIncidentPage(
                           catId: incident.catId,
-                        ), // Pre-fill fields for editing
+                        ),
                       ),
                     );
                   },

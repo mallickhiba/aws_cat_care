@@ -14,8 +14,6 @@ class MockMyUserBloc extends MockBloc<MyUserEvent, MyUserState>
 void main() {
   group('Golden Tests', () {
     testGoldens('Home Screen Golden Test', (tester) async {
-      await loadAppFonts();
-
       final mockMyUserBloc = MockMyUserBloc();
       final mockUser = MyUser(
         id: '123',
@@ -36,12 +34,9 @@ void main() {
         surfaceSize: const Size(375, 812),
       );
 
-      // Allow stabilization
       await tester.pump(const Duration(seconds: 1));
 
       expect(find.byType(HomeScreen), findsOneWidget);
-
-      // Generate Golden image
       await screenMatchesGolden(tester, 'home_screen');
     });
   });

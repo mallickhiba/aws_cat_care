@@ -49,7 +49,7 @@ void main() {
         bloc.add(const DeleteIncidentForCat('1', '1'));
       },
       expect: () => [
-        GetIncidentsForCatLoading(), // Assuming it loads after deleting for refresh
+        GetIncidentsForCatLoading(),
         GetIncidentsForCatSuccess(mockIncidents)
       ],
     );

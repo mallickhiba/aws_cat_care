@@ -8,7 +8,6 @@ import 'package:aws_app/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:aws_app/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:aws_app/blocs/sign_up_bloc/sign_up_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-
 import '../blocs/authentication_bloc/authentication_bloc_test.dart';
 
 class MockAuthenticationBloc extends Mock implements AuthenticationBloc {}
@@ -20,13 +19,9 @@ class MockSignUpBloc extends Mock implements SignUpBloc {}
 void main() {
   group('Golden Tests', () {
     testGoldens('Welcome Screen Golden Test', (tester) async {
-      await loadAppFonts();
-
-      // Mock dependencies
       final mockAuthenticationBloc = MockAuthenticationBloc();
       final mockUserRepository = MockUserRepository();
 
-      // Stub the necessary methods
       when(() => mockAuthenticationBloc.userRepository)
           .thenReturn(mockUserRepository);
 
@@ -45,16 +40,13 @@ void main() {
           ],
           child: const WelcomeScreen(),
         ),
-        surfaceSize: const Size(375, 812), // iPhone 11 Pro size
+        surfaceSize: const Size(375, 812),
       );
 
-      // Allow the widget to settle
       await tester.pumpAndSettle();
 
-      // Verify the screen renders correctly
       expect(find.byType(WelcomeScreen), findsOneWidget);
 
-      // Generate a golden screenshot
       await screenMatchesGolden(tester, 'welcome_screen');
     });
   });
