@@ -45,6 +45,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
+                const SizedBox(height: 20),
+                const CircleAvatar(
+                  radius: 40,
+                  backgroundImage: AssetImage('assets/images/logo_square.png'),
+                  backgroundColor: Colors.transparent,
+                ),
+                const SizedBox(height: 20),
                 const Text(
                   'Welcome Back!',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 import 'package:aws_app/screens/feeding/add_feeding_task_page.dart';
 import 'package:flutter/material.dart';

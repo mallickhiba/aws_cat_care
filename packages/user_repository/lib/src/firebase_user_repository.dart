@@ -50,6 +50,30 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
+  Future<void> signInWithCredential(AuthCredential credential) async {
+    try {
+      UserCredential userCredential =
+          await _firebaseAuth.signInWithCredential(credential);
+
+      final user = userCredential.user;
+      if (user != null) {
+        MyUser myUser = MyUser(
+          id: user.uid,
+          email: user.email ?? '',
+          name: user.email!.split('@').first,
+          picture: user.photoURL ?? '',
+          role: 'user',
+        );
+
+        await setUserData(myUser);
+      }
+    } catch (e) {
+      log("Error during signInWithCredential: $e");
+      rethrow;
+    }
+  }
+
+  @override
   Future<void> logOut() async {
     try {
       await _firebaseAuth.signOut();

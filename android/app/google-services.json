@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "719418946649-qgdidm2sltm8p5cu9saj7b2evvn8i8kt.apps.googleusercontent.com",
+              "client_id": "719418946649-54q5hn41qqtb27sqk1mqugnvjogd9ukj.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.awsCatCare"
+                "bundle_id": "com.example.awsApp"
               }
             }
           ]
@@ -49,6 +49,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "719418946649-tk036enabaq2124sdle73hdnqq822d92.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aws_app",
+            "certificate_hash": "ff5a802bc5df07e89197155beec6ee72bdcadf77"
+          }
+        },
         {
           "client_id": "719418946649-rt64ogs3ajl6ovu2knjpje7c84nenitt.apps.googleusercontent.com",
           "client_type": 3
@@ -67,10 +75,10 @@
               "client_type": 3
             },
             {
-              "client_id": "719418946649-qgdidm2sltm8p5cu9saj7b2evvn8i8kt.apps.googleusercontent.com",
+              "client_id": "719418946649-54q5hn41qqtb27sqk1mqugnvjogd9ukj.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.awsCatCare"
+                "bundle_id": "com.example.awsApp"
               }
             }
           ]
@@ -103,10 +111,10 @@
               "client_type": 3
             },
             {
-              "client_id": "719418946649-qgdidm2sltm8p5cu9saj7b2evvn8i8kt.apps.googleusercontent.com",
+              "client_id": "719418946649-54q5hn41qqtb27sqk1mqugnvjogd9ukj.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.awsCatCare"
+                "bundle_id": "com.example.awsApp"
               }
             }
           ]

@@ -217,6 +217,7 @@ class _EditDonationsPageState extends State<EditDonationsPage> {
       'progress': int.parse(_progressController.text),
       'bankDetails': _bankDetailsController.text,
     });
+    // ignore: use_build_context_synchronously
     Navigator.pop(context);
   }
 

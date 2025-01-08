@@ -19,4 +19,6 @@ abstract class UserRepository {
   Future<List<MyUser>> getAllUsers();
 
   Future<String> uploadPicture(String file, String userId);
+
+  Future<void> signInWithCredential(AuthCredential credential);
 }

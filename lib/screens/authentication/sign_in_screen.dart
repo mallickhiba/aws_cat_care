@@ -27,7 +27,16 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return BlocListener<SignInBloc, SignInState>(
       listener: (context, state) {
-        if (state is SignInSuccess || state is GoogleSignInSuccess) {
+        if (state is SignInSuccess) {
+          setState(() {
+            signInRequired = false;
+          });
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ),
+          );
+        } else if (state is GoogleSignInSuccess) {
           setState(() {
             signInRequired = false;
           });
@@ -40,10 +49,19 @@ class _SignInScreenState extends State<SignInScreen> {
           setState(() {
             signInRequired = true;
           });
-        } else if (state is SignInFailure || state is GoogleSignInFailure) {
+        } else if (state is SignInFailure) {
           setState(() {
             signInRequired = false;
             _errorMsg = 'Invalid email or password';
+          });
+        } else if (state is GoogleSignInFailure) {
+          setState(() {
+            signInRequired = false;
+            // Add specific handling for Google Sign-In failure
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text("Google Sign-In failed. Please try again.")),
+            );
           });
         }
       },
@@ -54,22 +72,15 @@ class _SignInScreenState extends State<SignInScreen> {
             key: _formKey,
             child: Column(
               children: [
-                const SizedBox(height: 20),
-                Text(
-                  'Sign In',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 40),
                 MyTextField(
                   controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
                   keyboardType: TextInputType.emailAddress,
                   prefixIcon: const Icon(CupertinoIcons.mail_solid),
-                  errorMsg: _errorMsg,
+                  errorMsg: _errorMsg == 'Invalid email or password'
+                      ? _errorMsg
+                      : null, // Only show if email/password error
                   validator: (val) {
                     if (val!.isEmpty) {
                       return 'Please fill in this field';
@@ -86,7 +97,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   obscureText: obscurePassword,
                   keyboardType: TextInputType.visiblePassword,
                   prefixIcon: const Icon(CupertinoIcons.lock_fill),
-                  errorMsg: _errorMsg,
+                  errorMsg: _errorMsg == 'Invalid email or password'
+                      ? _errorMsg
+                      : null,
                   validator: (val) {
                     if (val!.isEmpty) {
                       return 'Please fill in this field';
