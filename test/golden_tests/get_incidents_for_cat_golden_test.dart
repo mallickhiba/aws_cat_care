@@ -9,8 +9,6 @@ import 'package:incident_repository/incident_repository.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:user_repository/user_repository.dart';
 
-import 'all_incidents_golden_test.txt';
-
 class MockGetIncidentsForCatBloc extends Mock
     implements GetIncidentsForCatBloc {}
 
@@ -18,8 +16,6 @@ class MockMyUserBloc extends Mock implements MyUserBloc {}
 
 void main() {
   const catId = "cat1";
-  final mockCatBloc = MockGetCatBloc();
-
   final mockUser = MyUser(
     id: '1',
     name: 'Test User',
@@ -101,14 +97,14 @@ void main() {
           providers: [
             BlocProvider<GetIncidentsForCatBloc>(
               create: (_) => MockGetIncidentsForCatBloc()
-                ..emit(GetIncidentsForCatSuccess(const [])),
+                ..emit(const GetIncidentsForCatSuccess([])),
             ),
             BlocProvider<MyUserBloc>(
               create: (_) =>
                   MockMyUserBloc()..emit(MyUserState.success(mockUser)),
             ),
           ],
-          child: IncidentPage(catId: catId),
+          child: const IncidentPage(catId: catId),
         ),
         surfaceSize: const Size(375, 812),
       );
@@ -129,7 +125,7 @@ void main() {
                   MockMyUserBloc()..emit(MyUserState.success(mockUser)),
             ),
           ],
-          child: IncidentPage(catId: catId),
+          child: const IncidentPage(catId: catId),
         ),
         surfaceSize: const Size(375, 812),
       );

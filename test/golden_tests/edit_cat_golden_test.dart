@@ -86,7 +86,7 @@ void main() {
       await tester.pumpWidgetBuilder(
         BlocProvider<UpdateCatBloc>(
           create: (_) => MockUpdateCatBloc()
-            ..emit(UpdateCatFailure('Failed to update cat.')),
+            ..emit(const UpdateCatFailure('Failed to update cat.')),
           child: EditCatDetailScreen(cat: mockCat),
         ),
         surfaceSize: const Size(375, 812),
