@@ -68,7 +68,7 @@ class MyAppView extends StatelessWidget {
         title: 'AWS Cat Care',
         theme: ThemeData(
           colorScheme: const ColorScheme.light(
-            surface: Color.fromARGB(255, 234, 199, 247),
+            surface: Color.fromARGB(255, 246, 229, 252),
             onSurface: Colors.black,
             primary: Color.fromARGB(255, 106, 52, 128),
             onPrimary: Colors.white,

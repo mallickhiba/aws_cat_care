@@ -12,10 +12,15 @@ class MyUserBloc extends Bloc<MyUserEvent, MyUserState> {
   MyUserBloc({required UserRepository myUserRepository})
       : _userRepository = myUserRepository,
         super(const MyUserState.loading()) {
+    log("HELLLOOOO");
     on<GetMyUser>((event, emit) async {
       try {
-        MyUser myUser = await _userRepository.getMyUser(event.myUserId);
+        log("TRYING TO FIND USERRRR");
+        final myUser = await _userRepository.getMyUser(event.myUserId);
+        log('FOUND USERRRR');
+        log(myUser.toString());
         emit(MyUserState.success(myUser));
+        log("EMITTEDD SUCESSS");
       } catch (e) {
         log(e.toString());
         emit(const MyUserState.failure());

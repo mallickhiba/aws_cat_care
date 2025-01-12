@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:aws_app/blocs/get_cat_bloc/get_cat_bloc.dart';
 import 'package:aws_app/screens/incidents/cat_incidents_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
@@ -9,8 +10,6 @@ import 'package:incident_repository/incident_repository.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:user_repository/user_repository.dart';
 
-import 'all_incidents_golden_test.txt';
-
 class MockGetIncidentsForCatBloc extends Mock
     implements GetIncidentsForCatBloc {}
 
@@ -18,8 +17,6 @@ class MockMyUserBloc extends Mock implements MyUserBloc {}
 
 void main() {
   const catId = "cat1";
-  final mockCatBloc = MockGetCatBloc();
-
   final mockUser = MyUser(
     id: '1',
     name: 'Test User',

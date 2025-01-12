@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:cat_repository/cat_repository.dart';
-import 'package:cat_repository/src/models/cat.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -94,8 +93,8 @@ void main() {
         MultiBlocProvider(
           providers: [
             BlocProvider<GetAllIncidentsBloc>(
-              create: (_) =>
-                  MockGetAllIncidentsBloc()..emit(GetAllIncidentsSuccess([])),
+              create: (_) => MockGetAllIncidentsBloc()
+                ..emit(const GetAllIncidentsSuccess([])),
             ),
             BlocProvider<GetCatBloc>(
               create: (_) => MockGetCatBloc(),

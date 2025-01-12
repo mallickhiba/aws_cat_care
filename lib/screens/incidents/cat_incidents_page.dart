@@ -18,6 +18,10 @@ class _IncidentPageState extends State<IncidentPage> {
   @override
   void initState() {
     super.initState();
+    _loadIncidents();
+  }
+
+  void _loadIncidents() {
     context
         .read<GetIncidentsForCatBloc>()
         .add(GetIncidentsForCat(catId: widget.catId));
@@ -33,13 +37,19 @@ class _IncidentPageState extends State<IncidentPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              // Navigate to AddIncidentPage and wait for it to return
+              final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => AddIncidentPage(catId: widget.catId),
                 ),
               );
+
+              // Refresh the incident list if a new incident was added
+              if (result == true) {
+                _loadIncidents();
+              }
             },
           ),
         ],

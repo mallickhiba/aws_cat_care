@@ -32,183 +32,211 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(""),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: NetworkImage(cat.image),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              cat.catName,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.location_pin, color: Colors.pink),
-                Text(
-                  cat.location,
-                  style: const TextStyle(fontSize: 16, color: Colors.black),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade300,
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "🐾 About ${cat.catName}",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+        actions: [
+          if (widget.user.role == "admin")
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () async {
+                final updatedCat = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => UpdateCatBloc(
+                        catRepository: FirebaseCatRepository(),
+                      ),
+                      child: EditCatDetailScreen(cat: cat),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      _buildBadge("Age", "${cat.age} years"),
-                      _buildBadge("Status", cat.status),
-                      _buildBadge("Campus", cat.campus),
-                      _buildBadge(
-                          "Vaccinated", cat.isVaccinated ? "Yes" : "No"),
-                      _buildBadge("Healthy", cat.isHealthy ? "Yes" : "No"),
-                      _buildBadge("Fixed", cat.isFixed ? "Yes" : "No"),
-                      _buildBadge("Color", cat.color),
-                    ],
+                );
+
+                if (updatedCat != null) {
+                  setState(() {
+                    cat = updatedCat;
+                  });
+                }
+              },
+            ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(16),
+                    image: DecorationImage(
+                      image: NetworkImage(cat.image),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  const SizedBox(height: 10),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                cat.catName,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.location_pin, color: Colors.pink),
                   Text(
-                    cat.description,
+                    '${cat.location}, ${cat.campus}',
                     style: const TextStyle(fontSize: 16, color: Colors.black),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 10),
-            if (cat.photos.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "📷 Photos",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 100,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: cat.photos.length,
-                      itemBuilder: (context, index) {
-                        final photoUrl = cat.photos[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.network(
-                            photoUrl,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade300,
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "🐾 About ${cat.catName}",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Wrap content with full-width alignment
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            alignment:
+                                WrapAlignment.start, // Align items to start
+                            children: [
+                              _buildBadge("${cat.age} years old"),
+                              _buildBadge("${cat.color}"),
+                              _buildBadge("${cat.status}"),
+                              _buildBadge(cat.isVaccinated
+                                  ? "Vaccinated"
+                                  : "Not vaccinated yet"),
+                              _buildBadge(
+                                  cat.isHealthy ? "Healthy" : "Not Healthy"),
+                              _buildBadge(
+                                  cat.isFixed ? "Fixed" : "Not fixed yet"),
+                            ],
                           ),
-                        );
-                      },
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (context) => GetIncidentsForCatBloc(
-                        incidentRepository: FirebaseIncidentRepository(),
-                      )..add(GetIncidentsForCat(catId: cat.catId)),
-                      child: IncidentPage(catId: cat.catId),
+                    const SizedBox(height: 10),
+                    // Description with full width
+                    SizedBox(
+                      width: double.infinity, // Make the description full width
+                      child: Text(
+                        cat.description,
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.black),
+                      ),
                     ),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  ],
                 ),
               ),
-              child: const Text("View Incidents"),
-            ),
-            if (widget.user.role == "admin")
+              const SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () async {
-                  final updatedCat = await Navigator.push(
+                onPressed: () {
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => BlocProvider(
-                        create: (context) => UpdateCatBloc(
-                          catRepository: FirebaseCatRepository(),
-                        ),
-                        child: EditCatDetailScreen(cat: cat),
+                        create: (context) => GetIncidentsForCatBloc(
+                          incidentRepository: FirebaseIncidentRepository(),
+                        )..add(GetIncidentsForCat(catId: cat.catId)),
+                        child: IncidentPage(catId: cat.catId),
                       ),
                     ),
                   );
-
-                  if (updatedCat != null) {
-                    setState(() {
-                      cat = updatedCat;
-                    });
-                  }
                 },
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 106, 52, 128),
+                  foregroundColor: Colors.white,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: const Text("Edit Cat Details"),
+                child: const Text("View Incidents"),
               ),
-          ],
+              const SizedBox(height: 10),
+              if (cat.photos.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "📷 Photos",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 100,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: cat.photos.length,
+                        itemBuilder: (context, index) {
+                          final photoUrl = cat.photos[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      FullScreenPhoto(photoUrl: photoUrl),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.network(
+                                photoUrl,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildBadge(String label, String value) {
+  Widget _buildBadge(String value) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -216,8 +244,33 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        "$label: $value",
+        "$value",
         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+}
+
+class FullScreenPhoto extends StatelessWidget {
+  final String photoUrl;
+
+  const FullScreenPhoto({super.key, required this.photoUrl});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Photo"),
+      ),
+      body: GestureDetector(
+        onTap: () => Navigator.pop(context), // Close on tap
+        child: Center(
+          child: InteractiveViewer(
+            child: Image.network(
+              photoUrl,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
       ),
     );
   }

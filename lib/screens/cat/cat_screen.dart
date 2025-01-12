@@ -31,6 +31,8 @@ class _CatScreenState extends State<CatScreen> {
   bool _isFixed = false;
   bool _isVaccinated = false;
   bool _isHealthy = true;
+  List<File> _photoFiles = [];
+  List<String> _photoUrls = [];
 
   @override
   void initState() {
@@ -67,9 +69,40 @@ class _CatScreenState extends State<CatScreen> {
       setState(() {
         cat = cat.copyWith(
           image: imageUrl,
-          // photos: [...cat.photos, imageUrl], // Add the image to the photos list
         );
       });
+    }
+  }
+
+  Future<void> _pickPhotos() async {
+    final ImagePicker picker = ImagePicker();
+    final List<XFile>? images = await picker.pickMultiImage();
+
+    if (images != null && images.isNotEmpty) {
+      setState(() {
+        _photoFiles = images.map((image) => File(image.path)).toList();
+      });
+
+      for (var photo in _photoFiles) {
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('cat_photos/${DateTime.now().millisecondsSinceEpoch}.jpg');
+        final uploadTask = storageRef.putFile(photo);
+
+        final snapshot = await uploadTask;
+        final photoUrl = await snapshot.ref.getDownloadURL();
+
+        if (mounted) {
+          setState(() {
+            _photoUrls.add(photoUrl);
+          });
+        }
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Photos uploaded successfully.")),
+        );
+      }
     }
   }
 
@@ -114,6 +147,7 @@ class _CatScreenState extends State<CatScreen> {
                     isHealthy: _isHealthy,
                     campus: _selectedCampus,
                     status: _selectedStatus,
+                    photos: _photoUrls,
                   );
                 });
                 context.read<CreateCatBloc>().add(CreateCat(cat));
@@ -152,6 +186,24 @@ class _CatScreenState extends State<CatScreen> {
                         : null,
                   ),
                 ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _pickPhotos,
+                  child: const Text("Upload Cat Photos"),
+                ),
+                const SizedBox(height: 20),
+                if (_photoFiles.isNotEmpty)
+                  Wrap(
+                    spacing: 10,
+                    children: _photoFiles
+                        .map((file) => Image.file(
+                              file,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ))
+                        .toList(),
+                  ),
                 const SizedBox(height: 20),
                 _buildTextField(_nameController, "Cat Name"),
                 const SizedBox(height: 10),
@@ -242,8 +294,11 @@ class _CatScreenState extends State<CatScreen> {
                   },
                 ),
                 const SizedBox(height: 10),
-                _buildTextField(_descriptionController, "Description",
-                    maxLines: 5),
+                _buildTextField(
+                  _descriptionController,
+                  "Description",
+                  maxLines: 5,
+                ),
               ],
             ),
           ),

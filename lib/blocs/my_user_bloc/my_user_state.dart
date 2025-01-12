@@ -12,13 +12,13 @@ class MyUserState extends Equatable {
   });
 
   const MyUserState.initial() : this();
+  const MyUserState.loading() : this(status: MyUserStatus.loading);
 
-  const MyUserState.loading() : this();
-
-  const MyUserState.success(MyUser user) : this(user: user);
+  const MyUserState.success(MyUser user)
+      : this(status: MyUserStatus.success, user: user);
 
   const MyUserState.failure() : this(status: MyUserStatus.failure);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [status, user];
 }

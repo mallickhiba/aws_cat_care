@@ -71,67 +71,104 @@ class _DonationsPageState extends State<DonationsPage> {
 
     return Card(
       margin: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (images.isNotEmpty)
-            SizedBox(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: images.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.network(images[index], fit: BoxFit.cover),
-                  );
-                },
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: const BorderSide(
+          color: Color.fromARGB(255, 239, 200, 245),
+          width: 1,
+        ),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 238, 216, 241),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(description),
+                  const SizedBox(height: 8),
+                  LinearProgressIndicator(
+                    value: (progress / goal).clamp(0.0, 1.0),
+                    color: Color.fromARGB(255, 106, 52, 128),
+                    backgroundColor: Colors.grey.shade300,
+                  ),
+                  const SizedBox(height: 4),
+                  Text("Raised: Rs. $progress / Rs. $goal"),
+                ],
               ),
             ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(description),
-                const SizedBox(height: 8),
-                LinearProgressIndicator(
-                  value: (progress / goal).clamp(0.0, 1.0),
-                  color: Colors.green,
-                  backgroundColor: Colors.grey.shade300,
-                ),
-                const SizedBox(height: 4),
-                Text("Raised: Rs. $progress / Rs. $goal"),
-              ],
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              if (userRole == "admin")
-                IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue),
-                  onPressed: () {
-                    _navigateToEditCampaign(context, campaignId, campaignData);
+            if (images.isNotEmpty)
+              SizedBox(
+                height: 150, // Adjust height as needed
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: images.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          images[index],
+                          fit: BoxFit.cover,
+                          width: 120,
+                          height: 120,
+                        ),
+                      ),
+                    );
                   },
                 ),
-              ElevatedButton(
-                onPressed: () {
-                  _showBankDetails(context, bankDetails);
-                },
-                child: const Text("Donate"),
               ),
-            ],
-          ),
-        ],
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (userRole == "admin")
+                    IconButton(
+                      icon: const Icon(Icons.edit,
+                          color: Color.fromARGB(255, 106, 52, 128)),
+                      onPressed: () {
+                        _navigateToEditCampaign(
+                            context, campaignId, campaignData);
+                      },
+                    ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _showBankDetails(context, bankDetails);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 106, 52, 128),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text("Donate"),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

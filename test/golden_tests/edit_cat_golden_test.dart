@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:cat_repository/cat_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -86,7 +85,7 @@ void main() {
       await tester.pumpWidgetBuilder(
         BlocProvider<UpdateCatBloc>(
           create: (_) => MockUpdateCatBloc()
-            ..emit(UpdateCatFailure('Failed to update cat.')),
+            ..emit(const UpdateCatFailure('Failed to update cat.')),
           child: EditCatDetailScreen(cat: mockCat),
         ),
         surfaceSize: const Size(375, 812),

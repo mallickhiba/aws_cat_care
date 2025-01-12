@@ -74,135 +74,149 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetAllUsersBloc, GetAllUsersState>(
-      builder: (context, state) {
-        if (state is GetAllUsersLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+    return BlocListener<CreateIncidentBloc, CreateIncidentState>(
+      listener: (context, state) {
+        if (state is CreateIncidentSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Incident added successfully!")),
           );
-        } else if (state is GetAllUsersSuccess) {
-          final users = state.users;
-          final userOptions = users
-              .map((user) => DropdownMenuItem(
-                    value: user.id,
-                    child: Text(user.name),
-                  ))
-              .toList();
-
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text("Add Incident"),
-            ),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _descriptionController,
-                    decoration: const InputDecoration(
-                      labelText: "Description",
-                      border: OutlineInputBorder(),
-                    ),
-                    maxLines: 3,
-                  ),
-                  const SizedBox(height: 10),
-                  SwitchListTile(
-                    title: const Text("Vet Visit"),
-                    value: vetVisit,
-                    onChanged: (value) {
-                      setState(() {
-                        vetVisit = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  SwitchListTile(
-                    title: const Text("Follow-Up Required"),
-                    value: followUpRequired,
-                    onChanged: (value) {
-                      setState(() {
-                        followUpRequired = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  DropdownButtonFormField<String>(
-                    value: selectedVolunteer,
-                    items: userOptions,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedVolunteer = value;
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      labelText: "Volunteer",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Image Picker Section
-                  ElevatedButton(
-                    onPressed: _pickImages,
-                    child: const Text("Pick Images"),
-                  ),
-                  const SizedBox(height: 10),
-                  if (selectedImages.isNotEmpty)
-                    Wrap(
-                      spacing: 10,
-                      children: selectedImages
-                          .map((image) => Image.file(image,
-                              width: 100, height: 100, fit: BoxFit.cover))
-                          .toList(),
-                    ),
-                  if (isUploading)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: CircularProgressIndicator(),
-                    ),
-
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (_descriptionController.text.isNotEmpty &&
-                          selectedVolunteer != null) {
-                        await _uploadImages();
-
-                        final incident = Incident(
-                          id: '',
-                          catId: widget.catId,
-                          reportDate: DateTime.now(),
-                          reportedBy: context.read<MyUserBloc>().state.user!,
-                          vetVisit: vetVisit,
-                          description: _descriptionController.text,
-                          followUp: followUpRequired,
-                          volunteer: users.firstWhere(
-                              (user) => user.id == selectedVolunteer),
-                          photos: photoUrls,
-                        );
-                        context.read<CreateIncidentBloc>().add(
-                              CreateIncident(incident, widget.catId),
-                            );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text(
-                                  "All fields including Volunteer are required!")),
-                        );
-                      }
-                    },
-                    child: const Text("Submit"),
-                  ),
-                ],
-              ),
-            ),
-          );
-        } else {
-          return const Scaffold(
-            body: Center(child: Text("Failed to load users.")),
+          Navigator.pop(context); // Navigate back to the previous page
+        } else if (state is CreateIncidentFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Failed to add incident.")),
           );
         }
       },
+      child: BlocBuilder<GetAllUsersBloc, GetAllUsersState>(
+        builder: (context, state) {
+          if (state is GetAllUsersLoading) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          } else if (state is GetAllUsersSuccess) {
+            final users = state.users;
+            final userOptions = users
+                .map((user) => DropdownMenuItem(
+                      value: user.id,
+                      child: Text(user.name),
+                    ))
+                .toList();
+
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text("Add Incident"),
+              ),
+              body: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _descriptionController,
+                      decoration: const InputDecoration(
+                        labelText: "Description",
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 10),
+                    SwitchListTile(
+                      title: const Text("Vet Visit"),
+                      value: vetVisit,
+                      onChanged: (value) {
+                        setState(() {
+                          vetVisit = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    SwitchListTile(
+                      title: const Text("Follow-Up Required"),
+                      value: followUpRequired,
+                      onChanged: (value) {
+                        setState(() {
+                          followUpRequired = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    DropdownButtonFormField<String>(
+                      value: selectedVolunteer,
+                      items: userOptions,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedVolunteer = value;
+                        });
+                      },
+                      decoration: const InputDecoration(
+                        labelText: "Volunteer",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Image Picker Section
+                    ElevatedButton(
+                      onPressed: _pickImages,
+                      child: const Text("Pick Images"),
+                    ),
+                    const SizedBox(height: 10),
+                    if (selectedImages.isNotEmpty)
+                      Wrap(
+                        spacing: 10,
+                        children: selectedImages
+                            .map((image) => Image.file(image,
+                                width: 100, height: 100, fit: BoxFit.cover))
+                            .toList(),
+                      ),
+                    if (isUploading)
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: CircularProgressIndicator(),
+                      ),
+
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (_descriptionController.text.isNotEmpty &&
+                            selectedVolunteer != null) {
+                          await _uploadImages();
+
+                          final incident = Incident(
+                            id: '',
+                            catId: widget.catId,
+                            reportDate: DateTime.now(),
+                            reportedBy: context.read<MyUserBloc>().state.user!,
+                            vetVisit: vetVisit,
+                            description: _descriptionController.text,
+                            followUp: followUpRequired,
+                            volunteer: users.firstWhere(
+                                (user) => user.id == selectedVolunteer),
+                            photos: photoUrls,
+                          );
+                          context.read<CreateIncidentBloc>().add(
+                                CreateIncident(incident, widget.catId),
+                              );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text(
+                                    "All fields including Volunteer are required!")),
+                          );
+                        }
+                      },
+                      child: const Text("Submit"),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return const Scaffold(
+              body: Center(child: Text("Failed to load users.")),
+            );
+          }
+        },
+      ),
     );
   }
 }

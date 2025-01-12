@@ -102,14 +102,27 @@ class _UserDutiesPageState extends State<UserDutiesPage> {
           itemBuilder: (context, index) {
             final data = incidentDuties[index].data() as Map<String, dynamic>;
             final description = data['description'] ?? "No Description";
-            final reportDate =
-                (data['reportDate'] as Timestamp).toDate().toLocal();
             final catId = data['catId'] ?? "Unknown Cat ID";
+
+            DateTime? reportDate;
+            // Handle different formats of reportDate
+            try {
+              if (data['reportDate'] is Timestamp) {
+                reportDate =
+                    (data['reportDate'] as Timestamp).toDate().toLocal();
+              } else if (data['reportDate'] is String) {
+                reportDate = DateTime.tryParse(data['reportDate'])?.toLocal();
+              }
+            } catch (e) {
+              log("Error parsing reportDate: $e");
+            }
 
             return ListTile(
               leading: const Icon(Icons.report_problem, color: Colors.orange),
               title: Text(description),
-              subtitle: Text("Cat ID: $catId\nReported On: $reportDate"),
+              subtitle: Text(
+                "Cat ID: $catId\nReported On: ${reportDate != null ? reportDate : 'Invalid Date'}",
+              ),
             );
           },
         );
