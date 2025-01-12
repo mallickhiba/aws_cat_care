@@ -7,6 +7,7 @@ import 'package:cat_repository/cat_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aws_app/blocs/my_user_bloc/my_user_bloc.dart';
+import 'package:aws_app/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:aws_app/blocs/update_user_info_bloc/update_user_info_bloc.dart';
 import 'package:aws_app/screens/authentication/welcome_screen.dart';
 import 'package:incident_repository/incident_repository.dart';
@@ -21,7 +22,7 @@ class MyAppView extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AuthenticationBloc(
+          create: (context) => SignInBloc(
               userRepository:
                   context.read<AuthenticationBloc>().userRepository),
         ),
@@ -80,7 +81,7 @@ class MyAppView extends StatelessWidget {
         ),
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
-            if (state == AuthenticationStatusAuthenticated) {
+            if (state.status == AuthenticationStatus.authenticated) {
               return const HomeScreen();
             } else {
               return const WelcomeScreen();

@@ -94,8 +94,8 @@ void main() {
         MultiBlocProvider(
           providers: [
             BlocProvider<GetAllIncidentsBloc>(
-              create: (_) => MockGetAllIncidentsBloc()
-                ..emit(const GetAllIncidentsSuccess([])),
+              create: (_) =>
+                  MockGetAllIncidentsBloc()..emit(GetAllIncidentsSuccess([])),
             ),
             BlocProvider<GetCatBloc>(
               create: (_) => MockGetCatBloc(),
