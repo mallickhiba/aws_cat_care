@@ -78,7 +78,7 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Text(
                 cat.catName,
                 style: const TextStyle(
@@ -148,9 +148,8 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    // Description with full width
                     SizedBox(
-                      width: double.infinity, // Make the description full width
+                      width: double.infinity,
                       child: Text(
                         cat.description,
                         style:
@@ -186,7 +185,6 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                 ),
                 child: const Text("View Incidents"),
               ),
-              const SizedBox(height: 10),
               if (cat.photos.isNotEmpty)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

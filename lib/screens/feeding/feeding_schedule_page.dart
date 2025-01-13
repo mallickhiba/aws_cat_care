@@ -26,15 +26,11 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
 
   Future<void> _initializeFeedingSchedules() async {
     final userState = context.read<GetAllUsersBloc>().state;
+
     if (userState is! GetAllUsersSuccess) {
       context.read<GetAllUsersBloc>().add(FetchAllUsers());
     }
-
-    context.read<GetAllUsersBloc>().stream.firstWhere((state) {
-      return state is GetAllUsersSuccess;
-    }).then((_) {
-      _loadFeedingSchedules();
-    });
+    _loadFeedingSchedules();
   }
 
   Future<void> _loadFeedingSchedules() async {
@@ -91,11 +87,11 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
         log('User data not loaded or available');
       }
 
-      log('Parsed tasks: $tasks');
-
-      setState(() {
-        _feedingTasks = tasks;
-      });
+      if (mounted) {
+        setState(() {
+          _feedingTasks = tasks;
+        });
+      }
     } catch (e, stackTrace) {
       log('Error loading feeding schedules: $e');
       log(stackTrace.toString());

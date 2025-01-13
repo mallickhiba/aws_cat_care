@@ -129,82 +129,99 @@ class AvailableCatsPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Card(
-              elevation: 3,
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            shape: BoxShape.circle,
-                            image: cat.image.isNotEmpty
-                                ? DecorationImage(
-                                    image: NetworkImage(cat.image),
-                                    fit: BoxFit.cover,
-                                  )
-                                : null,
+                    // Cat Image
+                    Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(120),
+                        image: cat.image.isNotEmpty
+                            ? DecorationImage(
+                                image: NetworkImage(cat.image),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                        color: Colors.grey.shade300,
+                      ),
+                      child: cat.image.isEmpty
+                          ? const Icon(Icons.pets, size: 40, color: Colors.grey)
+                          : null,
+                    ),
+                    const SizedBox(width: 16),
+                    // Cat Info
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            cat.catName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
                           ),
-                          child: cat.image.isEmpty
-                              ? const Icon(Icons.pets, size: 30)
-                              : null,
-                        ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              cat.catName,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                          const SizedBox(height: 4),
+                          Text(
+                            "${cat.age} years old",
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              const Icon(Icons.location_pin,
+                                  color: Colors.pink, size: 16),
+                              Expanded(
+                                child: Text(
+                                  cat.location,
+                                  style: const TextStyle(fontSize: 14),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                            Text(
-                              "Age: ${cat.age} years",
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          // Text(
+                          //   cat.description,
+                          //   maxLines: 2,
+                          //   overflow: TextOverflow.ellipsis,
+                          //   style: const TextStyle(fontSize: 14),
+                          // ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      cat.description,
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Icon(Icons.location_pin,
-                            color: Colors.pink, size: 16),
-                        Text(
-                          cat.location,
-                          style: const TextStyle(
-                              fontSize: 14, color: Colors.black),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
+                    // Adopt Button
                     if (showAdoptButton)
-                      ElevatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Contact us for adoption!"),
+                      Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Contact us for adoption!"),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 106, 52, 128),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
                             ),
-                          );
-                        },
-                        child: const Text("Adopt Me"),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 16),
+                          ),
+                          child: const Text("Adopt me!"),
+                        ),
                       ),
                   ],
                 ),

@@ -121,7 +121,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            const SizedBox(height: 20),
+            Text("Latest cats!", style: TextStyle(fontSize: 20)),
+            SizedBox(height: 10),
             Expanded(
               child: BlocBuilder<GetCatBloc, GetCatState>(
                 builder: (context, state) {
