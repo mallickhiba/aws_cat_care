@@ -122,12 +122,12 @@ class _ProductsPageState extends State<ProductsPage> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Location: ${product['location']} - ${product['campus']} Campus',
+                            '${product['location']} - ${product['campus']} Campus',
                             style: const TextStyle(fontSize: 14),
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Required: ${product['required'] ? 'Yes' : 'No'}',
+                            'Qty: ${product['quantity']}',
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.black87,
@@ -138,10 +138,10 @@ class _ProductsPageState extends State<ProductsPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Qty: ${product['quantity']}',
+                                product['required'] ? 'Required' : '',
                                 style: const TextStyle(
                                   fontSize: 14,
-                                  color: Colors.black87,
+                                  color: Colors.red,
                                 ),
                               ),
                               Text(

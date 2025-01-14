@@ -55,16 +55,18 @@ class _IncidentPageState extends State<IncidentPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () async {
-              final result = await Navigator.push(
+            onPressed: () {
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => AddIncidentPage(catId: widget.catId),
                 ),
-              );
-              if (result == true) {
-                _loadIncidents();
-              }
+              ).then((result) {
+                if (result == true) {
+                  // Reload incidents when returning from AddIncidentPage
+                  _loadIncidents();
+                }
+              });
             },
           ),
         ],
