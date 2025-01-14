@@ -40,7 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         label: const Text(
           'Report an Incident',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'ICEBOLD',
+          ),
         ),
         icon: const Icon(Icons.report_problem, color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
@@ -58,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     "Welcome ${state.user!.name}!",
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontFamily: 'ICEBOLD',
                       color: Color.fromARGB(255, 106, 52, 128),
                     ),
                   ),
@@ -130,8 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 "Latest Cats!",
                 style: TextStyle(
                   fontSize: 20,
-                  // fontFamily: 'ICEBOLD',
-                  fontWeight: FontWeight.bold,
+                  fontFamily: 'ICEBOLD',
                   color: Color.fromARGB(255, 106, 52, 128),
                 ),
               ),
@@ -225,9 +227,10 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 10),
             Text(title,
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold)),
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontFamily: 'ICEBOLD',
+                )),
           ],
         ),
       ),
