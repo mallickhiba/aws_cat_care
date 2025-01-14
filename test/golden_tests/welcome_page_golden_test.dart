@@ -8,7 +8,7 @@ import 'package:aws_app/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:aws_app/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:aws_app/blocs/sign_up_bloc/sign_up_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-import '../blocs/authentication_bloc/authentication_bloc_test.dart';
+import '../blocs/authentication_bloc_test.dart';
 
 class MockAuthenticationBloc extends Mock implements AuthenticationBloc {}
 

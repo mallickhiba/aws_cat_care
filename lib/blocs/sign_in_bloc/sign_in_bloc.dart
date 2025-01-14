@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:equatable/equatable.dart';
@@ -28,17 +30,57 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignOutRequired>((event, emit) async {
       await _userRepository.logOut();
     });
+
     on<GoogleSignInRequested>((event, emit) async {
       final GoogleSignIn googleSignIn = GoogleSignIn();
       try {
         emit(SignInProcess());
+
         final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-        if (googleUser != null) {
-          emit(GoogleSignInSuccess());
-        } else {
+
+        if (googleUser == null) {
           throw Exception('User cancelled sign-in');
         }
+
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+
+        final OAuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        // Sign in to FirebaseAuth with the Google credentials
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+
+        // Check if the user exists in Firestore
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .get();
+
+        log("Google Sign-In successful: UID = ${userCredential.user!.uid}, Email = ${userCredential.user!.email}");
+
+        if (!userDoc.exists) {
+          // If user does not exist, create a new user record
+          final user = MyUser(
+            id: userCredential.user!.uid,
+            email: userCredential.user!.email!,
+            name: userCredential.user!.displayName ?? 'Unknown Name',
+            role: '', // Default role
+            picture: '',
+          );
+
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.id)
+              .set(user.toEntity().toDocument());
+        }
+
+        emit(GoogleSignInSuccess());
       } catch (error) {
+        log("Google Sign-In error: $error");
         emit(GoogleSignInFailure());
       }
     });

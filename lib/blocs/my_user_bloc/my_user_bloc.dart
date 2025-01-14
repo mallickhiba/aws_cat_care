@@ -16,6 +16,8 @@ class MyUserBloc extends Bloc<MyUserEvent, MyUserState> {
     on<GetMyUser>((event, emit) async {
       try {
         log("TRYING TO FIND USERRRR");
+        log("Fetching user document for ID: ${event.myUserId}");
+
         final myUser = await _userRepository.getMyUser(event.myUserId);
         log('FOUND USERRRR');
         log(myUser.toString());

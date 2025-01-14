@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aws_app/blocs/sign_up_bloc/sign_up_bloc.dart';
 import 'package:aws_app/screens/authentication/sign_up_screen.dart';
 
-import '../blocs/authentication_bloc/authentication_bloc_test.dart';
+import '../blocs/authentication_bloc_test.dart';
 
 final mockUserRepository = MockUserRepository();
 void main() {
