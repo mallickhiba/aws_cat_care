@@ -21,8 +21,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   void initState() {
     super.initState();
-    debugDumpApp();
-
     tabController = TabController(
       initialIndex: 0,
       length: 2,
@@ -45,38 +43,52 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                const Text(
-                  'Welcome Back!',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                // App logo
+                const SizedBox(height: 20),
+                ClipOval(
+                  child: Image.asset(
+                    'assets/images/logo_square.png',
+                    height: 120,
+                    width: 120,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                const SizedBox(height: kToolbarHeight),
+                Text(
+                  'Cat Care',
+                  style: TextStyle(
+                    fontSize: 50,
+                    fontFamily: 'ICEBOLD',
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                // Tab Bar
                 TabBar(
-                    controller: tabController,
-                    unselectedLabelColor: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.5),
-                    labelColor: Theme.of(context).colorScheme.onSurface,
-                    tabs: const [
-                      Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: Text(
-                          'Sign In',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
+                  controller: tabController,
+                  unselectedLabelColor:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  labelColor: Theme.of(context).colorScheme.onSurface,
+                  tabs: const [
+                    Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Text(
+                        'Log In',
+                        style: TextStyle(
+                          fontSize: 18,
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontSize: 18,
                         ),
                       ),
-                    ]),
+                    ),
+                  ],
+                ),
+                // TabBarView
                 Expanded(
                   child: TabBarView(controller: tabController, children: [
                     BlocProvider<SignInBloc>(

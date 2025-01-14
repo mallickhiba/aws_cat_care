@@ -1,3 +1,4 @@
+import 'package:aws_app/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -218,45 +219,77 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-              !signUpRequired
-                  ? SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: TextButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              MyUser myUser = MyUser.empty;
-                              myUser = myUser.copyWith(
-                                email: emailController.text,
-                                name: nameController.text,
-                              );
+              if (!signUpRequired)
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          MyUser myUser = MyUser.empty;
+                          myUser = myUser.copyWith(
+                            email: emailController.text,
+                            name: nameController.text,
+                          );
 
-                              setState(() {
-                                context.read<SignUpBloc>().add(SignUpRequired(
-                                    myUser, passwordController.text));
-                              });
-                            }
-                          },
-                          style: TextButton.styleFrom(
-                              elevation: 3.0,
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(60))),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 25, vertical: 5),
-                            child: Text(
-                              'Sign Up',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          )),
-                    )
-                  : const CircularProgressIndicator()
+                          setState(() {
+                            context.read<SignUpBloc>().add(SignUpRequired(
+                                myUser, passwordController.text));
+                          });
+                        }
+                      },
+                      style: TextButton.styleFrom(
+                          elevation: 3.0,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(60))),
+                      child: const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                        child: Text(
+                          'Sign Up',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      )),
+                )
+              else
+                const CircularProgressIndicator(),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: TextButton(
+                  onPressed: () {
+                    context.read<SignInBloc>().add(GoogleSignInRequested());
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(CupertinoIcons.mail_solid),
+                      SizedBox(width: 10),
+                      Text(
+                        'Sign Up with Google',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
