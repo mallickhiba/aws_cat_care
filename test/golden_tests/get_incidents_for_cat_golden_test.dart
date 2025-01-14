@@ -98,14 +98,14 @@ void main() {
           providers: [
             BlocProvider<GetIncidentsForCatBloc>(
               create: (_) => MockGetIncidentsForCatBloc()
-                ..emit(GetIncidentsForCatSuccess(const [])),
+                ..emit(const GetIncidentsForCatSuccess([])),
             ),
             BlocProvider<MyUserBloc>(
               create: (_) =>
                   MockMyUserBloc()..emit(MyUserState.success(mockUser)),
             ),
           ],
-          child: IncidentPage(catId: catId),
+          child: const IncidentPage(catId: catId),
         ),
         surfaceSize: const Size(375, 812),
       );
@@ -126,7 +126,7 @@ void main() {
                   MockMyUserBloc()..emit(MyUserState.success(mockUser)),
             ),
           ],
-          child: IncidentPage(catId: catId),
+          child: const IncidentPage(catId: catId),
         ),
         surfaceSize: const Size(375, 812),
       );

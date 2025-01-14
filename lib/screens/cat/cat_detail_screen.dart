@@ -133,8 +133,8 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                                 WrapAlignment.start, // Align items to start
                             children: [
                               _buildBadge("${cat.age} years old"),
-                              _buildBadge("${cat.color}"),
-                              _buildBadge("${cat.status}"),
+                              _buildBadge(cat.color),
+                              _buildBadge(cat.status),
                               _buildBadge(cat.isVaccinated
                                   ? "Vaccinated"
                                   : "Not vaccinated yet"),
@@ -242,7 +242,7 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        "$value",
+        value,
         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
       ),
     );

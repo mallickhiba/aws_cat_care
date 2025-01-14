@@ -47,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       appBar: AppBar(
         centerTitle: false,
-        elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: BlocBuilder<MyUserBloc, MyUserState>(
           builder: (context, state) {
@@ -55,10 +54,13 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state.status == MyUserStatus.success) {
               return Row(
                 children: [
-                  const SizedBox(width: 10),
                   Text(
                     "Welcome ${state.user!.name}!",
-                    style: const TextStyle(fontSize: 20),
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 106, 52, 128),
+                    ),
                   ),
                 ],
               );
@@ -121,8 +123,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            Text("Latest cats!", style: TextStyle(fontSize: 20)),
-            SizedBox(height: 10),
+            SizedBox(height: 12),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Latest Cats!",
+                style: TextStyle(
+                  fontSize: 20,
+                  // fontFamily: 'ICEBOLD',
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 106, 52, 128),
+                ),
+              ),
+            ),
+            const SizedBox(height: 6),
             Expanded(
               child: BlocBuilder<GetCatBloc, GetCatState>(
                 builder: (context, state) {

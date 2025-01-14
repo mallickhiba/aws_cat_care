@@ -104,7 +104,7 @@ class _DonationsPageState extends State<DonationsPage> {
                   const SizedBox(height: 8),
                   LinearProgressIndicator(
                     value: (progress / goal).clamp(0.0, 1.0),
-                    color: Color.fromARGB(255, 106, 52, 128),
+                    color: const Color.fromARGB(255, 106, 52, 128),
                     backgroundColor: Colors.grey.shade300,
                   ),
                   const SizedBox(height: 4),

@@ -32,7 +32,7 @@ class _CatScreenState extends State<CatScreen> {
   bool _isVaccinated = false;
   bool _isHealthy = true;
   List<File> _photoFiles = [];
-  List<String> _photoUrls = [];
+  final List<String> _photoUrls = [];
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _CatScreenState extends State<CatScreen> {
 
   Future<void> _pickPhotos() async {
     final ImagePicker picker = ImagePicker();
-    final List<XFile>? images = await picker.pickMultiImage();
+    final List<XFile> images = await picker.pickMultiImage();
 
     if (images != null && images.isNotEmpty) {
       setState(() {

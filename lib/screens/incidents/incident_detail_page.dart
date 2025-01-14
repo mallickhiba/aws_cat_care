@@ -7,10 +7,10 @@ class IncidentDetailPage extends StatelessWidget {
   final String catName;
 
   const IncidentDetailPage({
-    Key? key,
+    super.key,
     required this.incident,
     required this.catName,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,6 @@ class IncidentDetailPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // General Details Section
               Card(
                 elevation: 3,
                 shape: RoundedRectangleBorder(
