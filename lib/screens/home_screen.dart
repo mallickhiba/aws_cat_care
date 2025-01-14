@@ -59,8 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     "Welcome ${state.user!.name}!",
-                    style: TextStyle(
-                      fontSize: 20,
+                    style: const TextStyle(
+                      fontSize: 30,
                       fontFamily: 'ICEBOLD',
                       color: Color.fromARGB(255, 106, 52, 128),
                     ),
@@ -101,13 +101,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         _buildCardButton(context, "Cats", Icons.pets,
                             AvailableCatsPage(user: user)),
-                        _buildCardButton(context, "Feeding Schedule",
-                            Icons.schedule, const FeedingSchedulePage()),
-                        _buildCardButton(context, "Incident Reports",
+                        _buildCardButton(context, "Schedule", Icons.schedule,
+                            const FeedingSchedulePage()),
+                        _buildCardButton(context, "Incidents",
                             Icons.report_problem, const AllIncidentsPage()),
                         _buildCardButton(context, "Donate",
                             Icons.volunteer_activism, const DonationsPage()),
-                        _buildCardButton(context, "Volunteer Duties",
+                        _buildCardButton(context, "Your Duties",
                             Icons.assignment_ind, const UserDutiesPage()),
                         _buildCardButton(context, "Products",
                             Icons.shopping_bag, const ProductsPage()),
@@ -126,13 +126,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            SizedBox(height: 12),
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 "Latest Cats!",
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 30,
                   fontFamily: 'ICEBOLD',
                   color: Color.fromARGB(255, 106, 52, 128),
                 ),
@@ -228,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(title,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: 20,
                   fontFamily: 'ICEBOLD',
                 )),
           ],

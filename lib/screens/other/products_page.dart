@@ -190,152 +190,157 @@ class _ProductsPageState extends State<ProductsPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(
-            product == null ? 'Add New Product' : 'Edit Product',
-            style: const TextStyle(color: Colors.deepPurple),
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: "Product Name",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  value: selectedCategory,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCategory = newValue!;
-                    });
-                  },
-                  items:
-                      categories.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  decoration: const InputDecoration(
-                    labelText: "Category",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  value: selectedCampus,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCampus = newValue!;
-                    });
-                  },
-                  items: campuses.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  decoration: const InputDecoration(
-                    labelText: "Campus",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: priceController,
-                  decoration: const InputDecoration(
-                    labelText: "Price",
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: locationController,
-                  decoration: const InputDecoration(
-                    labelText: "Location",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: quantityController,
-                  decoration: const InputDecoration(
-                    labelText: "Quantity",
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Required:"),
-                    Switch(
-                      value: isRequired,
-                      onChanged: (value) {
-                        setState(() {
-                          isRequired = value;
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text(
+                product == null ? 'Add New Product' : 'Edit Product',
+                style: const TextStyle(color: Colors.deepPurple),
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        labelText: "Product Name",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String>(
+                      value: selectedCategory,
+                      onChanged: (String? newValue) {
+                        setDialogState(() {
+                          selectedCategory = newValue!;
                         });
                       },
+                      items: categories
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(
+                        labelText: "Category",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String>(
+                      value: selectedCampus,
+                      onChanged: (String? newValue) {
+                        setDialogState(() {
+                          selectedCampus = newValue!;
+                        });
+                      },
+                      items: campuses
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(
+                        labelText: "Campus",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: priceController,
+                      decoration: const InputDecoration(
+                        labelText: "Price",
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: locationController,
+                      decoration: const InputDecoration(
+                        labelText: "Location",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: quantityController,
+                      decoration: const InputDecoration(
+                        labelText: "Quantity",
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Required:"),
+                        Switch(
+                          value: isRequired,
+                          onChanged: (value) {
+                            setDialogState(() {
+                              isRequired = value;
+                            });
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (nameController.text.isNotEmpty &&
+                        priceController.text.isNotEmpty &&
+                        locationController.text.isNotEmpty &&
+                        quantityController.text.isNotEmpty) {
+                      if (product == null) {
+                        _addProduct(
+                          nameController.text,
+                          selectedCategory,
+                          selectedCampus,
+                          double.parse(priceController.text),
+                          locationController.text,
+                          int.parse(quantityController.text),
+                          isRequired,
+                        );
+                      } else {
+                        _updateProduct(
+                          product['id'],
+                          nameController.text,
+                          selectedCategory,
+                          selectedCampus,
+                          double.parse(priceController.text),
+                          locationController.text,
+                          int.parse(quantityController.text),
+                          isRequired,
+                        );
+                      }
+                      Navigator.of(context).pop();
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("All fields are required!"),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                  child: Text(product == null ? 'Add' : 'Update'),
+                ),
               ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (nameController.text.isNotEmpty &&
-                    priceController.text.isNotEmpty &&
-                    locationController.text.isNotEmpty &&
-                    quantityController.text.isNotEmpty) {
-                  if (product == null) {
-                    _addProduct(
-                      nameController.text,
-                      selectedCategory,
-                      selectedCampus,
-                      double.parse(priceController.text),
-                      locationController.text,
-                      int.parse(quantityController.text),
-                      isRequired,
-                    );
-                  } else {
-                    _updateProduct(
-                      product['id'],
-                      nameController.text,
-                      selectedCategory,
-                      selectedCampus,
-                      double.parse(priceController.text),
-                      locationController.text,
-                      int.parse(quantityController.text),
-                      isRequired,
-                    );
-                  }
-                  Navigator.of(context).pop();
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("All fields are required!"),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              },
-              child: Text(product == null ? 'Add' : 'Update'),
-            ),
-          ],
+            );
+          },
         );
       },
     );

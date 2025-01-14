@@ -1,10 +1,12 @@
 import 'dart:developer';
-import 'package:aws_app/screens/feeding/add_feeding_task_page.dart';
+
+import 'package:aws_app/blocs/my_user_bloc/my_user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:aws_app/blocs/get_all_users_bloc/get_all_users_bloc.dart';
+import 'package:aws_app/screens/feeding/add_feeding_task_page.dart';
 
 class FeedingSchedulePage extends StatefulWidget {
   const FeedingSchedulePage({super.key});
@@ -24,95 +26,78 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
     _initializeFeedingSchedules();
   }
 
-  Future<void> _initializeFeedingSchedules() async {
+  void _initializeFeedingSchedules() {
     final userState = context.read<GetAllUsersBloc>().state;
 
     if (userState is! GetAllUsersSuccess) {
       context.read<GetAllUsersBloc>().add(FetchAllUsers());
+      log("Dispatching FetchAllUsers event.");
     }
-    _loadFeedingSchedules();
+
+    context.read<GetAllUsersBloc>().stream.firstWhere((state) {
+      return state is GetAllUsersSuccess;
+    }).then((_) {
+      log("Users fetched successfully. Setting up feeding schedules listener.");
+      _setupFeedingSchedulesListener();
+    }).catchError((error) {
+      log("Error fetching users: $error");
+    });
   }
 
-  Future<void> _loadFeedingSchedules() async {
-    try {
-      final querySnapshot =
-          await _firestore.collection('feeding_schedules').get();
+  void _setupFeedingSchedulesListener() {
+    _firestore.collection('feeding_schedules').snapshots().listen((snapshot) {
+      log("Received Firestore snapshot with ${snapshot.docs.length} documents.");
+      _processFeedingSchedules(snapshot);
+    });
+  }
 
-      log('Fetched ${querySnapshot.docs.length} documents');
+  void _processFeedingSchedules(QuerySnapshot snapshot) {
+    final tasks = <DateTime, List<Map<String, dynamic>>>{};
+    final userState = context.read<GetAllUsersBloc>().state;
 
-      final tasks = <DateTime, List<Map<String, dynamic>>>{};
-      final userState = context.read<GetAllUsersBloc>().state;
+    if (userState is GetAllUsersSuccess) {
+      final users = {for (var user in userState.users) user.id: user.name};
+      log("Mapped users: $users");
 
-      if (userState is GetAllUsersSuccess) {
-        final users = {for (var user in userState.users) user.id: user.name};
-        log('Mapped Users: $users');
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        log("Processing document: ${doc.id}");
 
-        for (var doc in querySnapshot.docs) {
-          log('Document ID: ${doc.id}');
-          log('Document Data: ${doc.data()}');
+        if (data['date'] is Timestamp) {
+          final timestamp = data['date'] as Timestamp;
+          final date = DateTime(
+            timestamp.toDate().year,
+            timestamp.toDate().month,
+            timestamp.toDate().day,
+          );
 
-          final data = doc.data();
-
-          if (data['date'] is Timestamp) {
-            final timestamp = data['date'] as Timestamp;
-            final date = DateTime(
-              timestamp.toDate().year,
-              timestamp.toDate().month,
-              timestamp.toDate().day,
-            );
-
-            if (!tasks.containsKey(date)) {
-              tasks[date] = [];
-            }
-
-            final rawVolunteer = data['volunteer'];
-            final volunteerId = rawVolunteer is String
-                ? rawVolunteer.replaceAll('"', '')
-                : rawVolunteer;
-
-            final volunteerName = users[volunteerId] ?? 'Unknown Volunteer';
-
-            tasks[date]!.add({
-              'id': doc.id,
-              'slot': data['slot'] ?? 'Unknown Slot',
-              'location': data['location'] ?? 'Unknown Location',
-              'volunteer': volunteerName,
-              'completed': data['completed'] ?? false,
-            });
-          } else {
-            log('Invalid datetime format for document: ${doc.id}');
+          if (!tasks.containsKey(date)) {
+            tasks[date] = [];
           }
+
+          final volunteerId = data['volunteer'] ?? "Unknown Volunteer";
+          final volunteerName = users[volunteerId] ?? 'Unknown Volunteer';
+
+          tasks[date]!.add({
+            'id': doc.id,
+            'slot': data['slot'] ?? 'Unknown Slot',
+            'location': data['location'] ?? 'Unknown Location',
+            'volunteer': volunteerName,
+            'volunteerId': volunteerId,
+            'completed': data['completed'] ?? false,
+          });
+        } else {
+          log("Invalid date format in document: ${doc.id}");
         }
-      } else {
-        log('User data not loaded or available');
       }
-
-      if (mounted) {
-        setState(() {
-          _feedingTasks = tasks;
-        });
-      }
-    } catch (e, stackTrace) {
-      log('Error loading feeding schedules: $e');
-      log(stackTrace.toString());
+    } else {
+      log("User data not available for processing tasks.");
     }
-  }
 
-  Future<void> _markTaskAsDone(String taskId) async {
-    try {
-      await _firestore
-          .collection('feeding_schedules')
-          .doc(taskId)
-          .update({'completed': true});
-      _loadFeedingSchedules();
-    } catch (e) {
-      log('Error marking task as done: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to mark task as done.")),
-        );
-      }
-    }
+    setState(() {
+      _feedingTasks = tasks;
+      log("Updated feeding tasks state.");
+    });
   }
 
   List<Map<String, dynamic>> _getTasksForSelectedDay() {
@@ -124,24 +109,24 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
     return _feedingTasks[normalizedSelectedDay] ?? [];
   }
 
-  void _addTask() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const AddFeedingTaskPage(),
-      ),
-    ).then((_) => _loadFeedingSchedules());
-  }
-
   @override
   Widget build(BuildContext context) {
+    final currentUserId = context.read<MyUserBloc>().state.user?.id ?? "";
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Feeding Schedule"),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: _addTask,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AddFeedingTaskPage(),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -172,18 +157,18 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
                       Text("Volunteer: ${task['volunteer']}"),
                     ],
                   ),
-                  trailing: task['completed']
-                      ? const Icon(Icons.check_circle, color: Colors.green)
-                      : IconButton(
-                          icon: const Icon(Icons.check_circle_outline,
-                              color: Colors.grey),
-                          onPressed: () {
-                            _markTaskAsDone(task['id']);
-                          },
-                        ),
-                  onTap: () {
-                    // TODO: Add functionality to view or edit task
-                  },
+                  trailing: task['volunteerId'] == currentUserId
+                      ? (task['completed']
+                          ? const Icon(Icons.check_circle, color: Colors.green)
+                          : IconButton(
+                              icon: const Icon(Icons.check_circle_outline,
+                                  color: Colors.green),
+                              onPressed: () {
+                                _markTaskAsDone(task['id']);
+                              },
+                            ))
+                      : const Icon(Icons.check_circle_outline,
+                          color: Colors.grey),
                 );
               }).toList(),
             ),
@@ -191,5 +176,17 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
         ],
       ),
     );
+  }
+
+  Future<void> _markTaskAsDone(String taskId) async {
+    try {
+      await _firestore
+          .collection('feeding_schedules')
+          .doc(taskId)
+          .update({'completed': true});
+      log("Marked task $taskId as completed.");
+    } catch (e) {
+      log("Error marking task as completed: $e");
+    }
   }
 }

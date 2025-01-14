@@ -1,12 +1,13 @@
 import 'dart:developer';
-
 import 'package:aws_app/blocs/get_cat_bloc/get_cat_bloc.dart';
-import 'package:aws_app/screens/incidents/incident_detail_page.dart';
+import 'package:aws_app/screens/incidents/incident_card.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aws_app/blocs/my_user_bloc/my_user_bloc.dart';
+import 'package:incident_repository/incident_repository.dart';
 import 'package:intl/intl.dart';
+import 'package:user_repository/user_repository.dart';
 
 class UserDutiesPage extends StatefulWidget {
   const UserDutiesPage({super.key});
@@ -91,29 +92,56 @@ class _UserDutiesPageState extends State<UserDutiesPage> {
             final date = (data['date'] as Timestamp).toDate();
             final location = data['location'] ?? "Unknown Location";
             final slot = data['slot'] ?? "Unknown Slot";
-            final backup = data['backup'] ?? "Unknown Backup";
+            final backupId = data['backup'] ?? "Unknown Backup";
+            final completed = data['completed'] ?? false;
 
-            return Card(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildRow(Icons.food_bank, "Location: $location"),
-                    _buildRow(Icons.access_time, "Slot: $slot"),
-                    _buildRow(Icons.person, "Backup: $backup"),
-                    _buildRow(
-                      Icons.calendar_today,
-                      "Date: ${DateFormat('dd MMM yyyy').format(date)}",
+            // Fetch backup user details
+            return FutureBuilder<DocumentSnapshot>(
+              future: _firestore.collection('users').doc(backupId).get(),
+              builder: (context, backupSnapshot) {
+                String backupName = "Unknown Backup";
+
+                if (backupSnapshot.connectionState == ConnectionState.done &&
+                    backupSnapshot.hasData &&
+                    backupSnapshot.data != null) {
+                  final backupData =
+                      backupSnapshot.data!.data() as Map<String, dynamic>;
+                  backupName = backupData['name'] ?? "Unknown Backup";
+                }
+
+                return Card(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 8),
+                        _buildRow(Icons.access_time, "$slot slot"),
+                        const SizedBox(height: 8),
+                        _buildRow(Icons.location_on, "$location"),
+                        const SizedBox(height: 8),
+                        _buildRow(
+                          Icons.calendar_today,
+                          "${DateFormat('dd MMM yyyy').format(date)}",
+                        ),
+                        const SizedBox(height: 8),
+                        _buildRow(Icons.person, "Backup: $backupName"),
+                        const SizedBox(height: 8),
+                        _buildRow(
+                          Icons.check,
+                          completed ? "Completed" : "Pending",
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             );
           },
         );
@@ -148,6 +176,27 @@ class _UserDutiesPageState extends State<UserDutiesPage> {
             final catId = data['catId'] ?? "Unknown Cat ID";
             final catName = _catNames[catId] ?? 'Unknown Cat';
 
+            final reportedByData = data['reportedBy'] as Map<String, dynamic>?;
+            final volunteerData = data['volunteer'] as Map<String, dynamic>?;
+
+            final reportedBy = reportedByData != null
+                ? MyUser(
+                    id: reportedByData['id'] ?? '',
+                    name: reportedByData['name'] ?? 'Unknown',
+                    email: '',
+                    role: '',
+                  )
+                : MyUser.empty;
+
+            final volunteer = volunteerData != null
+                ? MyUser(
+                    id: volunteerData['id'] ?? '',
+                    name: volunteerData['name'] ?? 'Unknown',
+                    email: '',
+                    role: '',
+                  )
+                : MyUser.empty;
+
             DateTime? reportDate;
             try {
               if (data['reportDate'] is Timestamp) {
@@ -160,62 +209,21 @@ class _UserDutiesPageState extends State<UserDutiesPage> {
               log("Error parsing reportDate: $e");
             }
 
-            return Card(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      description,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    _buildRow(Icons.pets, "Cat Name: $catName"),
-                    _buildRow(
-                      Icons.calendar_today,
-                      "Reported On: ${reportDate != null ? DateFormat('dd MMM yyyy, hh:mm a').format(reportDate) : 'Invalid Date'}",
-                    ),
-                    const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurple,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => IncidentDetailPage(
-                                incident: data[
-                                    incidentDuties], // Adjust as per your model
-                                catName: catName,
-                              ),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "View Details",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            final incident = Incident(
+              id: data['id'] ?? '',
+              description: description,
+              catId: catId,
+              reportDate: reportDate ?? DateTime.now(),
+              vetVisit: data['vetVisit'] ?? false,
+              followUp: data['followUp'] ?? false,
+              reportedBy: reportedBy,
+              volunteer: volunteer,
+            );
+
+            return incidentCard(
+              incident: incident,
+              catName: catName,
+              context: context,
             );
           },
         );
@@ -226,7 +234,7 @@ class _UserDutiesPageState extends State<UserDutiesPage> {
   Widget _buildRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, color: Colors.blue, size: 20),
+        Icon(icon, color: Color.fromARGB(255, 106, 52, 128), size: 20),
         const SizedBox(width: 8),
         Text(
           text,
