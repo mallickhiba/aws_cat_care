@@ -1,4 +1,5 @@
 import 'package:aws_app/screens/donations/create_donations_page.dart';
+import 'package:aws_app/screens/other/full_screen_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -119,15 +120,27 @@ class _DonationsPageState extends State<DonationsPage> {
                   scrollDirection: Axis.horizontal,
                   itemCount: images.length,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          images[index],
-                          fit: BoxFit.cover,
-                          width: 120,
-                          height: 120,
+                    final photoUrl = images[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                FullScreenPhoto(photoUrl: photoUrl),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            photoUrl,
+                            fit: BoxFit.cover,
+                            width: 120,
+                            height: 120,
+                          ),
                         ),
                       ),
                     );

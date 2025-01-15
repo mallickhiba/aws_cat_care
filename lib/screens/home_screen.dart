@@ -10,6 +10,7 @@ import 'package:aws_app/screens/incidents/all_incidents_page.dart';
 import 'package:aws_app/blocs/my_user_bloc/my_user_bloc.dart';
 import 'package:aws_app/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:aws_app/blocs/get_cat_bloc/get_cat_bloc.dart';
+import 'package:aws_app/screens/other/full_screen_photo.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -231,29 +232,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontFamily: 'ICEBOLD',
                 )),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class FullScreenPhoto extends StatelessWidget {
-  final String photoUrl;
-
-  const FullScreenPhoto({super.key, required this.photoUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(""),
-      ),
-      body: Center(
-        child: InteractiveViewer(
-          child: Image.network(
-            photoUrl,
-            fit: BoxFit.contain,
-          ),
         ),
       ),
     );
