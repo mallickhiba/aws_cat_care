@@ -73,7 +73,7 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(16),
                     image: DecorationImage(
-                      image: NetworkImage(cat.image),
+                      image: getImageProvider(cat.image),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -247,5 +247,12 @@ class _CatDetailScreenState extends State<CatDetailScreen> {
         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
       ),
     );
+  }
+
+  ImageProvider getImageProvider(String path) {
+    if (path.startsWith('assets/')) {
+      return AssetImage(path); // Use AssetImage for local files
+    }
+    return NetworkImage(path); // Use NetworkImage for URLs
   }
 }

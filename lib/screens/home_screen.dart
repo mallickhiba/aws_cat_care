@@ -11,6 +11,7 @@ import 'package:aws_app/blocs/my_user_bloc/my_user_bloc.dart';
 import 'package:aws_app/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:aws_app/blocs/get_cat_bloc/get_cat_bloc.dart';
 import 'package:aws_app/screens/other/full_screen_photo.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -58,14 +59,17 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state.status == MyUserStatus.success) {
               return Row(
                 children: [
-                  Text(
-                    "Welcome ${state.user!.name}!",
-                    style: const TextStyle(
-                      fontSize: 30,
-                      fontFamily: 'ICEBOLD',
-                      color: Color.fromARGB(255, 106, 52, 128),
+                  const SizedBox(width: 1),
+                  Expanded(
+                    child: Text(
+                      "Welcome ${state.user!.name}!",
+                      style: const TextStyle(
+                        fontSize: 30,
+                        fontFamily: 'ICEBOLD',
+                        color: Color.fromARGB(255, 106, 52, 128),
+                      ),
                     ),
-                  ),
+                  )
                 ],
               );
             } else if (state.status == MyUserStatus.failure) {
@@ -225,12 +229,14 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 10),
             Icon(icon, color: Colors.white, size: 30),
             const SizedBox(width: 10),
-            Text(title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontFamily: 'ICEBOLD',
-                )),
+            Expanded(
+              child: Text(title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontFamily: 'ICEBOLD',
+                  )),
+            )
           ],
         ),
       ),

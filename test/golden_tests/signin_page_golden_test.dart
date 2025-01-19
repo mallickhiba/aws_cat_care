@@ -17,7 +17,7 @@ void main() {
       await tester.pumpWidgetBuilder(
         BlocProvider<SignInBloc>(
           create: (_) => SignInBloc(userRepository: mockUserRepository),
-          child: const SignInScreen(),
+          child: SignInScreen(),
         ),
         surfaceSize: const Size(375, 812),
       );

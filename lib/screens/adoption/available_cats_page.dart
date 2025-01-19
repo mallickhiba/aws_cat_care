@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aws_app/blocs/get_cat_bloc/get_cat_bloc.dart';
 import 'package:aws_app/screens/cat/cat_detail_screen.dart';
 import 'package:user_repository/user_repository.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class AvailableCatsPage extends StatelessWidget {
   final MyUser user;
@@ -146,7 +147,7 @@ class AvailableCatsPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(120),
                         image: cat.image.isNotEmpty
                             ? DecorationImage(
-                                image: NetworkImage(cat.image),
+                                image: CachedNetworkImageProvider(cat.image),
                                 fit: BoxFit.cover,
                               )
                             : null,
@@ -156,6 +157,7 @@ class AvailableCatsPage extends StatelessWidget {
                           ? const Icon(Icons.pets, size: 40, color: Colors.grey)
                           : null,
                     ),
+
                     const SizedBox(width: 16),
                     // Cat Info
                     Expanded(

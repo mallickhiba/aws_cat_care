@@ -122,13 +122,18 @@ class SignInScreen extends StatelessWidget {
                         children: [
                           Icon(CupertinoIcons.mail_solid),
                           SizedBox(width: 10),
-                          Text(
-                            'Sign In with Google',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                          Flexible(
+                            // Prevents overflow
+                            child: Text(
+                              'Sign In with Google',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              overflow: TextOverflow
+                                  .ellipsis, // Handles text overflow
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),

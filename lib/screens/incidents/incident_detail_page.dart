@@ -50,7 +50,7 @@ class IncidentDetailPage extends StatelessWidget {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              "Cat: $catName",
+                              "$catName",
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black87,
@@ -63,7 +63,7 @@ class IncidentDetailPage extends StatelessWidget {
                       Row(
                         children: [
                           const Icon(Icons.calendar_today,
-                              color: Colors.green, size: 20),
+                              color: Colors.purple, size: 20),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -77,14 +77,48 @@ class IncidentDetailPage extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.report,
+                              color: Colors.purple, size: 20),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              "Reported by ${incident.reportedBy.name}",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.volunteer_activism,
+                              color: Colors.purple, size: 20),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              "Volunteer: ${incident.volunteer.name}",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
                       if (incident.vetVisit)
                         const Row(
                           children: [
                             Icon(Icons.local_hospital,
-                                color: Colors.red, size: 20),
+                                color: Colors.purple, size: 20),
                             SizedBox(width: 8),
                             Text(
-                              "Vet Visit: Yes",
+                              "Vet Visit",
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black87,
@@ -97,10 +131,10 @@ class IncidentDetailPage extends StatelessWidget {
                         const Row(
                           children: [
                             Icon(Icons.follow_the_signs,
-                                color: Colors.blue, size: 20),
+                                color: Colors.purple, size: 20),
                             SizedBox(width: 8),
                             Text(
-                              "Follow Up Required: Yes",
+                              "Follow Up Required",
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black87,

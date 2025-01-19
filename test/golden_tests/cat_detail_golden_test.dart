@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:aws_app/blocs/get_incidents_for_cat_bloc/get_incidents_for_cat_bloc.dart';
 import 'package:aws_app/blocs/update_cat_bloc/update_cat_bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +19,6 @@ class MockUpdateCatBloc extends Mock implements UpdateCatBloc {}
 void main() {
   group('Golden Tests', () {
     testGoldens('CatDetailScreen Golden Test', (tester) async {
-
       final mockCat = Cat(
         catId: '1',
         catName: 'Grace',
@@ -31,11 +31,11 @@ void main() {
         isFixed: false,
         location: 'Home',
         description: 'description',
-        image: 'https://via.placeholder.com/150',
+        image: 'assets/images/cats/1.png',
         photos: [
-          'https://via.placeholder.com/100',
-          'https://via.placeholder.com/100',
-          'https://via.placeholder.com/100',
+          'assets/images/cats/2.png',
+          'assets/images/cats/3.png',
+          'assets/images/cats/4.png',
         ],
         sex: '',
         myUser: MyUser.empty,

@@ -10,7 +10,15 @@ import 'package:aws_app/blocs/sign_up_bloc/sign_up_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import '../blocs/authentication_bloc_test.dart';
 
-class MockAuthenticationBloc extends Mock implements AuthenticationBloc {}
+class MockAuthenticationBloc extends Mock implements AuthenticationBloc {
+  @override
+  Stream<AuthenticationState> get stream => Stream.value(
+        const AuthenticationState.unauthenticated(),
+      );
+
+  @override
+  AuthenticationState get state => AuthenticationState.unauthenticated();
+}
 
 class MockSignInBloc extends Mock implements SignInBloc {}
 
@@ -22,6 +30,7 @@ void main() {
       final mockAuthenticationBloc = MockAuthenticationBloc();
       final mockUserRepository = MockUserRepository();
 
+      // Mock the userRepository property if needed
       when(() => mockAuthenticationBloc.userRepository)
           .thenReturn(mockUserRepository);
 
