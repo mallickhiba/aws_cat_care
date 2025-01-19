@@ -18,3 +18,11 @@ final class CreateCatSuccess extends CreateCatState {
 
   const CreateCatSuccess(this.cat);
 }
+
+class CreateCatUpdated extends CreateCatState {
+  final UpdateCatDetails details;
+  const CreateCatUpdated(this.details);
+
+  @override
+  List<Object> get props => [details];
+}

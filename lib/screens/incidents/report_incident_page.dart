@@ -1,16 +1,18 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:aws_app/blocs/my_user_bloc/my_user_bloc.dart';
 import 'package:aws_app/blocs/get_all_users_bloc/get_all_users_bloc.dart';
 import 'package:aws_app/blocs/get_cat_bloc/get_cat_bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aws_app/blocs/create_incident_bloc/create_incident_bloc.dart';
 import 'package:incident_repository/incident_repository.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class ReportIncidentPage extends StatefulWidget {
-  const ReportIncidentPage({super.key});
+  final String? catId;
+
+  const ReportIncidentPage({super.key, this.catId});
 
   @override
   State<ReportIncidentPage> createState() => _ReportIncidentPageState();
@@ -42,6 +44,12 @@ class _ReportIncidentPageState extends State<ReportIncidentPage> {
 
   Future<List<String>> _uploadPhotos() async {
     List<String> uploadedUrls = [];
+    if (selectedPhotos.isEmpty) return uploadedUrls;
+
+    setState(() {
+      isUploading = true;
+    });
+
     try {
       for (var photo in selectedPhotos) {
         final storageRef = FirebaseStorage.instance.ref().child(
@@ -55,209 +63,164 @@ class _ReportIncidentPageState extends State<ReportIncidentPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to upload photos: $e")),
       );
+    } finally {
+      setState(() {
+        isUploading = false;
+      });
     }
     return uploadedUrls;
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<CreateIncidentBloc, CreateIncidentState>(
-          listener: (context, state) {
-            if (state is CreateIncidentSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text("Incident reported successfully!")),
-              );
-              Navigator.pop(context);
-            } else if (state is CreateIncidentFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Failed to report incident: $state")),
-              );
-            }
-          },
-        ),
-      ],
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Add Incident"),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: "Description",
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 10),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.catId == null ? "Report Incident" : "Add Incident"),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (widget.catId == null)
               BlocBuilder<GetCatBloc, GetCatState>(
-                builder: (context, catState) {
-                  if (catState is GetCatLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (catState is GetCatSuccess) {
-                    final catOptions = [
-                      const DropdownMenuItem(
-                        value: "unknown",
-                        child: Text("Unknown"),
-                      ),
-                      ...catState.cats.map((cat) {
-                        return DropdownMenuItem(
-                          value: cat.catId,
-                          child: Text(cat.catName),
-                        );
-                      }),
-                    ];
-
+                builder: (context, state) {
+                  if (state is GetCatLoading) {
+                    return const CircularProgressIndicator();
+                  } else if (state is GetCatSuccess) {
                     return DropdownButtonFormField<String>(
                       value: selectedCat,
-                      items: catOptions,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedCat = value;
-                        });
-                      },
+                      onChanged: (value) => setState(() => selectedCat = value),
+                      items: state.cats
+                          .map((cat) => DropdownMenuItem(
+                                value: cat.catId,
+                                child: Text(cat.catName),
+                              ))
+                          .toList(),
                       decoration: const InputDecoration(
-                        labelText: "Cat",
+                        labelText: "Select Cat",
                         border: OutlineInputBorder(),
                       ),
                     );
                   } else {
-                    return const Center(
-                      child: Text("Failed to load cats."),
-                    );
+                    return Text("Failed to load cats",
+                        style: Theme.of(context).textTheme.bodyMedium);
                   }
                 },
               ),
-              const SizedBox(height: 10),
-              BlocBuilder<GetAllUsersBloc, GetAllUsersState>(
-                builder: (context, userState) {
-                  if (userState is GetAllUsersLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (userState is GetAllUsersSuccess) {
-                    final userOptions = userState.users
+            const SizedBox(height: 20),
+            TextField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(
+                labelText: "Description",
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+            ),
+            const SizedBox(height: 20),
+            BlocBuilder<GetAllUsersBloc, GetAllUsersState>(
+              builder: (context, state) {
+                if (state is GetAllUsersLoading) {
+                  return const CircularProgressIndicator();
+                } else if (state is GetAllUsersSuccess) {
+                  final users = state.users;
+                  return DropdownButtonFormField<String>(
+                    value: selectedVolunteer,
+                    onChanged: (value) =>
+                        setState(() => selectedVolunteer = value),
+                    items: users
                         .map((user) => DropdownMenuItem(
                               value: user.id,
                               child: Text(user.name),
                             ))
-                        .toList();
+                        .toList(),
+                    decoration: const InputDecoration(
+                      labelText: "Select Volunteer",
+                      border: OutlineInputBorder(),
+                    ),
+                  );
+                } else {
+                  return Text("Failed to load users",
+                      style: Theme.of(context).textTheme.bodyMedium);
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _pickImages,
+              child: const Text("Pick Images"),
+            ),
+            Wrap(
+              spacing: 10,
+              children: selectedPhotos
+                  .map((file) => Stack(
+                        alignment: Alignment.topRight,
+                        children: [
+                          Image.file(file,
+                              width: 100, height: 100, fit: BoxFit.cover),
+                          IconButton(
+                            icon: const Icon(Icons.remove_circle,
+                                color: Colors.red),
+                            onPressed: () =>
+                                setState(() => selectedPhotos.remove(file)),
+                          ),
+                        ],
+                      ))
+                  .toList(),
+            ),
+            SwitchListTile(
+              title: const Text("Vet Visit"),
+              value: vetVisit,
+              onChanged: (bool value) => setState(() => vetVisit = value),
+            ),
+            SwitchListTile(
+              title: const Text("Follow-Up Required"),
+              value: followUpRequired,
+              onChanged: (bool value) =>
+                  setState(() => followUpRequired = value),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (_descriptionController.text.isNotEmpty &&
+                    (widget.catId != null || selectedCat != null) &&
+                    selectedVolunteer != null) {
+                  final photoUrls = await _uploadPhotos();
+                  final usersState = context.read<GetAllUsersBloc>().state;
 
-                    return DropdownButtonFormField<String>(
-                      value: selectedVolunteer,
-                      items: userOptions,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedVolunteer = value;
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        labelText: "Volunteer",
-                        border: OutlineInputBorder(),
-                      ),
-                    );
-                  } else {
-                    return const Center(
-                      child: Text("Failed to load users."),
-                    );
-                  }
-                },
-              ),
-              const SizedBox(height: 10),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: selectedPhotos
-                    .map((photo) => Stack(
-                          alignment: Alignment.topRight,
-                          children: [
-                            Image.file(photo,
-                                width: 100, height: 100, fit: BoxFit.cover),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedPhotos.remove(photo);
-                                });
-                              },
-                              child: const Icon(Icons.close, color: Colors.red),
-                            ),
-                          ],
-                        ))
-                    .toList(),
-              ),
-              ElevatedButton.icon(
-                onPressed: _pickImages,
-                icon: const Icon(Icons.add_a_photo),
-                label: const Text("Add Photos"),
-              ),
-              SwitchListTile(
-                title: const Text("Vet Visit"),
-                value: vetVisit,
-                onChanged: (value) {
-                  setState(() {
-                    vetVisit = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 5),
-              SwitchListTile(
-                title: const Text("Follow-Up Required"),
-                value: followUpRequired,
-                onChanged: (value) {
-                  setState(() {
-                    followUpRequired = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_descriptionController.text.isNotEmpty &&
-                      selectedCat != null &&
-                      selectedVolunteer != null) {
-                    setState(() {
-                      isUploading = true;
-                    });
-                    final photoUrls = await _uploadPhotos();
-                    setState(() {
-                      isUploading = false;
-                    });
+                  if (usersState is GetAllUsersSuccess) {
+                    final users = usersState.users;
+                    final volunteer = users
+                        .firstWhere((user) => user.id == selectedVolunteer);
 
                     final incident = Incident(
                       id: '',
-                      catId: selectedCat == "unknown" ? 'NA' : selectedCat!,
+                      catId: widget.catId ?? selectedCat!,
                       reportDate: DateTime.now(),
                       reportedBy: context.read<MyUserBloc>().state.user!,
                       vetVisit: vetVisit,
                       description: _descriptionController.text,
                       followUp: followUpRequired,
-                      volunteer: (context.read<GetAllUsersBloc>().state
-                              as GetAllUsersSuccess)
-                          .users
-                          .firstWhere((user) => user.id == selectedVolunteer),
+                      volunteer: volunteer,
                       photos: photoUrls,
                     );
                     context.read<CreateIncidentBloc>().add(
-                          CreateIncident(incident, selectedCat!),
-                        );
+                        CreateIncident(incident, widget.catId ?? selectedCat!));
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text(
-                              "All fields including Cat and Volunteer are required!")),
+                      const SnackBar(content: Text("Failed to get users data")),
                     );
                   }
-                },
-                child: isUploading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text("Submit"),
-              ),
-            ],
-          ),
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("All fields are required")),
+                  );
+                }
+              },
+              child: isUploading
+                  ? const CircularProgressIndicator()
+                  : const Text("Submit"),
+            ),
+          ],
         ),
       ),
     );

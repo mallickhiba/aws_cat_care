@@ -4,6 +4,7 @@ import 'package:aws_app/screens/incidents/incident_card.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:aws_app/components/cat_utility.dart';
 import 'package:aws_app/blocs/my_user_bloc/my_user_bloc.dart';
 import 'package:incident_repository/incident_repository.dart';
 import 'package:intl/intl.dart';
@@ -23,21 +24,14 @@ class _UserDutiesPageState extends State<UserDutiesPage> {
   @override
   void initState() {
     super.initState();
-    _preloadCatNames();
+    _loadCatNames();
   }
 
-  Future<void> _preloadCatNames() async {
-    final catBloc = context.read<GetCatBloc>();
-    catBloc.add(GetCats());
-
-    final catState =
-        await catBloc.stream.firstWhere((state) => state is GetCatSuccess);
-    if (catState is GetCatSuccess) {
-      _catNames = {
-        for (var cat in catState.cats) cat.catId: cat.catName,
-      };
-      log('Cat names preloaded: $_catNames');
-      setState(() {});
+  void _loadCatNames() async {
+    try {
+      _catNames = await CatUtility.preloadCatNames(context);
+    } catch (e) {
+      print('Error loading cat names: $e');
     }
   }
 

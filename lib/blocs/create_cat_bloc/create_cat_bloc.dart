@@ -20,5 +20,10 @@ class CreateCatBloc extends Bloc<CreateCatEvent, CreateCatState> {
         emit(CreateCatFailure());
       }
     });
+
+    on<UpdateCatDetails>((event, emit) {
+      // TODO: You can add more complex logic here if needed, such as validation
+      emit(CreateCatUpdated(event));
+    });
   }
 }
