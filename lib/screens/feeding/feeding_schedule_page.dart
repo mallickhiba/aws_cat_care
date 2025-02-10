@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:aws_app/blocs/my_user_bloc/my_user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,14 +75,17 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
           }
 
           final volunteerId = data['volunteer'] ?? "Unknown Volunteer";
+          final backupId = data['backup'] ?? "Unknown Backup";
           final volunteerName = users[volunteerId] ?? 'Unknown Volunteer';
+          final backupName = users[backupId] ?? 'Unknown Backup';
 
           tasks[date]!.add({
             'id': doc.id,
             'slot': data['slot'] ?? 'Unknown Slot',
-            'location': data['location'] ?? 'Unknown Location',
             'volunteer': volunteerName,
             'volunteerId': volunteerId,
+            'backup': backupName,
+            'backupId': backupId,
             'completed': data['completed'] ?? false,
           });
         } else {
@@ -112,6 +114,7 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
   @override
   Widget build(BuildContext context) {
     final currentUserId = context.read<MyUserBloc>().state.user?.id ?? "";
+    final userRole = context.read<MyUserBloc>().state.user?.role ?? "";
 
     return Scaffold(
       appBar: AppBar(
@@ -143,32 +146,79 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
               });
             },
             eventLoader: (day) => _feedingTasks[day] ?? [],
+            calendarStyle: CalendarStyle(
+              todayDecoration: const BoxDecoration(
+                color: Color.fromARGB(255, 106, 52, 128),
+                shape: BoxShape.circle,
+              ),
+              selectedDecoration: const BoxDecoration(
+                color: Colors.blue,
+                shape: BoxShape.circle,
+              ),
+            ),
+            headerStyle: const HeaderStyle(
+              formatButtonVisible: false,
+              titleCentered: true,
+            ),
           ),
           const SizedBox(height: 10),
           Expanded(
             child: ListView(
               children: _getTasksForSelectedDay().map((task) {
-                return ListTile(
-                  title: Text(task['slot']),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Location: ${task['location']}"),
-                      Text("Volunteer: ${task['volunteer']}"),
-                    ],
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  trailing: task['volunteerId'] == currentUserId
-                      ? (task['completed']
-                          ? const Icon(Icons.check_circle, color: Colors.green)
-                          : IconButton(
-                              icon: const Icon(Icons.check_circle_outline,
-                                  color: Colors.green),
-                              onPressed: () {
-                                _markTaskAsDone(task['id']);
-                              },
-                            ))
-                      : const Icon(Icons.check_circle_outline,
-                          color: Colors.grey),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              task['slot'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                if (userRole == "admin" ||
+                                    task['volunteerId'] == currentUserId)
+                                  IconButton(
+                                    icon: const Icon(Icons.edit,
+                                        color:
+                                            Color.fromARGB(255, 106, 52, 128)),
+                                    onPressed: () => _editFeedingTask(task),
+                                  ),
+                                task['volunteerId'] == currentUserId
+                                    ? (task['completed']
+                                        ? const Icon(Icons.check_circle,
+                                            color: Colors.green)
+                                        : IconButton(
+                                            icon: const Icon(
+                                                Icons.check_circle_outline,
+                                                color: Colors.green),
+                                            onPressed: () {
+                                              _markTaskAsDone(task['id']);
+                                            },
+                                          ))
+                                    : const Icon(Icons.check_circle_outline,
+                                        color: Colors.grey),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Text("Volunteer: ${task['volunteer']}"),
+                        Text("Backup: ${task['backup']}"),
+                      ],
+                    ),
+                  ),
                 );
               }).toList(),
             ),
@@ -178,15 +228,92 @@ class _FeedingSchedulePageState extends State<FeedingSchedulePage> {
     );
   }
 
-  Future<void> _markTaskAsDone(String taskId) async {
-    try {
-      await _firestore
-          .collection('feeding_schedules')
-          .doc(taskId)
-          .update({'completed': true});
-      log("Marked task $taskId as completed.");
-    } catch (e) {
-      log("Error marking task as completed: $e");
+  Future<void> _editFeedingTask(Map<String, dynamic> task) async {
+    String? selectedVolunteer = task['volunteerId'];
+    String? selectedBackup = task['backupId'];
+
+    final userState = context.read<GetAllUsersBloc>().state;
+    if (userState is! GetAllUsersSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to load users.")),
+      );
+      return;
     }
+
+    final users = userState.users;
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Edit Feeding Task"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButtonFormField<String>(
+                value: selectedVolunteer,
+                items: users
+                    .map((user) => DropdownMenuItem(
+                          value: user.id,
+                          child: Text(user.name),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  selectedVolunteer = value;
+                },
+                decoration: const InputDecoration(labelText: "Volunteer"),
+              ),
+              const SizedBox(height: 10),
+              DropdownButtonFormField<String>(
+                value: selectedBackup,
+                items: users
+                    .map((user) => DropdownMenuItem(
+                          value: user.id,
+                          child: Text(user.name),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  selectedBackup = value;
+                },
+                decoration: const InputDecoration(labelText: "Backup"),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context,
+                    {'volunteer': selectedVolunteer, 'backup': selectedBackup});
+              },
+              child: const Text("Update"),
+            ),
+          ],
+        );
+      },
+    ).then((updatedValues) async {
+      if (updatedValues != null) {
+        await _firestore
+            .collection('feeding_schedules')
+            .doc(task['id'])
+            .update({
+          'volunteer': updatedValues['volunteer'],
+          'backup': updatedValues['backup'],
+        });
+
+        log("Updated task ${task['id']} with volunteer: ${updatedValues['volunteer']} and backup: ${updatedValues['backup']}");
+      }
+    });
+  }
+
+  Future<void> _markTaskAsDone(String taskId) async {
+    await _firestore
+        .collection('feeding_schedules')
+        .doc(taskId)
+        .update({'completed': true});
+    log("Marked task $taskId as completed.");
   }
 }

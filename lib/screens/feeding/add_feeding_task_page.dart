@@ -12,33 +12,42 @@ class AddFeedingTaskPage extends StatefulWidget {
 
 class _AddFeedingTaskPageState extends State<AddFeedingTaskPage> {
   DateTime? _selectedDate;
+  DateTime? _repeatUntilDate; // New: End date for repeating tasks
   String? _selectedTimeSlot;
-  String? _selectedLocation;
   String? _selectedVolunteer;
   String? _selectedBackup;
+  bool _repeatWeekly = false; // New: Toggle for repeating weekly
 
   final List<String> _timeSlots = ["Morning", "Evening"];
-  final List<String> _locations = [
-    "Courtyard",
-    "Student Centre",
-    "Tabba",
-    "Library",
-    "Fauji"
-  ];
 
   Future<void> _addFeedingTask() async {
     if (_selectedDate != null &&
         _selectedTimeSlot != null &&
-        _selectedLocation != null &&
         _selectedVolunteer != null &&
         _selectedBackup != null) {
-      await FirebaseFirestore.instance.collection('feeding_schedules').add({
-        'date': Timestamp.fromDate(_selectedDate!),
-        'slot': _selectedTimeSlot,
-        'location': _selectedLocation,
-        'volunteer': _selectedVolunteer,
-        'backup': _selectedBackup,
-      });
+      // Calculate all dates based on weekly repetition
+      List<DateTime> taskDates = [_selectedDate!];
+
+      if (_repeatWeekly && _repeatUntilDate != null) {
+        DateTime nextDate = _selectedDate!.add(const Duration(days: 7));
+
+        while (nextDate.isBefore(_repeatUntilDate!) ||
+            nextDate.isAtSameMomentAs(_repeatUntilDate!)) {
+          taskDates.add(nextDate);
+          nextDate = nextDate.add(const Duration(days: 7));
+        }
+      }
+
+      // Store all feeding schedules
+      for (var date in taskDates) {
+        await FirebaseFirestore.instance.collection('feeding_schedules').add({
+          'date': Timestamp.fromDate(date),
+          'slot': _selectedTimeSlot,
+          'volunteer': _selectedVolunteer,
+          'backup': _selectedBackup,
+        });
+      }
+
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -47,17 +56,22 @@ class _AddFeedingTaskPageState extends State<AddFeedingTaskPage> {
     }
   }
 
-  void _pickDate() async {
+  void _pickDate({bool isRepeatUntil = false}) async {
     final selectedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate:
+          isRepeatUntil ? (_selectedDate ?? DateTime.now()) : DateTime.now(),
       firstDate: DateTime.now().subtract(const Duration(days: 1)),
       lastDate: DateTime(2030),
     );
 
     if (selectedDate != null) {
       setState(() {
-        _selectedDate = selectedDate;
+        if (isRepeatUntil) {
+          _repeatUntilDate = selectedDate;
+        } else {
+          _selectedDate = selectedDate;
+        }
       });
     }
   }
@@ -87,7 +101,7 @@ class _AddFeedingTaskPageState extends State<AddFeedingTaskPage> {
                 child: Column(
                   children: [
                     GestureDetector(
-                      onTap: _pickDate,
+                      onTap: () => _pickDate(),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 15,
@@ -136,25 +150,6 @@ class _AddFeedingTaskPageState extends State<AddFeedingTaskPage> {
                     ),
                     const SizedBox(height: 10),
                     DropdownButtonFormField<String>(
-                      value: _selectedLocation,
-                      items: _locations
-                          .map((location) => DropdownMenuItem(
-                                value: location,
-                                child: Text(location),
-                              ))
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedLocation = value;
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        labelText: "Location",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    DropdownButtonFormField<String>(
                       value: _selectedVolunteer,
                       items: userOptions,
                       onChanged: (value) {
@@ -181,6 +176,50 @@ class _AddFeedingTaskPageState extends State<AddFeedingTaskPage> {
                         border: OutlineInputBorder(),
                       ),
                     ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _repeatWeekly,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _repeatWeekly = value ?? false;
+                            });
+                          },
+                        ),
+                        const Text("Repeat this every week"),
+                      ],
+                    ),
+                    if (_repeatWeekly)
+                      GestureDetector(
+                        onTap: () => _pickDate(isRepeatUntil: true),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 15,
+                            horizontal: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                _repeatUntilDate != null
+                                    ? "${_repeatUntilDate!.year}-${_repeatUntilDate!.month.toString().padLeft(2, '0')}-${_repeatUntilDate!.day.toString().padLeft(2, '0')}"
+                                    : "Select Repeat Until Date",
+                                style: TextStyle(
+                                  color: _repeatUntilDate != null
+                                      ? Colors.black
+                                      : Colors.grey,
+                                ),
+                              ),
+                              const Icon(Icons.calendar_today),
+                            ],
+                          ),
+                        ),
+                      ),
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _addFeedingTask,

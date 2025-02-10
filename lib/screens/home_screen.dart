@@ -41,13 +41,14 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
         label: const Text(
-          'Report an Incident',
+          '', //REPORT AN INCIDENT
           style: TextStyle(
+            fontSize: 18,
             color: Colors.white,
             fontFamily: 'ICEBOLD',
           ),
         ),
-        icon: const Icon(Icons.report_problem, color: Colors.white),
+        icon: const Icon(Icons.report_problem, color: Colors.white, size: 30),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       appBar: AppBar(
@@ -57,19 +58,18 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, state) {
             debugPrint('MyUserBloc state: $state');
             if (state.status == MyUserStatus.success) {
-              return Row(
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(width: 1),
-                  Expanded(
-                    child: Text(
-                      "Welcome ${state.user!.name}!",
-                      style: const TextStyle(
-                        fontSize: 30,
-                        fontFamily: 'ICEBOLD',
-                        color: Color.fromARGB(255, 106, 52, 128),
-                      ),
+                  const SizedBox(height: 10), // Spacing above "Welcome" text
+                  Text(
+                    "Welcome ${state.user!.name}!",
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontFamily: 'ICEBOLD',
+                      color: Color.fromARGB(255, 106, 52, 128),
                     ),
-                  )
+                  ),
                 ],
               );
             } else if (state.status == MyUserStatus.failure) {
@@ -93,6 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             Expanded(
+              flex: 5, // To ensure more space for buttons
               child: BlocBuilder<MyUserBloc, MyUserState>(
                 builder: (context, state) {
                   debugPrint('MyUserBloc body state: $state');
@@ -112,9 +113,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icons.report_problem, const AllIncidentsPage()),
                         _buildCardButton(context, "Donate",
                             Icons.volunteer_activism, const DonationsPage()),
-                        _buildCardButton(context, "Your Duties",
+                        _buildCardButton(context, "Duties",
                             Icons.assignment_ind, const UserDutiesPage()),
-                        _buildCardButton(context, "Products",
+                        _buildCardButton(context, "Supplies",
                             Icons.shopping_bag, const ProductsPage()),
                       ],
                     );
@@ -142,8 +143,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 6),
+            SizedBox(height: 10),
             Expanded(
+              flex: 4, // To ensure enough space for latest cats
               child: BlocBuilder<GetCatBloc, GetCatState>(
                 builder: (context, state) {
                   if (state is GetCatLoading) {
@@ -187,9 +189,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              photoUrl,
+                            child: CachedNetworkImage(
+                              imageUrl: photoUrl,
                               fit: BoxFit.cover,
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
                             ),
                           ),
                         );

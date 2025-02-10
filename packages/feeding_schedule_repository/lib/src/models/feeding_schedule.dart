@@ -4,7 +4,6 @@ import '../entities/entities.dart';
 class FeedingSchedule {
   String feedingScheduleId;
   DateTime datetime;
-  String location;
   String slot;
   MyUser volunteer;
   MyUser backup;
@@ -13,7 +12,6 @@ class FeedingSchedule {
   FeedingSchedule({
     required this.feedingScheduleId,
     required this.datetime,
-    required this.location,
     required this.slot,
     required this.volunteer,
     required this.backup,
@@ -23,7 +21,6 @@ class FeedingSchedule {
   static final empty = FeedingSchedule(
     feedingScheduleId: '',
     datetime: DateTime.now(),
-    location: '',
     slot: '',
     volunteer: MyUser.empty,
     backup: MyUser.empty,
@@ -33,7 +30,6 @@ class FeedingSchedule {
   FeedingSchedule copyWith({
     String? feedingScheduleId,
     DateTime? datetime,
-    String? location,
     String? slot,
     MyUser? volunteer,
     MyUser? backup,
@@ -42,7 +38,6 @@ class FeedingSchedule {
     return FeedingSchedule(
       feedingScheduleId: feedingScheduleId ?? this.feedingScheduleId,
       datetime: datetime ?? this.datetime,
-      location: location ?? this.location,
       slot: slot ?? this.slot,
       volunteer: volunteer ?? this.volunteer,
       backup: backup ?? this.backup,
@@ -58,7 +53,6 @@ class FeedingSchedule {
     return FeedingScheduleEntity(
       feedingScheduleId: feedingScheduleId,
       datetime: datetime,
-      location: location,
       slot: slot,
       volunteer: volunteer,
       backup: backup,
@@ -70,7 +64,6 @@ class FeedingSchedule {
     return FeedingSchedule(
       feedingScheduleId: entity.feedingScheduleId,
       datetime: entity.datetime,
-      location: entity.location,
       slot: entity.slot,
       volunteer: entity.volunteer,
       backup: entity.backup,
@@ -82,7 +75,6 @@ class FeedingSchedule {
   String toString() {
     return '''FeedingSchedule: {
       datetime: $datetime,
-      location: $location
       slot: $slot,
       volunteer: $volunteer,
       backup: $backup,

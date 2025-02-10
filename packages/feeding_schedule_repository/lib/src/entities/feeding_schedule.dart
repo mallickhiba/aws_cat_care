@@ -3,7 +3,6 @@ import 'package:user_repository/user_repository.dart';
 class FeedingScheduleEntity {
   String feedingScheduleId;
   DateTime datetime;
-  String location;
   String slot;
   MyUser volunteer;
   MyUser backup;
@@ -12,7 +11,6 @@ class FeedingScheduleEntity {
   FeedingScheduleEntity({
     required this.feedingScheduleId,
     required this.datetime,
-    required this.location,
     required this.slot,
     required this.volunteer,
     required this.backup,
@@ -23,7 +21,6 @@ class FeedingScheduleEntity {
     return {
       'feedingScheduleId': feedingScheduleId,
       'datetime': datetime,
-      'location': location,
       'slot': slot,
       'volunteer': volunteer.toEntity().toDocument(),
       'backup': backup.toEntity().toDocument(),
@@ -35,7 +32,6 @@ class FeedingScheduleEntity {
     return FeedingScheduleEntity(
       feedingScheduleId: doc['feedingScheduleId'] as String,
       datetime: doc['datetime'] as DateTime,
-      location: doc['location'] as String,
       slot: doc['slot'] as String,
       volunteer: MyUser.fromEntity(MyUserEntity.fromDocument(doc['volunteer'])),
       backup: MyUser.fromEntity(MyUserEntity.fromDocument(doc['backup'])),
@@ -46,7 +42,6 @@ class FeedingScheduleEntity {
   List<Object?> get props => [
         feedingScheduleId,
         datetime,
-        location,
         slot,
         volunteer,
         backup,
@@ -58,7 +53,6 @@ class FeedingScheduleEntity {
     return '''FeedingScheduleEntity: {
         feedingScheduleId: $feedingScheduleId,
       datetime: $datetime,
-       location: $location
         slot: $slot,
         volunteer: $volunteer,
         backup: $backup,

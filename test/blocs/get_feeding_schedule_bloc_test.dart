@@ -19,7 +19,6 @@ void main() {
         FeedingSchedule(
             feedingScheduleId: '',
             datetime: DateTime.now(),
-            location: '',
             slot: '',
             volunteer: MyUser.empty,
             backup: MyUser.empty,

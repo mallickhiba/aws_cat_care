@@ -34,7 +34,6 @@ void main() {
       when(() => mockMyUserBloc.state)
           .thenReturn(MyUserState.success(mockUser));
 
-      // Mock `GetCatBloc` state
       when(() => mockGetCatBloc.state).thenReturn(GetCatSuccess(const []));
 
       await tester.pumpWidgetBuilder(
